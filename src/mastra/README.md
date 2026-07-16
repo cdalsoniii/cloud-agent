@@ -177,35 +177,102 @@ Baseten returns **403 Forbidden** from Daytona sandbox IPs, preventing direct mo
 - Local machine: 200 OK (same API key)
 - Daytona sandbox: 403 Forbidden (same API key, same endpoint)
 
+**Root Cause**: Baseten blocks unknown IP ranges (Daytona sandbox IPs are not in Baseten's allow list). This is a security measure to prevent abuse.
+
 **Workarounds:**
 
-1. **Fireworks AI Fallback** (Recommended): Fireworks AI is reachable from the sandbox (domain allow list includes `*.fireworks.ai`). Tested successfully with `gpt-oss-120b` model.
-   ```bash
-   # Update sandbox opencode config to use Fireworks
-   python3 scripts/sandbox_daytona.py shell --command \
-     'cat > ~/.config/opencode/opencode.json << EOF
-   {"provider":{"fireworks-ai":{"npm":"@ai-sdk/openai-compatible",
-   "options":{"baseURL":"https://api.fireworks.ai/inference/v1",
-   "apiKey":"fw_PBxvxxy78mNCuUN3vYE3Hb"},
-   "models":{"gpt-oss-120b":{"name":"Fireworks GPT-OSS-120B","tool_call":true}}}},
-   "small_model":"fireworks-ai/gpt-oss-120b"}'
-   ```
+### 1. Host Proxy + ngrok (Recommended for Baseten)
 
-2. **Host Proxy + ngrok**: `baseten-proxy.js` creates a local HTTP proxy that forwards to Baseten with auth injection. ngrok exposes it to the sandbox. **Note**: Requires adding `*.ngrok-free.app` to `DOMAIN_ALLOW` (currently 16/20 domains, room for 4 more).
+`baseten-proxy.js` creates a local HTTP proxy that forwards to Baseten with auth injection. ngrok exposes it to the sandbox.
 
-3. **Northflank Proxy**: `*.code.run` is in the allow list but current proxy is down (503). Deploy a new Northflank service to provide a working proxy.
+**Setup:**
+```bash
+# 1. Start the proxy on the host machine
+cd cloud-agent
+export BASETEN_API_KEY=<your-key>
+export BASETEN_MODEL_ID=qelg6953
+node baseten-proxy.js &
 
-### Integration Test Results
+# 2. Start ngrok tunnel
+ngrok http 9876 &
+
+# 3. Get the ngrok URL
+curl -sS http://127.0.0.1:4040/api/tunnels | python3 -c "
+import json, sys
+data = json.load(sys.stdin)
+for t in data.get('tunnels', []):
+    u = t.get('public_url', '')
+    if u.startswith('https://'):
+        print(u)
+        break
+"
+
+# 4. Update sandbox opencode config
+python3 scripts/sandbox_daytona.py shell --command \
+  'cat > ~/.config/opencode/opencode.json << EOF
+{"provider":{"baseten-proxy":{"npm":"@ai-sdk/openai-compatible",
+"options":{"baseURL":"https://<ngrok-url>/v1","apiKey":"sk-proxy"},
+"models":{"qwen-coder":{"name":"Qwen-2.5-Coder-32B-Instruct","tool_call":true}}}},
+"small_model":"baseten-proxy/qwen-coder"}'
+
+# 5. Restart opencode server
+python3 scripts/sandbox_daytona.py shell --command \
+  'pkill -f "opencode serve" || true; sleep 2; cd ~/gpu-inference-stack && \
+   nohup opencode serve --hostname 127.0.0.1 --port 4096 > /tmp/opencode.log 2>&1 &'
+```
+
+**Note**: Requires adding `*.ngrok-free.app` to `DOMAIN_ALLOW` (18/20 domains as of latest commit).
+
+### 2. Fireworks AI Fallback (Alternative)
+
+Fireworks AI is reachable from the sandbox (domain allow list includes `*.fireworks.ai`). Tested successfully with `gpt-oss-120b` model.
+
+```bash
+python3 scripts/sandbox_daytona.py shell --command \
+  'cat > ~/.config/opencode/opencode.json << EOF
+{"provider":{"fireworks-ai":{"npm":"@ai-sdk/openai-compatible",
+"options":{"baseURL":"https://api.fireworks.ai/inference/v1",
+"apiKey":"fw_PBxvxxy78mNCuUN3vYE3Hb"},
+"models":{"gpt-oss-120b":{"name":"Fireworks GPT-OSS-120B","tool_call":true}}}},
+"small_model":"fireworks-ai/gpt-oss-120b"}'
+```
+
+### 3. Northflank Proxy (When Available)
+
+`*.code.run` is in the allow list but current proxy is down (503). Deploy a new Northflank service to provide a working proxy.
+
+### 4. Automatic Provider Fallback (Mastra Workflow)
+
+The updated Mastra workflow now automatically tries providers in order:
+1. **Baseten** (direct) → if 403, fallback to:
+2. **Fireworks** → if unavailable, fallback to:
+3. **Proxy** (ngrok tunnel) → if unavailable, fallback to:
+4. **Northflank**
+
+Configure the preferred provider:
+```bash
+npx tsx src/mastra/index.ts --task "Implement feature" --provider baseten --proxy-url https://<ngrok>.ngrok-free.app
+```
+
+## Integration Test Results
 
 - **17/17 integration tests passed** in `DRY_RUN=1` mode
 - Tests cover: full workflow, chain plan generation, sandbox communication, plan structure validation
 - Run with: `npm run test:integration` (requires `DRY_RUN=1`)
 
+## Live Test Results
+
+- **Sandbox**: `d57eaa11-9246-49b8-9981-b5cc21a9acd7` (Daytona large)
+- **Proxy**: `https://bdd5-2600-4040-2dfe-3d00-4111-653e-a532-bce4.ngrok-free.app`
+- **Baseten via proxy**: ✅ 200 OK, generates React components, Python scripts, bash scripts
+- **Fireworks direct**: ✅ 200 OK (tested `gpt-oss-120b`)
+- **Northflank proxy**: ❌ 503 (service down)
+
 ## Next Steps
 
 1. **Connect to SurrealDB**: When SurrealDB is available, load rules into the database for runtime enforcement
-2. **Add retry logic**: Implement exponential backoff for 408 timeouts and provider fallback
+2. **Add retry logic**: Implement exponential backoff for 408 timeouts
 3. **Metrics**: Add OpenTelemetry instrumentation to track step timing and success rates
 4. **Dashboard**: Use the existing dashboard to visualize workflow execution
 5. **Automated testing**: Run `mastra:verify` in CI/CD pipeline before deployment
-6. **Provider fallback**: Automate Baseten → Fireworks fallback when 403 detected from sandbox
+6. **Provider health monitoring**: Add periodic health checks for each provider and automatic failover
