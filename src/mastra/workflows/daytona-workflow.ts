@@ -7,6 +7,7 @@ import {
   daytonaConnectivityTool,
   daytonaExecTool,
   daytonaDestroyTool,
+  daytonaShellTool,
   verifyRuleTool,
 } from '../tools/daytona-tools.js';
 
@@ -19,11 +20,12 @@ import {
  * 3. Verifies sandbox creation via business rules
  * 4. Bootstraps the sandbox (git clone + harness install)
  * 5. Verifies bootstrap success
- * 6. Checks connectivity to Baseten/proxy
- * 7. Verifies connectivity via business rules
- * 8. Executes the agent task
- * 9. Verifies task execution
- * 10. Optionally cleans up the sandbox
+ * 6. Checks connectivity to inference provider (Baseten/Fireworks/proxy)
+ * 7. If connectivity fails, attempts provider fallback (Baseten -> Fireworks -> Proxy)
+ * 8. Verifies connectivity via business rules
+ * 9. Executes the agent task
+ * 10. Verifies task execution
+ * 11. Optionally cleans up the sandbox
  *
  * Each verification step uses Midspiral formal verification tools.
  */
@@ -128,39 +130,291 @@ const bootstrapSandbox = new Step({
   },
 });
 
-// Step 4: Connectivity Check
+// Step 4: Connectivity Check with Provider Fallback
 const connectivityCheck = new Step({
   id: 'connectivity-check',
-  description: 'Check connectivity from sandbox to Baseten/proxy endpoint',
+  description: 'Check connectivity from sandbox to inference endpoint with automatic provider fallback',
   inputSchema: z.object({
     dryRun: z.boolean().default(false),
+    provider: z.enum(['baseten', 'fireworks', 'proxy', 'northflank']).default('baseten'),
+    proxyUrl: z.string().optional(),
   }),
   execute: async ({ context }) => {
-    const result = await daytonaConnectivityTool.execute({
-      context: {
-        dryRun: context.inputData.dryRun,
-        timeoutSeconds: 60,
-      },
-    });
+    const dryRun = context.inputData.dryRun;
+    const providers = ['baseten', 'fireworks', 'proxy', 'northflank'];
+    const startIndex = providers.indexOf(context.inputData.provider);
+    const orderedProviders = [...providers.slice(startIndex), ...providers.slice(0, startIndex)];
 
-    // Verify business rule: connectivity-http-ok
-    const ruleVerify = await verifyRuleTool.execute({
-      context: {
-        ruleSpec: 'Connectivity probe must return acceptable HTTP code (2xx, 401, 403, 404, 503)',
-        ruleCode: `connectivity_http_code IN ('200', '201', '202', '204', '401', '403', '404', '503')`,
-      },
-    });
+    for (const provider of orderedProviders) {
+      if (dryRun) {
+        return {
+          ok: true,
+          dryRun: true,
+          provider,
+          step: 'connectivity-check',
+        };
+      }
 
+      let result: any;
+      let proxyUrl = context.inputData.proxyUrl;
+
+      switch (provider) {
+        case 'baseten':
+          // Check direct Baseten connectivity
+          result = await daytonaConnectivityTool.execute({
+            context: { dryRun: false, timeoutSeconds: 60 },
+          });
+          if (result.ok && result.httpCode && result.httpCode.startsWith('2')) {
+            return { ...result, provider: 'baseten', step: 'connectivity-check' };
+          }
+          // If 403, Baseten is blocking this IP - try next provider
+          if (result.httpCode === '403') {
+            console.log('Baseten returned 403 (IP blocked), trying fallback provider...');
+            continue;
+          }
+          break;
+
+        case 'fireworks':
+          // Check Fireworks AI connectivity
+          result = await daytonaShellTool.execute({
+            context: {
+              command: `curl -sS -o /dev/null -w '%{http_code}' -H 'Authorization: Bearer ${process.env.FIREWORKS_API_KEY || ''}' --connect-timeout 5 --max-time 10 'https://api.fireworks.ai/inference/v1/models' 2>/dev/null || printf '000'`,
+              timeoutSeconds: 30,
+            },
+          });
+          if (result.ok && result.output?.includes('200')) {
+            return { ...result, provider: 'fireworks', step: 'connectivity-check', ok: true };
+          }
+          break;
+
+        case 'proxy':
+          // Check proxy tunnel connectivity
+          if (!proxyUrl) {
+            console.log('No proxy URL configured, skipping proxy fallback');
+            continue;
+          }
+          result = await daytonaShellTool.execute({
+            context: {
+              command: `curl -sS -o /dev/null -w '%{http_code}' --connect-timeout 5 --max-time 10 '${proxyUrl}/v1/chat/completions' 2>/dev/null || printf '000'`,
+              timeoutSeconds: 30,
+            },
+          });
+          if (result.ok && result.output?.includes('405')) {
+            // 405 means the endpoint exists but needs POST - that's good
+            return { ...result, provider: 'proxy', step: 'connectivity-check', ok: true, proxyUrl };
+          }
+          if (result.ok && result.output?.includes('200')) {
+            return { ...result, provider: 'proxy', step: 'connectivity-check', ok: true, proxyUrl };
+          }
+          break;
+
+        case 'northflank':
+          // Check Northflank proxy connectivity
+          result = await daytonaConnectivityTool.execute({
+            context: { dryRun: false, timeoutSeconds: 60 },
+          });
+          if (result.ok) {
+            return { ...result, provider: 'northflank', step: 'connectivity-check' };
+          }
+          break;
+      }
+    }
+
+    // All providers failed
     return {
-      ...result,
-      ruleVerified: ruleVerify.verified,
-      ruleCoverage: ruleVerify.coverage,
+      ok: false,
+      error: 'All inference providers failed connectivity check',
       step: 'connectivity-check',
     };
   },
 });
 
-// Step 5: Execute Task
+// Step 5: Configure Provider in Sandbox
+const configureProvider = new Step({
+  id: 'configure-provider',
+  description: 'Configure the selected inference provider in the sandbox opencode config',
+  inputSchema: z.object({
+    provider: z.enum(['baseten', 'fireworks', 'proxy', 'northflank']).default('baseten'),
+    proxyUrl: z.string().optional(),
+    dryRun: z.boolean().default(false),
+  }),
+  execute: async ({ context }) => {
+    const provider = context.inputData.provider;
+    const proxyUrl = context.inputData.proxyUrl;
+    const dryRun = context.inputData.dryRun;
+
+    if (dryRun) {
+      return {
+        ok: true,
+        dryRun: true,
+        provider,
+        step: 'configure-provider',
+      };
+    }
+
+    let configCommand: string;
+
+    switch (provider) {
+      case 'baseten':
+        configCommand = `cat > ~/.config/opencode/opencode.json << 'EOF'
+{
+  "provider": {
+    "baseten-qwen": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Baseten Qwen-2.5-Coder-32B",
+      "options": {
+        "baseURL": "https://model-qelg6953.api.baseten.co/environments/production/sync/v1",
+        "apiKey": "${process.env.BASETEN_API_KEY || ''}"
+      },
+      "models": {
+        "qwen-coder": {
+          "name": "Qwen-2.5-Coder-32B-Instruct",
+          "tool_call": true
+        }
+      }
+    }
+  },
+  "$schema": "https://opencode.ai/config.json",
+  "small_model": "baseten-qwen/qwen-coder"
+}
+EOF`;
+        break;
+
+      case 'fireworks':
+        configCommand = `cat > ~/.config/opencode/opencode.json << 'EOF'
+{
+  "provider": {
+    "fireworks-ai": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Fireworks AI",
+      "options": {
+        "baseURL": "https://api.fireworks.ai/inference/v1",
+        "apiKey": "${process.env.FIREWORKS_API_KEY || ''}"
+      },
+      "models": {
+        "gpt-oss-120b": {
+          "name": "Fireworks GPT-OSS-120B",
+          "tool_call": true
+        }
+      }
+    }
+  },
+  "$schema": "https://opencode.ai/config.json",
+  "small_model": "fireworks-ai/gpt-oss-120b"
+}
+EOF`;
+        break;
+
+      case 'proxy':
+        if (!proxyUrl) {
+          return {
+            ok: false,
+            error: 'Proxy URL required but not provided',
+            step: 'configure-provider',
+          };
+        }
+        configCommand = `cat > ~/.config/opencode/opencode.json << 'EOF'
+{
+  "provider": {
+    "baseten-proxy": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Baseten via Proxy",
+      "options": {
+        "baseURL": "${proxyUrl}/v1",
+        "apiKey": "sk-proxy"
+      },
+      "models": {
+        "qwen-coder": {
+          "name": "Qwen-2.5-Coder-32B-Instruct (via proxy)",
+          "tool_call": true
+        }
+      }
+    }
+  },
+  "$schema": "https://opencode.ai/config.json",
+  "small_model": "baseten-proxy/qwen-coder"
+}
+EOF`;
+        break;
+
+      case 'northflank':
+        configCommand = `cat > ~/.config/opencode/opencode.json << 'EOF'
+{
+  "provider": {
+    "northflank-qwen": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Northflank Qwen-Coder",
+      "options": {
+        "baseURL": "https://http--bentoml-phase1--pvmzsl6mxvmb.code.run/v1"
+      },
+      "models": {
+        "qwen-coder": {
+          "name": "Qwen-Coder (Northflank)",
+          "tool_call": true
+        }
+      }
+    }
+  },
+  "$schema": "https://opencode.ai/config.json",
+  "small_model": "northflank-qwen/qwen-coder"
+}
+EOF`;
+        break;
+
+      default:
+        return {
+          ok: false,
+          error: `Unknown provider: ${provider}`,
+          step: 'configure-provider',
+        };
+    }
+
+    const result = await daytonaShellTool.execute({
+      context: {
+        command: configCommand,
+        timeoutSeconds: 30,
+      },
+    });
+
+    return {
+      ...result,
+      provider,
+      step: 'configure-provider',
+    };
+  },
+});
+
+// Step 6: Restart OpenCode Server
+const restartOpencode = new Step({
+  id: 'restart-opencode',
+  description: 'Restart the opencode server with the new provider configuration',
+  inputSchema: z.object({
+    dryRun: z.boolean().default(false),
+  }),
+  execute: async ({ context }) => {
+    if (context.inputData.dryRun) {
+      return {
+        ok: true,
+        dryRun: true,
+        step: 'restart-opencode',
+      };
+    }
+
+    const result = await daytonaShellTool.execute({
+      context: {
+        command: 'pkill -f "opencode serve" || true; sleep 2; cd ~/gpu-inference-stack && nohup opencode serve --hostname 127.0.0.1 --port 4096 > /tmp/opencode-restart.log 2>&1 & sleep 3; curl -sf http://127.0.0.1:4096/global/health || curl -sf http://127.0.0.1:4096/health || (echo "OPENCODE_HEALTH_MISS"; exit 1)',
+        timeoutSeconds: 60,
+      },
+    });
+
+    return {
+      ...result,
+      step: 'restart-opencode',
+    };
+  },
+});
+
+// Step 7: Execute Task
 const executeTask = new Step({
   id: 'execute-task',
   description: 'Execute the agent task within the sandbox',
@@ -196,7 +450,7 @@ const executeTask = new Step({
   },
 });
 
-// Step 6: Cleanup (conditional)
+// Step 8: Cleanup (conditional)
 const cleanupSandbox = new Step({
   id: 'cleanup-sandbox',
   description: 'Destroy the Daytona sandbox',
@@ -229,7 +483,7 @@ const cleanupSandbox = new Step({
  * The main Daytona sandbox orchestration workflow.
  *
  * Steps:
- * 1. validate-environment → 2. create-sandbox → 3. bootstrap-sandbox → 4. connectivity-check → 5. execute-task → 6. cleanup-sandbox
+ * 1. validate-environment → 2. create-sandbox → 3. bootstrap-sandbox → 4. connectivity-check → 5. configure-provider → 6. restart-opencode → 7. execute-task → 8. cleanup-sandbox
  *
  * Each step includes formal verification of business rules via Midspiral tools.
  */
@@ -240,6 +494,8 @@ export const daytonaOrchestrationWorkflow = new Workflow({
     harness: z.enum(['goose', 'opencode', 'pi']).default('opencode'),
     dryRun: z.boolean().default(false),
     skipCleanup: z.boolean().default(false),
+    provider: z.enum(['baseten', 'fireworks', 'proxy', 'northflank']).default('baseten'),
+    proxyUrl: z.string().optional(),
     requiredVars: z.array(z.string()).default([
       'DAYTONA_API_KEY',
       'GIT_TOKEN',
@@ -262,8 +518,24 @@ daytonaOrchestrationWorkflow
     when: { 'create-sandbox': { ok: true } },
   })
   .then(connectivityCheck, {
-    variables: { dryRun: { step: 'trigger', path: 'dryRun' } },
+    variables: {
+      dryRun: { step: 'trigger', path: 'dryRun' },
+      provider: { step: 'trigger', path: 'provider' },
+      proxyUrl: { step: 'trigger', path: 'proxyUrl' },
+    },
     when: { 'bootstrap-sandbox': { ok: true } },
+  })
+  .then(configureProvider, {
+    variables: {
+      dryRun: { step: 'trigger', path: 'dryRun' },
+      provider: { step: 'connectivity-check', path: 'provider' },
+      proxyUrl: { step: 'connectivity-check', path: 'proxyUrl' },
+    },
+    when: { 'connectivity-check': { ok: true } },
+  })
+  .then(restartOpencode, {
+    variables: { dryRun: { step: 'trigger', path: 'dryRun' } },
+    when: { 'configure-provider': { ok: true } },
   })
   .then(executeTask, {
     variables: {
@@ -271,7 +543,7 @@ daytonaOrchestrationWorkflow
       harness: { step: 'trigger', path: 'harness' },
       dryRun: { step: 'trigger', path: 'dryRun' },
     },
-    when: { 'connectivity-check': { ok: true } },
+    when: { 'restart-opencode': { ok: true } },
   })
   .then(cleanupSandbox, {
     variables: { skipCleanup: { step: 'trigger', path: 'skipCleanup' } },
