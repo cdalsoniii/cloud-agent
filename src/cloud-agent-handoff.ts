@@ -162,10 +162,13 @@ function daytona(args: string[], dryRun: boolean): { status: number; stdout: str
   return { status: r.status, stdout: `${r.stdout}${r.stderr}` };
 }
 
-function runChainPrd(opts: HandoffOptions, planText: string): { status: number; stdout: string } {
-  const script = path.join(STACK_DIR, 'scripts/chain-daytona-opencode-prd.ts');
+function runChain(opts: HandoffOptions, planText: string): { status: number; stdout: string } {
+  const isNorthflank = opts.sandboxProvider === 'northflank';
+  const script = isNorthflank
+    ? path.join(STACK_DIR, 'scripts/chain-sandbox-bridge.ts')
+    : path.join(STACK_DIR, 'scripts/chain-daytona-opencode-prd.ts');
   if (!fs.existsSync(script)) {
-    log.error('chain-daytona-opencode-prd.ts not found at', script);
+    log.error('Chain script not found at', script);
     return { status: 1, stdout: '' };
   }
 
@@ -176,20 +179,27 @@ function runChainPrd(opts: HandoffOptions, planText: string): { status: number; 
     '--specialty', opts.chainSpecialty,
     '--timeout', String(opts.timeout),
   ];
-  
+
   if (opts.dryRun) args.push('--dry-run');
   if (opts.executeOnly) args.push('--execute-only');
   if (opts.keepSandbox) args.push('--keep-sandbox');
   if (opts.destroy) args.push('--destroy');
+  if (isNorthflank) {
+    args.push('--sandbox-provider', 'northflank');
+  }
 
-  log.info('Running chain-daytona-opencode-prd.ts', { args: args.slice(4) });
-  
-  const r = run(args[0], args.slice(1), {
+  log.info(`Running ${path.basename(script)}`, { args: args.slice(4) });
+
+  const env: Record<string, string> = {
     AGENT_RUNTIME: 'opencode-sdk',
-    SANDBOX_PROVIDER: 'daytona',
-    DAYTONA_SDK_READY: '1',
+    SANDBOX_PROVIDER: opts.sandboxProvider,
     CHAIN_DAYTONA_TIMEOUT_SEC: String(opts.timeout),
-  });
+  };
+  if (!isNorthflank) {
+    env.DAYTONA_SDK_READY = '1';
+  }
+
+  const r = run(args[0], args.slice(1), env);
 
   return { status: r.status, stdout: r.stdout };
 }
@@ -371,13 +381,13 @@ async function executeInSandbox(
     return { ok: true, steps, sandboxId: 'dry-run-sandbox-123', branch: 'feat/dry-run-test' };
   }
 
-  if (opts.sandboxProvider !== 'daytona') {
-    throw new Error(`Sandbox provider ${opts.sandboxProvider} not yet implemented. Use daytona.`);
+  if (opts.sandboxProvider !== 'daytona' && opts.sandboxProvider !== 'northflank') {
+    throw new Error(`Sandbox provider ${opts.sandboxProvider} not yet implemented. Use daytona or northflank.`);
   }
 
   // Use the real chain-daytona-opencode-prd.ts script
-  log.info('Executing in Daytona sandbox via chain-daytona-opencode-prd.ts');
-  const result = runChainPrd(opts, planText);
+  log.info(`Executing in ${opts.sandboxProvider} sandbox via chain script`);
+  const result = runChain(opts, planText);
   
   // Parse result for steps
   try {

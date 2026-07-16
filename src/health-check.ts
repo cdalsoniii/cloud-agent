@@ -47,7 +47,11 @@ async function checkBasetenChain(config: OrchestratorConfig): Promise<HealthChec
         'Authorization': `Api-Key ${config.basetenApiKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ request: { health: true } }),
+      body: JSON.stringify({
+        model: portfolioId,
+        messages: [{ role: 'user', content: 'health check' }],
+        max_tokens: 5,
+      }),
     });
 
     if (response.ok) {

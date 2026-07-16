@@ -1,0 +1,23 @@
+version: '1.0'
+description: Business rules for Midspiral projects
+categories:
+  infrastructure:
+    description: Rules for infrastructure
+    count: 1
+rules:
+- name: chain-sandbox-live-communication
+  description: The chain-sandbox system must communicate with live cloud endpoints
+    using the correct Baseten model endpoint format. The executeChain method must
+    use the sync endpoint (model-{ID}.api.baseten.co) rather than the management API
+    (app.baseten.co/api/v1/models).
+  condition: When executeChain is called with a valid portfolioId and basetenApiKey
+  action: POST request to https://model-{portfolioId}.api.baseten.co/environments/production/sync
+    with Api-Key authorization header and specialty payload
+  category: infrastructure
+  surrealql_table: chain_endpoint
+  surrealql_field: url
+  surrealql_assertion: url CONTAINS 'model-' AND url CONTAINS '.api.baseten.co' AND
+    url CONTAINS 'environments/production/sync'
+  id: rule_0
+  created_at: '2026-07-16T20:55:59.746381'
+  status: draft
