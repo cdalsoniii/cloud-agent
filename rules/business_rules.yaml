@@ -1,23 +1,151 @@
-version: '1.0'
-description: Business rules for Midspiral projects
+version: '2.0'
+description: Business rules for Daytona sandbox lifecycle orchestration with formal verification
 categories:
   infrastructure:
-    description: Rules for infrastructure
-    count: 1
+    description: Rules for cloud infrastructure and sandbox lifecycle
+    count: 6
+  security:
+    description: Rules for security and access control
+    count: 2
+  compliance:
+    description: Rules for operational compliance
+    count: 3
+
 rules:
-- name: chain-sandbox-live-communication
-  description: The chain-sandbox system must communicate with live cloud endpoints
-    using the correct Baseten model endpoint format. The executeChain method must
-    use the sync endpoint (model-{ID}.api.baseten.co) rather than the management API
-    (app.baseten.co/api/v1/models).
-  condition: When executeChain is called with a valid portfolioId and basetenApiKey
-  action: POST request to https://model-{portfolioId}.api.baseten.co/environments/production/sync
-    with Api-Key authorization header and specialty payload
+# --- Infrastructure Rules ---
+
+- id: rule-env-vars-present
+  name: environment-variables-present
+  description: All required environment variables must be present and non-empty before any sandbox operation. Missing critical secrets (DAYTONA_API_KEY, GIT_TOKEN) will cause cascading failures.
+  condition: When validateEnvironment step is executed
+  action: Check that DAYTONA_API_KEY, GIT_TOKEN, GIT_REPO_URL, and BASETEN_API_KEY are set and non-empty
   category: infrastructure
+  surrealql_table: environment_state
+  surrealql_field: required_vars
+  surrealql_assertion: required_vars CONTAINS 'DAYTONA_API_KEY' AND required_vars CONTAINS 'GIT_TOKEN' AND required_vars CONTAINS 'GIT_REPO_URL'
+  status: active
+  created_at: '2026-07-16T21:00:00Z'
+
+- id: rule-sandbox-id-present
+  name: sandbox-creation-valid
+  description: Daytona sandbox creation must return a valid sandbox_id UUID. The sandbox must exist in the Daytona API and be reachable within 60 seconds.
+  condition: When createSandbox step is executed
+  action: Verify response contains sandbox_id matching UUID pattern and toolbox_exec returns non-empty output
+  category: infrastructure
+  surrealql_table: sandbox_state
+  surrealql_field: sandbox_id
+  surrealql_assertion: sandbox_id IS NOT NULL AND sandbox_id MATCHES '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+  status: active
+  created_at: '2026-07-16T21:00:00Z'
+
+- id: rule-bootstrap-exit-code-0
+  name: bootstrap-success
+  description: Sandbox bootstrap (git clone + harness install) must complete with exit code 0. The repo must be cloned to the expected path and the harness must be executable.
+  condition: When bootstrapSandbox step is executed
+  action: Verify exec_exit_code returns 0 and the repository directory exists in the sandbox
+  category: infrastructure
+  surrealql_table: sandbox_state
+  surrealql_field: bootstrap_status
+  surrealql_assertion: bootstrap_status == 'success' AND bootstrap_exit_code == 0
+  status: active
+  created_at: '2026-07-16T21:00:00Z'
+
+- id: rule-connectivity-http-ok
+  name: connectivity-acceptable
+  description: Connectivity probe must return HTTP 2xx, 401, 403, 404, or 503. A 408 timeout indicates the model is cold-scaled on Baseten and requires retry. A 000 indicates network blockage from the sandbox.
+  condition: When connectivityCheck step is executed
+  action: Parse HTTP code from curl response and verify it is in the acceptable set
+  category: infrastructure
+  surrealql_table: sandbox_state
+  surrealql_field: connectivity_http_code
+  surrealql_assertion: connectivity_http_code IN ('200', '201', '202', '204', '401', '403', '404', '503')
+  status: active
+  created_at: '2026-07-16T21:00:00Z'
+
+- id: rule-task-exit-code-0
+  name: task-execution-success
+  description: Agent task execution within the sandbox must complete with exit code 0. Output must be non-empty and contain no critical error patterns.
+  condition: When executeTask step is executed
+  action: Verify exec_exit_code returns 0 and stdout/stderr contain no FATAL or CRITICAL patterns
+  category: infrastructure
+  surrealql_table: sandbox_state
+  surrealql_field: task_status
+  surrealql_assertion: task_status == 'success' AND task_exit_code == 0
+  status: active
+  created_at: '2026-07-16T21:00:00Z'
+
+- id: rule-domain-allow-list-valid
+  name: domain-allow-list-valid
+  description: Daytona domain allow list must contain ≤20 domains to fit within tier limits. The list must include all required domains (github.com, baseten.co, firewalls.ai, etc.).
+  condition: When createSandbox step is executed
+  action: Verify DOMAIN_ALLOW comma-separated count is ≤20 and contains required domains
+  category: infrastructure
+  surrealql_table: sandbox_state
+  surrealql_field: domain_allow_list
+  surrealql_assertion: array::len(domain_allow_list) <= 20 AND domain_allow_list CONTAINS 'github.com' AND domain_allow_list CONTAINS '*.baseten.co'
+  status: active
+  created_at: '2026-07-16T21:00:00Z'
+
+# --- Security Rules ---
+
+- id: rule-secrets-redacted
+  name: secrets-redacted-in-logs
+  description: All secret values (API keys, tokens, passwords) must be redacted in dry-run output and log dumps. The redact_exports function must mask all known secret patterns.
+  condition: When any step is executed with dry_run=true
+  action: Verify redact_exports replaces all secret values with '***'
+  category: security
+  surrealql_table: audit_log
+  surrealql_field: dry_run_output
+  surrealql_assertion: dry_run_output DOES NOT CONTAIN any(SECRET_KEYS) VALUES
+  status: active
+  created_at: '2026-07-16T21:00:00Z'
+
+- id: rule-api-key-valid
+  name: api-key-authentication-valid
+  description: Baseten API key must be valid and authenticate successfully. A 401 response indicates an invalid or expired key.
+  condition: When connectivityCheck targets Baseten endpoint
+  action: Verify HTTP code is not 401; if 401, fail fast with clear error message
+  category: security
+  surrealql_table: sandbox_state
+  surrealql_field: baseten_auth_status
+  surrealql_assertion: baseten_auth_status != '401'
+  status: active
+  created_at: '2026-07-16T21:00:00Z'
+
+# --- Compliance Rules ---
+
+- id: rule-baseten-model-id-valid
+  name: baseten-model-id-valid
+  description: The Baseten model ID must be a valid deployment ID. For Qwen-2.5-Coder-32B, the model ID must be 'qelg6953' (not 'nwxlx5wy' which does not exist).
+  condition: When WARP_BASETEN_QWEN=1 or Baseten is the inference backend
+  action: Verify BASETEN_MODEL_ID matches a deployed model ID or falls back to qelg6953
+  category: compliance
   surrealql_table: chain_endpoint
-  surrealql_field: url
-  surrealql_assertion: url CONTAINS 'model-' AND url CONTAINS '.api.baseten.co' AND
-    url CONTAINS 'environments/production/sync'
-  id: rule_0
-  created_at: '2026-07-16T20:55:59.746381'
-  status: draft
+  surrealql_field: model_id
+  surrealql_assertion: model_id IS NOT NULL AND model_id != 'nwxlx5wy'
+  status: active
+  created_at: '2026-07-16T21:00:00Z'
+
+- id: rule-provider-explicit
+  name: sandbox-provider-explicit
+  description: The sandbox provider must be explicitly set (daytona or northflank) and passed to all provider.sh subprocess calls. The default must be 'daytona' as per user directive.
+  condition: When orchestrator.ts is initialized
+  action: Verify opts.sandboxProvider is explicitly passed via env to create, bootstrap, connectivity, and exec calls
+  category: compliance
+  surrealql_table: environment_state
+  surrealql_field: sandbox_provider
+  surrealql_assertion: sandbox_provider IN ('daytona', 'northflank') AND sandbox_provider IS NOT NULL
+  status: active
+  created_at: '2026-07-16T21:00:00Z'
+
+- id: rule-opencode-model-routing
+  name: opencode-model-routing-correct
+  description: When WARP_BASETEN_QWEN is enabled, the opencode model must route to 'baseten-qwen/Qwen-2.5-Coder-32B-Instruct' instead of 'northflank-qwen/qwen-coder'.
+  condition: When agent-opencode-sdk.ts resolves defaultOpencodeModel
+  action: Verify model string contains 'baseten-qwen' when WARP_BASETEN_QWEN=1
+  category: compliance
+  surrealql_table: environment_state
+  surrealql_field: opencode_model
+  surrealql_assertion: (WARP_BASETEN_QWEN == '1' AND opencode_model CONTAINS 'baseten-qwen') OR (WARP_BASETEN_QWEN != '1' AND opencode_model CONTAINS 'northflank-qwen')
+  status: active
+  created_at: '2026-07-16T21:00:00Z'
