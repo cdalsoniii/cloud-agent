@@ -1,0 +1,30 @@
+{
+  "name": "cloud-agent-handoff",
+  "version": "1.0.0",
+  "description": "Cloud agent handoff via OpenCode skills and Baseten chain sandbox communication",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "node --test dist/**/*.test.js",
+    "test:integration": "npx tsx test/integration.test.ts",
+    "lint": "eslint src/**/*.ts",
+    "handoff": "npx tsx src/cloud-agent-handoff.ts",
+    "chain-sandbox": "npx tsx src/baseten-chain-sandbox.ts",
+    "orchestrate": "npx tsx src/orchestrator.ts",
+    "health": "npx tsx src/health-check.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "node-fetch": "^3.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "eslint": "^8.57.0",
+    "tsx": "^4.23.1",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
