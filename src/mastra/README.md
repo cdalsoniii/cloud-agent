@@ -169,10 +169,43 @@ rules/
 | Extensibility | Hard | Easy via new tools |
 | Reusability | Low | High (workflow engine) |
 
+## Known Issues & Workarounds
+
+### Baseten IP Blocking from Daytona Sandbox
+
+Baseten returns **403 Forbidden** from Daytona sandbox IPs, preventing direct model inference. Verified that:
+- Local machine: 200 OK (same API key)
+- Daytona sandbox: 403 Forbidden (same API key, same endpoint)
+
+**Workarounds:**
+
+1. **Fireworks AI Fallback** (Recommended): Fireworks AI is reachable from the sandbox (domain allow list includes `*.fireworks.ai`). Tested successfully with `gpt-oss-120b` model.
+   ```bash
+   # Update sandbox opencode config to use Fireworks
+   python3 scripts/sandbox_daytona.py shell --command \
+     'cat > ~/.config/opencode/opencode.json << EOF
+   {"provider":{"fireworks-ai":{"npm":"@ai-sdk/openai-compatible",
+   "options":{"baseURL":"https://api.fireworks.ai/inference/v1",
+   "apiKey":"fw_PBxvxxy78mNCuUN3vYE3Hb"},
+   "models":{"gpt-oss-120b":{"name":"Fireworks GPT-OSS-120B","tool_call":true}}}},
+   "small_model":"fireworks-ai/gpt-oss-120b"}'
+   ```
+
+2. **Host Proxy + ngrok**: `baseten-proxy.js` creates a local HTTP proxy that forwards to Baseten with auth injection. ngrok exposes it to the sandbox. **Note**: Requires adding `*.ngrok-free.app` to `DOMAIN_ALLOW` (currently 16/20 domains, room for 4 more).
+
+3. **Northflank Proxy**: `*.code.run` is in the allow list but current proxy is down (503). Deploy a new Northflank service to provide a working proxy.
+
+### Integration Test Results
+
+- **17/17 integration tests passed** in `DRY_RUN=1` mode
+- Tests cover: full workflow, chain plan generation, sandbox communication, plan structure validation
+- Run with: `npm run test:integration` (requires `DRY_RUN=1`)
+
 ## Next Steps
 
 1. **Connect to SurrealDB**: When SurrealDB is available, load rules into the database for runtime enforcement
-2. **Add retry logic**: Implement exponential backoff for 408 timeouts
+2. **Add retry logic**: Implement exponential backoff for 408 timeouts and provider fallback
 3. **Metrics**: Add OpenTelemetry instrumentation to track step timing and success rates
 4. **Dashboard**: Use the existing dashboard to visualize workflow execution
 5. **Automated testing**: Run `mastra:verify` in CI/CD pipeline before deployment
+6. **Provider fallback**: Automate Baseten → Fireworks fallback when 403 detected from sandbox
