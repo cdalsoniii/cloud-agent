@@ -1,0 +1,1 @@
+\n## Verified Connectivity (2026-07-17)\n\nAll layers verified end-to-end with HTTP 200 responses:\n\n1. OpenCode Server (:4096) - Healthy, v1.18.3\n2. Cloud Agent Server (:3000) - Status: ok\n3. Baseten Chain (qelg6953) - LLM responses confirmed\n4. Northflank API - HTTP 200\n5. Proxy Path (:9876 → chain) - Sandbox → proxy → chain → response confirmed
