@@ -1,0 +1,139 @@
+# Repo Registry — maps target names to repository URLs, auth, and verification rules
+# Usage: cloud-agent --target <name> --task "..."
+#        cloud-agent --repo <url> --token <env_var> --task "..."  (ad-hoc)
+
+repos:
+  # Default: this repo
+  cloud-agent:
+    url: https://github.com/cdalsoniii/cloud-agent.git
+    provider: github
+    token_env: GIT_TOKEN
+    default_branch: main
+    verify_rules:
+      - rule: all-required-env-present
+      - rule: sandbox-provider-explicit
+      - rule: no-secrets-in-code
+    sandbox:
+      provider: northflank
+      plan: gpu-inference-agent
+
+  # GPU inference stack
+  gpu-inference-stack:
+    url: https://github.com/cdalsoniii/gpu-inference-stack.git
+    provider: github
+    token_env: GIT_TOKEN
+    default_branch: main
+    verify_rules:
+      - rule: all-required-env-present
+      - rule: model-id-valid
+      - rule: provider-explicit
+    sandbox:
+      provider: northflank
+      plan: gpu-inference-agent
+
+  # Assistant UI — Next.js 14 monorepo with AI chat platform
+  assistant-ui:
+    url: https://github.com/cdalsoniii/assistant-ui.git
+    provider: github
+    token_env: GIT_TOKEN
+    default_branch: main
+    verify_rules:
+      - rule: all-required-env-present
+      - rule: no-secrets-in-code
+      - rule: mastra-integrated
+    sandbox:
+      provider: northflank
+      plan: gpu-inference-agent
+
+  # Example: external partner repo
+  # partner-billing:
+  #   url: https://gitlab.com/partner/billing-service.git
+  #   provider: gitlab
+  #   token_env: PARTNER_GITLAB_TOKEN
+  #   default_branch: develop
+  #   verify_rules:
+  #     - rule: pci-compliance
+  #     - rule: audit-log-retention
+  #   sandbox:
+  #     provider: daytona
+  #     plan: large
+
+  # Example: open source
+  # oss-react:
+  #   url: https://github.com/facebook/react.git
+  #   provider: github
+  #   token_env: GH_TOKEN
+  #   default_branch: main
+  #   verify_rules: []
+  #   sandbox:
+  #     provider: northflank
+  #     plan: gpu-inference-agent
+
+# Default verification rules applied to ALL repos unless overridden
+global_rules:
+  - rule: no-secrets-in-code
+  - rule: all-required-env-present
+
+# Chain portfolio mapping (for SDLC loop)
+chains:
+  deep-research-brief:
+    id: nwxlx5wy
+    description: Research topic → structured brief with citations
+  
+  roadmap:
+    id: nwxlx5wy
+    description: Task + research → phased implementation plan
+  
+  spec-from-research:
+    id: nwxlx5wy
+    description: Research → formal Midspiral specification
+    inputs: [research_brief]
+    outputs: [dafny_spec, property_tests]
+  
+  design-tradeoff:
+    id: nwxlx5wy
+    description: Spec → architecture alternatives + recommendation
+    inputs: [formal_spec, codebase_map]
+    outputs: [architecture_decision, tradeoff_matrix]
+  
+  impl-from-design:
+    id: nwxlx5wy
+    description: Design + spec → code diff + tests
+    inputs: [architecture_decision, formal_spec]
+    outputs: [code_diff, test_suite]
+  
+  verify-full:
+    id: nwxlx5wy
+    description: Code + spec → Dafny + property tests + fuzzing
+    inputs: [code_diff, formal_spec]
+    outputs: [verification_report, counterexamples]
+  
+  feedback-translate:
+    id: nwxlx5wy
+    description: Verification errors → human-readable fix guidance
+    inputs: [verification_errors]
+    outputs: [fix_guidance, suggested_changes]
+  
+  review-summarize:
+    id: nwxlx5wy
+    description: PR diff → structured review with risk assessment
+    inputs: [code_diff, verification_report]
+    outputs: [review_summary, risk_score]
+  
+  deploy-validate:
+    id: nwxlx5wy
+    description: Deployed change → smoke tests + invariant check
+    inputs: [deployment_info]
+    outputs: [validation_report]
+  
+  monitor-analyze:
+    id: nwxlx5wy
+    description: Telemetry → anomaly detection → next task suggestion
+    inputs: [telemetry_data]
+    outputs: [anomalies, suggested_tasks]
+  
+  loop-orchestrator:
+    id: nwxlx5wy
+    description: Coordinates all SDLC phases with learning feedback
+    inputs: [task, repo_context, learning_state]
+    outputs: [sdlc_result, updated_learning]
