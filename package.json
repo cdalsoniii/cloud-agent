@@ -12,11 +12,16 @@
     "handoff": "npx tsx src/cloud-agent-handoff.ts",
     "chain-sandbox": "npx tsx src/baseten-chain-sandbox.ts",
     "orchestrate": "npx tsx src/orchestrator.ts",
-    "health": "npx tsx src/health-check.ts"
+    "health": "npx tsx src/health-check.ts",
+    "mastra:daytona": "npx tsx src/mastra/index.ts",
+    "mastra:verify": "npx tsx src/mastra/tools/verify-rules.ts"
   },
   "dependencies": {
+    "@mastra/core": "^0.1.26",
     "dotenv": "^16.4.5",
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "yaml": "^2.9.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "^20.19.43",

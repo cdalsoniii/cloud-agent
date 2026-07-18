@@ -282,3 +282,4 @@ cloud-agent/
 ## License
 
 MIT
+\n## ✅ Verified Connectivity\n\n- OpenCode Server :4096 ✅ Healthy\n- Cloud Agent Server :3000 ✅ Running\n- Baseten Chain qelg6953 ✅ Responds\n- Northflank Sandbox ✅ Ready\n- Proxy Path :9876 → Chain ✅ Confirmed

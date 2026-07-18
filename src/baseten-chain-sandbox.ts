@@ -105,12 +105,29 @@ export class BasetenChainSandbox {
       return { ok: false, error: 'Chain portfolio ID not configured' };
     }
 
-    const url = `https://app.baseten.co/api/v1/models/${portfolioId}/predict`;
-    
+    const url = this.baseUrl;
+
     // Build request payload based on the chain specialty
-    const payload = this.buildChainPayload(specialty, input);
-    
-    log.verbose('Chain request', { url, specialty, payload });
+    const chainPayload = this.buildChainPayload(specialty, input);
+
+    // Convert to OpenAI-compatible chat completion for standard LLM models
+    const chatPayload = {
+      model: this.modelId,
+      messages: [
+        {
+          role: 'system',
+          content: `You are a specialist in ${specialty}. Generate a structured response based on the provided input. Return your output as a JSON object with fields like "plan", "roadmap", "output", or "content" when possible.`,
+        },
+        {
+          role: 'user',
+          content: JSON.stringify(chainPayload),
+        },
+      ],
+      temperature: 0.7,
+      max_tokens: 4096,
+    };
+
+    log.verbose('Chain request', { url, specialty, chatPayload });
 
     try {
       const controller = new AbortController();
@@ -122,7 +139,7 @@ export class BasetenChainSandbox {
           ...this.headers,
           'X-Baseten-Chain-Specialty': specialty,
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(chatPayload),
         signal: controller.signal,
       });
 
@@ -137,7 +154,15 @@ export class BasetenChainSandbox {
         };
       }
 
-      const result = await response.json() as Record<string, unknown>;
+      let result = await response.json() as Record<string, unknown>;
+      // Normalize OpenAI chat completion response (choices[0].message.content)
+      if (result.choices && Array.isArray(result.choices)) {
+        const choice = result.choices[0] as Record<string, unknown>;
+        if (choice && choice.message) {
+          const message = choice.message as Record<string, unknown>;
+          result = { content: message.content, ...result };
+        }
+      }
       log.verbose('Chain response', result);
 
       // Extract plan from response if available
@@ -413,6 +438,12 @@ export class BasetenChainSandbox {
 /** CLI entry point for standalone chain-sandbox communication */
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
+  
+  // Load environment variables from .env files
+  const { loadEnv } = await import('./types.js');
+  const __dirname = (await import('node:path')).dirname((await import('node:url')).fileURLToPath(import.meta.url));
+  loadEnv((await import('node:path')).resolve(__dirname, '..'));
+  
   const config = {
     chainPortfolioId: process.env.BASETEN_CHAIN_PORTFOLIO_ID || 'nwxlx5wy',
     basetenApiKey: process.env.BASETEN_API_KEY || '',
