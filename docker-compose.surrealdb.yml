@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  surrealdb:
+    image: surrealdb/surrealdb:latest
+    container_name: cloud-agent-surrealdb
+    ports:
+      - "8000:8000"
+    command: start --log trace --user root --pass root --bind 0.0.0.0:8000 memory
+    environment:
+      - SURREAL_USER=root
+      - SURREAL_PASS=root
+    volumes:
+      - surrealdb_data:/var/lib/surrealdb
+    restart: unless-stopped
+
+volumes:
+  surrealdb_data:

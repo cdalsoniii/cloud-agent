@@ -1,0 +1,802 @@
+[
+  {
+    "id": "ses_089261b13ffe035y9zZDizp4dT",
+    "title": "Audit Opencode sessions: completion status",
+    "updated": 1784413077567,
+    "created": 1784405419244,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d1db3cbffep37C4kvHlElzDH",
+    "title": "Opencode sessions 5‑day audit",
+    "updated": 1784405311945,
+    "created": 1784338861108,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_0976c6c5affeEwK2NKBW5xczQe",
+    "title": "Midspiral Stack Audit and Baseten Chain Implementation Plan",
+    "updated": 1784357327309,
+    "created": 1784165929893,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08c7fd294ffe9QtZAqCatUYMI9",
+    "title": "{\"pass\": true, \"reasons\": []}",
+    "updated": 1784349236265,
+    "created": 1784349207915,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08c80e398ffeFFmyzvlTO2eol5",
+    "title": "{\"pass\": true, \"reasons\": []}",
+    "updated": 1784349145318,
+    "created": 1784349138023,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08c82415bffekIFPBBWvj9diyA",
+    "title": "{\"pass\": true, \"reasons\": []}",
+    "updated": 1784349059772,
+    "created": 1784349048484,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08c8456afffe9Clg5ckBRHNxIk",
+    "title": "{\"pass\": true, \"reasons\": []}",
+    "updated": 1784348931241,
+    "created": 1784348911952,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08c87597affeG2fxGxuV2oF33Z",
+    "title": "{\"pass\": true, \"reasons\": []}",
+    "updated": 1784348726335,
+    "created": 1784348714629,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08c8f88bfffeGd2SadDZrw0rK3",
+    "title": "{\"pass\": true, \"reasons\": []}",
+    "updated": 1784348375958,
+    "created": 1784348178240,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08c9352eeffeZMDEzBtRia6xuL",
+    "title": "{\"pass\": true, \"reasons\": []}",
+    "updated": 1784348026131,
+    "created": 1784347929873,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08ca29f64ffeoB0D6hu7dDexql",
+    "title": "{\"pass\": true, \"reasons\": []}",
+    "updated": 1784346930539,
+    "created": 1784346927260,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08ccb2b93ffexg4YrcJLMA5vCx",
+    "title": "{\"pass\": false, \"reasons\": [\"No acceptance criteria provided\", \"No deliverable specified\", \"No cr...",
+    "updated": 1784344333124,
+    "created": 1784344269932,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08ce58547ffeO1glSQJfHuf5Ut",
+    "title": "{\"pass\": false, \"reasons\": [\"The artefact does not provide a title for the conversation as reques...",
+    "updated": 1784342623106,
+    "created": 1784342543032,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_0977d9c57ffesPUwg5BNOp3fPb",
+    "title": "Gap Analysis and Baseten Chain for Formal Validation",
+    "updated": 1784341680761,
+    "created": 1784164803496,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08cfc96b8ffea57r9z8MmzXpvg",
+    "title": "{\"pass\": false, \"reasons\": [\"No evidence of property-based tests derived from Dafny invariants; c...",
+    "updated": 1784341032338,
+    "created": 1784341031239,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08cfca7baffes8txjWmsnxepAn",
+    "title": "{\"pass\": false, \"reasons\": [\"No evidence that the trace ingestion API was wired to use SurrealDB ...",
+    "updated": 1784341027656,
+    "created": 1784341026885,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08cfcb423ffeMN1yzfmH1i25dy",
+    "title": "{\"pass\": false, \"reasons\": [\"Final return text is empty, providing no evidence that Blueprint.js ...",
+    "updated": 1784341025938,
+    "created": 1784341023708,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08cfcef3cffeNq2u3eGYpT8ZcL",
+    "title": "Quint specification for chat streaming semantics",
+    "updated": 1784341009823,
+    "created": 1784341008579,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08cfd27c9ffef6g3vJfKnsX9wP",
+    "title": "{\"pass\": false, \"reasons\": [\"Missing evidence that CI workflow was updated to use Docker-based fo...",
+    "updated": 1784340995980,
+    "created": 1784340994102,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08cfe032fffeHx226LcR82KjhJ",
+    "title": "Testing Quint sidecar monitor and WS sync server",
+    "updated": 1784340939089,
+    "created": 1784340937936,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08cfe0985ffeoBzfdOeWrsJrUI",
+    "title": "Integration tests for web and TUI on shared kernel",
+    "updated": 1784340937399,
+    "created": 1784340936314,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08cfe2fbaffe11vYBOOUIOBb2P",
+    "title": "Deploy project-auditor Baseten Chain",
+    "updated": 1784340927441,
+    "created": 1784340926533,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08cfe56b2ffetpEqIqo3EjRFHm",
+    "title": "{\"pass\": false, \"reasons\": [\"Cannot find the TUI (`packages/tui/`) or kernels (`packages/kernels/...",
+    "updated": 1784340921229,
+    "created": 1784340916557,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d0e69f6ffe4jJ5PCdlfdhjvG",
+    "title": "{\"pass\": false, \"reasons\": [\"Final return text is empty, providing no implementation of DF-1.\", \"...",
+    "updated": 1784339864524,
+    "created": 1784339863049,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d0ed6dfffeLmgdPq3FYvgN54",
+    "title": "Generate conversation title",
+    "updated": 1784339836227,
+    "created": 1784339835169,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d0f4c3cffeA1hFFwMwnJBjQ6",
+    "title": "DF-4 self-correction loop implementation",
+    "updated": 1784339807362,
+    "created": 1784339805123,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d0f83cdffeBae8MCtvd1uo3v",
+    "title": "Implement DF-3 Quint sidecar monitor",
+    "updated": 1784339792131,
+    "created": 1784339790898,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d0fcbb2ffexPewziEUm09lhC",
+    "title": "{\"pass\": false, \"reasons\": [\"No title generated for the conversation\"]}",
+    "updated": 1784339773285,
+    "created": 1784339772493,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d0ff9a9ffeBC3IOzp8a0MKna",
+    "title": "{\"pass\": false, \"reasons\": [\"Final return text is empty\", \"No changed files\", \"No declared output...",
+    "updated": 1784339768808,
+    "created": 1784339760726,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d0fdd6dffeJ45bFajY1OYvR3",
+    "title": "Switch verify.yml to Docker-based formal tools",
+    "updated": 1784339768752,
+    "created": 1784339767954,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d100e3bffeGEYWFsZEt3fBHD",
+    "title": "{\"pass\": false, \"reasons\": [\"Final return text is empty\", \"No changed files\", \"No declared output...",
+    "updated": 1784339763862,
+    "created": 1784339755460,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d1050c5ffesE3FDxO71E8rwJ",
+    "title": "{\"pass\": false, \"reasons\": [\"Final return text is empty\", \"No changed files\", \"No declared output...",
+    "updated": 1784339758895,
+    "created": 1784339738426,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d1009c6ffeE25qOeGZg4skac",
+    "title": "{\"pass\": false, \"reasons\": [\"No changes were made; Blueprint Table2 and PanelStack for dense veri...",
+    "updated": 1784339756610,
+    "created": 1784339756601,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d10365effen0k970OID55jKy",
+    "title": "{\"pass\": false, \"reasons\": [\"No title generated for the conversation\"]}",
+    "updated": 1784339746636,
+    "created": 1784339745185,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d109182ffeU5mEy2dzPqjjSg",
+    "title": "{\"pass\": false, \"reasons\": [\"Final return text is empty, no deployment steps provided.\", \"No chan...",
+    "updated": 1784339722733,
+    "created": 1784339721853,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d18bf5fffeWCZvyk48nxejB7",
+    "title": "{\"pass\": true, \"reasons\": []}",
+    "updated": 1784339188849,
+    "created": 1784339185824,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d18e1f3ffecjZUdNJkYScSWs",
+    "title": "Lean 4 bridge for property verification",
+    "updated": 1784339186754,
+    "created": 1784339176972,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d19364bffeaqpJDfR8qTO0he",
+    "title": "CI workflow update for formal verification tools",
+    "updated": 1784339159067,
+    "created": 1784339155380,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d19656bffe2kRZ964OBg7cBT",
+    "title": "Blueprint.js integration verification",
+    "updated": 1784339144785,
+    "created": 1784339143316,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d1a78b2ffeRlllKCClOg5aAP",
+    "title": "{\"pass\": true, \"reasons\": []}",
+    "updated": 1784339078039,
+    "created": 1784339072845,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d1ab29dffeJ56g0xWRMwSFAk",
+    "title": "{\"pass\": true, \"reasons\": []}",
+    "updated": 1784339068245,
+    "created": 1784339058018,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d1a9c82ffehCuPPqMakhUJ4S",
+    "title": "{\"pass\": false, \"reasons\": [\"Final return text is empty, indicating no implementation was provide...",
+    "updated": 1784339067447,
+    "created": 1784339063677,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d1b01e2ffekwrBdr03mlKV3f",
+    "title": "{\"pass\": true, \"reasons\": []}",
+    "updated": 1784339049788,
+    "created": 1784339037725,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d1b218bffeF4FaljvwzNCM5H",
+    "title": "Trace API route and emitter implementation",
+    "updated": 1784339034731,
+    "created": 1784339029620,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d1b5a1effeJEL7xdfs2L4XoL",
+    "title": "Dafny bridge and Quint monitor CLI integration fix",
+    "updated": 1784339016011,
+    "created": 1784339015137,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d1b78adffe94ijJVoJszHAfV",
+    "title": "{\"pass\": false, \"reasons\": [\"Final return text is empty, providing no implementation\", \"No change...",
+    "updated": 1784339014007,
+    "created": 1784339007314,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d1b7b00ffefnDvEjOH2MdLoJ",
+    "title": "{\"pass\": false, \"reasons\": [\"Artefact does not create a wrapper actor\", \"Chat machine is not upda...",
+    "updated": 1784339008365,
+    "created": 1784339006719,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d1b9adaffeC83XZfegnlKYwM",
+    "title": "{\"pass\": false, \"reasons\": [\"No title generated for the conversation\"]}",
+    "updated": 1784339006726,
+    "created": 1784338998565,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_08d1ba2e8ffeAx2m3iCYlJuWiI",
+    "title": "{\"pass\": false, \"reasons\": [\"Missing evidence that /api/traces route was created: file content no...",
+    "updated": 1784338997998,
+    "created": 1784338996503,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09782f835ffe2x83f0925KkZ3j",
+    "title": "{\"pass\": true, \"reasons\": []}",
+    "updated": 1784338781689,
+    "created": 1784164452298,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_0a355f181ffeOARx1a8AKt4ENL",
+    "title": "**Implementation Plan – Rule Viewer (React‑Flow + SurrealDB)**",
+    "updated": 1784221847118,
+    "created": 1783966076542,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_0981a9a0dffe4KpWUIHVj6dzuh",
+    "title": "Updating multiple repos",
+    "updated": 1784217130225,
+    "created": 1784154514930,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/interviewing/oteemo/projects/axiom/repos"
+  },
+  {
+    "id": "ses_0975653c2ffervhe9jgEwog9nI",
+    "title": "{\"pass\": false, \"reasons\": [\"The title is missing from the response.\"]}",
+    "updated": 1784167386689,
+    "created": 1784167377981,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_0977945b1ffe2R7FWeyMnQoTk0",
+    "title": "{\"pass\": true, \"reasons\": []}",
+    "updated": 1784165129319,
+    "created": 1784165087822,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_0978b5059ffeG50rs0bl2vllVQ",
+    "title": "Maximizing Formal Verification in Next.js Assistant UI",
+    "updated": 1784164710747,
+    "created": 1784163905446,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_0978092f0ffeEOmWA3WmtPe3bp",
+    "title": "{\"pass\": false, \"reasons\": [\"No files or outputs were created as required by the acceptance crite...",
+    "updated": 1784164617445,
+    "created": 1784164609295,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09783d65dffeccbgQkCv9BjahN",
+    "title": "{\"pass\": true, \"reasons\": []}",
+    "updated": 1784164412439,
+    "created": 1784164395426,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_097840f6fffemoK2zxeeuCdLYU",
+    "title": "{\"pass\": true, \"reasons\": []}",
+    "updated": 1784164397284,
+    "created": 1784164380816,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09790d520ffeKa1P4wwsDG5UMi",
+    "title": "Converting Next.js Project to Palantir Foundry Theme",
+    "updated": 1784163894140,
+    "created": 1784163543775,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_097926ddcffelpiE5zSJkLPTf9",
+    "title": "{\"pass\": false, \"reasons\": [\"No title generated for the conversation\"]}",
+    "updated": 1784163446801,
+    "created": 1784163439139,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09c641593ffelZk99X0ntpTbaO",
+    "title": "{",
+    "updated": 1784082601076,
+    "created": 1784082590316,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09c64697effescfWOk1r7prbjQ",
+    "title": "{",
+    "updated": 1784082596287,
+    "created": 1784082568833,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09c649306ffeGdWRAfRAsbSI1d",
+    "title": "{",
+    "updated": 1784082583781,
+    "created": 1784082558201,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09c64b67bffe8AL34hsC4FkWBr",
+    "title": "{",
+    "updated": 1784082572795,
+    "created": 1784082549124,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09c64dd45ffeRRmRM5H4G7tMOJ",
+    "title": "```json",
+    "updated": 1784082564092,
+    "created": 1784082539194,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09c64ee70ffev4pZaWr9F0DHtw",
+    "title": "```json",
+    "updated": 1784082553803,
+    "created": 1784082534799,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09c650955ffesOzgaZAW8zthv6",
+    "title": "{",
+    "updated": 1784082542254,
+    "created": 1784082527914,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09c654518ffectvXWKLaA2fDXr",
+    "title": "{",
+    "updated": 1784082530160,
+    "created": 1784082512615,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09c6551e2ffeYhO4bUNBf6nwwx",
+    "title": "{",
+    "updated": 1784082520639,
+    "created": 1784082509341,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09c73d9bcffeU6au1rEWApglpw",
+    "title": "```json",
+    "updated": 1784081565308,
+    "created": 1784081557059,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09c744418ffen4lkin02F33PJ2",
+    "title": "{",
+    "updated": 1784081551000,
+    "created": 1784081529831,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09c745988ffejRXkK5CJK4A7Ju",
+    "title": "```json",
+    "updated": 1784081542209,
+    "created": 1784081524343,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09c863ddeffezo5UKwqfqZxXT0",
+    "title": "{",
+    "updated": 1784080381382,
+    "created": 1784080351777,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09c864ca4ffe7o1kJotYtepA8c",
+    "title": "{",
+    "updated": 1784080373591,
+    "created": 1784080347995,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09c865f1affev9WprdmPvKVCg4",
+    "title": "{",
+    "updated": 1784080364718,
+    "created": 1784080343269,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09c9de787ffe1aPLyJZAenc4B8",
+    "title": "```json",
+    "updated": 1784078809684,
+    "created": 1784078801016,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09cb3297affeQ7jTRlvwvjXdJR",
+    "title": "{",
+    "updated": 1784077417639,
+    "created": 1784077407877,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09d21aea5ffe23XfVVKqNoGe01",
+    "title": "```json",
+    "updated": 1784070184749,
+    "created": 1784070164826,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09d21ce11ffe90njI3aZ2P531k",
+    "title": "{",
+    "updated": 1784070174867,
+    "created": 1784070156782,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09d222c40ffepXZ5qvjvwwxg1t",
+    "title": "```json",
+    "updated": 1784070143618,
+    "created": 1784070132671,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09d225c55ffeY0tc501pcQuDTr",
+    "title": "{",
+    "updated": 1784070138585,
+    "created": 1784070120362,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09d229663ffeD3i7XMOFzjHJ4H",
+    "title": "{",
+    "updated": 1784070113266,
+    "created": 1784070105500,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09d31b457ffeVEt3FiLi5qUTRc",
+    "title": "{",
+    "updated": 1784069121708,
+    "created": 1784069114792,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09d31ebceffeKVje32yUr8bs0l",
+    "title": "{",
+    "updated": 1784069108779,
+    "created": 1784069100593,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09d322055ffeUVJB4F3oAR9AJU",
+    "title": "```json",
+    "updated": 1784069094391,
+    "created": 1784069087146,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09d344789ffedgl4QdppxQTWPJ",
+    "title": "```json",
+    "updated": 1784068972681,
+    "created": 1784068946038,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09d34685affe3xB6Izy6spfqET",
+    "title": "{",
+    "updated": 1784068960842,
+    "created": 1784068937637,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09d46a07bffeJGU50j10d0zKXk",
+    "title": "```json",
+    "updated": 1784067770002,
+    "created": 1784067743620,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09d46ce9affeoqM64l3El3MseG",
+    "title": "{",
+    "updated": 1784067756562,
+    "created": 1784067731813,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09d46ff46ffeEtmNH5rczUrgh4",
+    "title": "{",
+    "updated": 1784067748755,
+    "created": 1784067719353,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09d4741aeffcaS2t8JZYPeSITV",
+    "title": "```json",
+    "updated": 1784067734518,
+    "created": 1784067702353,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09d475430ffe0RGe50S6zO1RkN",
+    "title": "```json",
+    "updated": 1784067709839,
+    "created": 1784067697615,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09d55e982ffeyCrbWpzPnB6Jm6",
+    "title": "{",
+    "updated": 1784066757053,
+    "created": 1784066741885,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09d5601afffeZpGd47hO8gzqUy",
+    "title": "{",
+    "updated": 1784066747480,
+    "created": 1784066735696,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09d5690ccffeuCmqeMGe2Jb77L",
+    "title": "{",
+    "updated": 1784066714781,
+    "created": 1784066699059,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09dd0f0fcffe16y3skwU3vnsFo",
+    "title": "{",
+    "updated": 1784058859647,
+    "created": 1784058679043,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09dd172d9ffe6wnqvkWWwvVh1K",
+    "title": "{",
+    "updated": 1784058799782,
+    "created": 1784058645798,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09dd24fdeffeW68DotT6BCEut8",
+    "title": "```json",
+    "updated": 1784058766954,
+    "created": 1784058589217,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09dd4205dffehJeNl4bHLCb6gQ",
+    "title": "{",
+    "updated": 1784058726504,
+    "created": 1784058470306,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  },
+  {
+    "id": "ses_09dd49fceffecftDePk3004pYO",
+    "title": "```json",
+    "updated": 1784058613609,
+    "created": 1784058437681,
+    "projectId": "global",
+    "directory": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments"
+  }
+]

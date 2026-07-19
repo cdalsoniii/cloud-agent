@@ -4,6 +4,7 @@
   "description": "Cloud agent handoff via OpenCode skills and Baseten chain sandbox communication",
   "type": "module",
   "scripts": {
+    "deploy-schema": "npx tsx src/deploy-schema.ts",
     "build": "tsc",
     "dev": "tsc --watch",
     "test": "node --test dist/**/*.test.js",
@@ -12,14 +13,21 @@
     "handoff": "npx tsx src/cloud-agent-handoff.ts",
     "chain-sandbox": "npx tsx src/baseten-chain-sandbox.ts",
     "orchestrate": "npx tsx src/orchestrator.ts",
+    "pr-sandbox": "npx tsx src/pr-sandbox-orchestrator.ts",
     "health": "npx tsx src/health-check.ts",
     "mastra:daytona": "npx tsx src/mastra/index.ts",
-    "mastra:verify": "npx tsx src/mastra/tools/verify-rules.ts"
+    "mastra:verify": "npx tsx src/mastra/tools/verify-rules.ts",
+    "verify-data": "npx tsx src/verify-data-loading.ts",
+    "sync:opencode": "npx tsx src/sync-opencode-to-surreal.ts",
+    "api:sessions": "npx tsx src/session-api.ts"
   },
   "dependencies": {
     "@mastra/core": "^0.1.26",
     "dotenv": "^16.4.5",
     "node-fetch": "^3.3.2",
+    "surqlize": "^0.1.0",
+    "surrealdb": "^2.0.4",
+    "surrealdb-orm": "^1.8.9",
     "yaml": "^2.9.0",
     "zod": "^3.25.76"
   },
