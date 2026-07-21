@@ -25,7 +25,8 @@
     "sync:opencode": "npx tsx src/sync-opencode-to-surreal.ts",
     "api:sessions": "npx tsx src/session-api.ts",
     "validation:test": "npx tsx test-validation.ts",
-    "validation:run": "npx tsx src/validation/run-validation.ts"
+    "validation:run": "npx tsx src/validation/run-validation.ts",
+    "mastra:mcp:test": "npx tsx scripts/test-mastra-mcp.mjs"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.5.20",
