@@ -203,6 +203,9 @@ class ValidationConfig(pydantic.BaseModel):
 
     lint_cmd: Optional[str] = None
     validation_cmd: Optional[str] = None
+    # Expand into validation_cmd when validation_cmd is unset (see resolve_validation_cmd).
+    formal_suite: Optional[str] = None  # quint | dafny | alloy | all
+    formal_paths: List[str] = pydantic.Field(default_factory=list)
     run_typescript_validation: bool = False
     typescript_engines: Optional[List[str]] = None
     rule_specs: List[str] = pydantic.Field(default_factory=list)
@@ -797,9 +800,19 @@ class OpenCodeWorker(chains.ChainletBase):
                 diff_resp = await self._shell(base, session, "cd repo && git diff", model=job.model)
                 last_diff = self._extract_text(diff_resp)
 
-                # Validation: validation_cmd is source of truth when present
+                # Validation: validation_cmd is source of truth when present;
+                # else expand formal_suite / formal_paths when set.
                 validation_reports = []
-                validation_cmd = job.validation.validation_cmd
+                try:
+                    from sdlc_batch.validation import resolve_validation_cmd
+
+                    validation_cmd = resolve_validation_cmd(
+                        validation_cmd=job.validation.validation_cmd,
+                        formal_suite=job.validation.formal_suite,
+                        formal_paths=job.validation.formal_paths,
+                    )
+                except Exception:
+                    validation_cmd = job.validation.validation_cmd
                 cmd_ok = True
                 if validation_cmd:
                     if self._sandbox_map.get(base):

@@ -1,0 +1,27 @@
+[
+  {
+    "job_id": "formal-self-001-lifecycle-edges",
+    "repo_url": "https://github.com/cdalsoniii/cloud-agent.git",
+    "branch": "main",
+    "task": "Write the following file to config/verification/quint/sandbox-lifecycle-edges.qnt (exact content):\n\n// Edge cases for sandbox lifecycle: destroy-from-created, no recreate after destroy.\nmodule sandbox_lifecycle_edges {\n  var phase: str\n  var destroyed: bool\n\n  action init = all {\n    phase' = \"none\",\n    destroyed' = false,\n  }\n\n  action create = all {\n    phase == \"none\",\n    destroyed == false,\n    phase' = \"created\",\n    destroyed' = false,\n  }\n\n  action destroyFromCreated = all {\n    phase == \"created\",\n    destroyed == false,\n    phase' = \"destroyed\",\n    destroyed' = true,\n  }\n\n  action step = any { create, destroyFromCreated }\n\n  val NoResurrect = destroyed implies (phase == \"destroyed\")\n\n  run simulation = init.then(step).then(step)\n}\n",
+    "test_cmd": "test -f config/verification/quint/sandbox-lifecycle-edges.qnt && grep -q 'module sandbox_lifecycle_edges' config/verification/quint/sandbox-lifecycle-edges.qnt",
+    "lint_cmd": "test -s config/verification/quint/sandbox-lifecycle-edges.qnt",
+    "validation": {
+      "formal_suite": "quint",
+      "formal_paths": ["config/verification/quint/sandbox-lifecycle-edges.qnt"],
+      "rule_specs": [
+        "edge Quint module must define NoResurrect and destroyFromCreated"
+      ],
+      "rule_codes": [
+        "module sandbox_lifecycle_edges {\n  action destroyFromCreated = all { phase == \"created\", destroyed' = true }\n  val NoResurrect = destroyed implies (phase == \"destroyed\")\n}"
+      ],
+      "max_validation_iterations": 4
+    },
+    "max_iterations": 4,
+    "model": "baseten-proxy/qwen-coder",
+    "create_pr": true,
+    "pr_branch_prefix": "formal-self",
+    "pr_title": "formal: add sandbox-lifecycle Quint edge cases",
+    "pr_body": "Cloud-agent self-apply: add Quint edge-case module (destroy-from-created, NoResurrect) under config/verification/quint, validated via formal_suite expansion."
+  }
+]

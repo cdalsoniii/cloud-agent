@@ -1,0 +1,113 @@
+# Formal verification CI for cloud-agent (Quint, Dafny, Alloy)
+# Adapted from assistant-ui patterns; scoped to this product's specs.
+
+name: Formal Verification
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "config/verification/**"
+      - "scripts/verify-local.sh"
+      - "scripts/setup-verification-tools.sh"
+      - ".github/workflows/formal-verification.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "config/verification/**"
+      - "scripts/verify-local.sh"
+      - "scripts/setup-verification-tools.sh"
+      - ".github/workflows/formal-verification.yml"
+  workflow_dispatch:
+
+env:
+  DAFNY_VERSION: "4.11.0"
+  QUINT_VERSION: "0.32.0"
+  ALLOY_VERSION: "6.2.0"
+  TLA_VERSION: "1.7.4"
+
+jobs:
+  verify-quint:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install Quint
+        run: |
+          npm install -g @informalsystems/quint@${QUINT_VERSION}
+          quint --version
+      - name: Typecheck Quint specs
+        run: |
+          for qnt in config/verification/quint/*.qnt; do
+            echo "==> $qnt"
+            quint typecheck "$qnt"
+          done
+
+  verify-dafny:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.x"
+      - name: Install Dafny
+        run: |
+          wget -q "https://github.com/dafny-lang/dafny/releases/download/v${DAFNY_VERSION}/dafny-${DAFNY_VERSION}-x64-ubuntu-20.04.zip"
+          unzip -q "dafny-${DAFNY_VERSION}-x64-ubuntu-20.04.zip" -d "$HOME/dafny"
+          echo "$HOME/dafny" >> "$GITHUB_PATH"
+          "$HOME/dafny/dafny" --version
+      - name: Verify Dafny specs
+        run: |
+          for dfy in config/verification/dafny/*.dfy; do
+            echo "==> $dfy"
+            dafny verify --verification-time-limit=120 --allow-warnings "$dfy"
+          done
+
+  verify-alloy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: temurin
+      - name: Install Alloy
+        run: |
+          mkdir -p "$HOME/alloy"
+          wget -q -O "$HOME/alloy/alloy.jar" \
+            "https://github.com/AlloyTools/org.alloytools.alloy/releases/download/v${ALLOY_VERSION}/org.alloytools.alloy.dist.jar"
+          echo "ALLOY_JAR=$HOME/alloy/alloy.jar" >> "$GITHUB_ENV"
+      - name: Execute Alloy models
+        run: |
+          for als in config/verification/alloy/*.als; do
+            echo "==> $als"
+            java -jar "$ALLOY_JAR" exec -f "$als"
+          done
+
+  summarize:
+    runs-on: ubuntu-24.04
+    needs: [verify-quint, verify-dafny, verify-alloy]
+    if: always()
+    steps:
+      - name: Summary
+        run: |
+          echo "# Formal Verification Results" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Tool | Status |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|------|--------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Quint | ${{ needs.verify-quint.result }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Dafny | ${{ needs.verify-dafny.result }} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Alloy | ${{ needs.verify-alloy.result }} |" >> "$GITHUB_STEP_SUMMARY"
+      - name: Fail if any verification failed
+        run: |
+          if [ "${{ needs.verify-quint.result }}" != "success" ] || \
+             [ "${{ needs.verify-dafny.result }}" != "success" ] || \
+             [ "${{ needs.verify-alloy.result }}" != "success" ]; then
+            echo "One or more verification jobs failed"
+            exit 1
+          fi
+          echo "All verification jobs passed"

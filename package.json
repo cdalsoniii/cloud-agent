@@ -26,7 +26,13 @@
     "api:sessions": "npx tsx src/session-api.ts",
     "validation:test": "npx tsx test-validation.ts",
     "validation:run": "npx tsx src/validation/run-validation.ts",
-    "mastra:mcp:test": "npx tsx scripts/test-mastra-mcp.mjs"
+    "mastra:mcp:test": "npx tsx scripts/test-mastra-mcp.mjs",
+    "verify:quint": "bash scripts/verify-local.sh --suite quint",
+    "verify:dafny": "bash scripts/verify-local.sh --suite dafny",
+    "verify:alloy": "bash scripts/verify-local.sh --suite alloy",
+    "verify:all": "bash scripts/verify-local.sh --suite all",
+    "verify:tools": "bash scripts/verify-local.sh --check-tools",
+    "verify:setup": "bash scripts/setup-verification-tools.sh"
   },
   "dependencies": {
     "@clerk/nextjs": "^7.5.20",

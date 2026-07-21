@@ -131,10 +131,43 @@ Example `jobs.json` with validation:
 
 The SDLC loop now includes a **validation phase** after tests pass:
 
-1. **Custom command validation** (`validation_cmd`) runs inside the sandbox.
-2. **Lint** (`lint_cmd`) runs inside the sandbox.
-3. **Business-rule heuristics** compare `rule_specs` to `rule_codes`.
-4. **TypeScript validation runner** can be invoked if `run_typescript_validation: true`.
+1. **Custom command validation** (`validation_cmd`) runs inside the sandbox (source of truth).
+2. **Formal suite expansion** — if `validation_cmd` is unset, `formal_suite` / `formal_paths` expand into a command (Quint typecheck, Dafny verify, or `./scripts/verify-local.sh`).
+3. **Lint** (`lint_cmd`) runs inside the sandbox.
+4. **Business-rule heuristics** compare `rule_specs` to `rule_codes`.
+5. **TypeScript validation runner** can be invoked if `run_typescript_validation: true`.
+
+Repo-level formal specs live under [`config/verification/`](../config/verification/README.md). Local/CI:
+
+```bash
+npm run verify:all          # or ./scripts/verify-local.sh
+npm run verify:quint
+npm run verify:setup        # download Alloy/TLA jars, install Quint/Dafny
+```
+
+Example job using `formal_suite` (no explicit `validation_cmd`):
+
+```json
+{
+  "job_id": "formal-lifecycle-001",
+  "repo_url": "https://github.com/cdalsoniii/cloud-agent.git",
+  "task": "Improve sandbox-lifecycle Quint edge case",
+  "validation": {
+    "formal_suite": "quint",
+    "formal_paths": ["config/verification/quint/sandbox-lifecycle.qnt"],
+    "max_validation_iterations": 4
+  },
+  "create_pr": true
+}
+```
+
+Or call the verify script directly via `validation_cmd`:
+
+```json
+"validation": {
+  "validation_cmd": "bash scripts/verify-local.sh --suite quint"
+}
+```
 
 Validation results are returned in each `SdlcResult`:
 

@@ -8,6 +8,8 @@ This directory contains a **Mastra.ai** agent system that orchestrates the full 
 
 **SDK-first:** Mastra Daytona tools use Node `@daytona/sdk` (create / git.clone / process.executeCommand / delete). No `provider.sh` or `sandbox_daytona.py` on the hot path.
 
+**Formal verification:** Specs and local/CI runners live under [`config/verification/`](../../config/verification/README.md) (`npm run verify:all`). Pybatch jobs may set `validation.formal_suite` / `formal_paths` or a `validation_cmd` that invokes `scripts/verify-local.sh`.
+
 **Dual-account GitHub tokens:** `src/mastra/lib/github-tokens.ts` (mirrors `pybatch/src/sdlc_batch/tokens.py`):
 
 | Owner | Preference |

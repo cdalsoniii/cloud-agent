@@ -4,7 +4,34 @@ from __future__ import annotations
 
 import pytest
 
-from sdlc_batch.validation import ValidationEngine, ValidationResult
+from sdlc_batch.validation import (
+    ValidationEngine,
+    ValidationResult,
+    resolve_validation_cmd,
+)
+
+
+def test_resolve_validation_cmd_prefers_explicit():
+    cmd = resolve_validation_cmd(
+        validation_cmd="echo hi",
+        formal_suite="quint",
+        formal_paths=["config/verification/quint/sandbox-lifecycle.qnt"],
+    )
+    assert cmd == "echo hi"
+
+
+def test_resolve_validation_cmd_expands_quint_path():
+    cmd = resolve_validation_cmd(
+        formal_suite="quint",
+        formal_paths=["config/verification/quint/sandbox-lifecycle.qnt"],
+    )
+    assert cmd is not None
+    assert "sandbox-lifecycle.qnt" in cmd
+    assert "quint" in cmd
+
+
+def test_resolve_validation_cmd_none_without_inputs():
+    assert resolve_validation_cmd() is None
 
 
 def test_run_local_rules_passes_when_keywords_match():
