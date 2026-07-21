@@ -1,0 +1,62 @@
+[
+  {
+    "job_id": "bf-meta-readme-keywords-001",
+    "repo_url": "https://github.com/BrightforestX/meta-utilities.git",
+    "branch": "main",
+    "task": "Ensure README.md has H1 '# Meta-Utilities', a '## Purpose' section containing the word purpose, and a status badge containing the word status. Do not delete existing useful content; prefer additive edits.",
+    "test_cmd": "test -f README.md && echo 'README exists'",
+    "lint_cmd": "test -s README.md",
+    "validation": {
+      "rule_specs": ["Meta-Utilities README must include Purpose and status"],
+      "rule_codes": [],
+      "validation_cmd": "grep -E '^# Meta-Utilities' README.md && grep -E 'status|Status|badge' README.md && grep -E '## Purpose|purpose' README.md",
+      "max_validation_iterations": 4
+    },
+    "max_iterations": 4,
+    "model": "baseten-proxy/qwen-coder",
+    "create_pr": true,
+    "pr_branch_prefix": "sdlc-test",
+    "pr_title": "docs: reinforce meta-utilities README keywords",
+    "pr_body": "BrightforestX concurrency batch job 1/3."
+  },
+  {
+    "job_id": "bf-meta-contributing-002",
+    "repo_url": "https://github.com/BrightforestX/meta-utilities.git",
+    "branch": "main",
+    "task": "Add or update CONTRIBUTING.md with sections: Overview, Local setup, Pull requests. Keep it under 80 lines. Mention Meta-Utilities once in the Overview.",
+    "test_cmd": "test -f CONTRIBUTING.md && echo 'CONTRIBUTING exists'",
+    "lint_cmd": "test -s CONTRIBUTING.md",
+    "validation": {
+      "rule_specs": ["CONTRIBUTING must have Overview Local setup Pull requests"],
+      "rule_codes": [],
+      "validation_cmd": "test -f CONTRIBUTING.md && grep -E '## Overview|Overview' CONTRIBUTING.md && grep -E '## Local setup|Local setup' CONTRIBUTING.md && grep -E '## Pull requests|Pull requests' CONTRIBUTING.md",
+      "max_validation_iterations": 4
+    },
+    "max_iterations": 4,
+    "model": "baseten-proxy/qwen-coder",
+    "create_pr": true,
+    "pr_branch_prefix": "sdlc-test",
+    "pr_title": "docs: add CONTRIBUTING for meta-utilities",
+    "pr_body": "BrightforestX concurrency batch job 2/3."
+  },
+  {
+    "job_id": "bf-meta-scripts-smoke-003",
+    "repo_url": "https://github.com/BrightforestX/meta-utilities.git",
+    "branch": "main",
+    "task": "Create scripts/smoke_check.sh that exits 0 and prints SMOKE_OK. Make it executable in git (file mode 100755). Keep the script under 20 lines.",
+    "test_cmd": "test -x scripts/smoke_check.sh && ./scripts/smoke_check.sh | grep -q SMOKE_OK",
+    "lint_cmd": "test -s scripts/smoke_check.sh",
+    "validation": {
+      "rule_specs": ["smoke_check.sh must print SMOKE_OK"],
+      "rule_codes": [],
+      "validation_cmd": "test -f scripts/smoke_check.sh && grep -q SMOKE_OK scripts/smoke_check.sh && test -x scripts/smoke_check.sh && ./scripts/smoke_check.sh | grep -q SMOKE_OK",
+      "max_validation_iterations": 4
+    },
+    "max_iterations": 4,
+    "model": "baseten-proxy/qwen-coder",
+    "create_pr": true,
+    "pr_branch_prefix": "sdlc-test",
+    "pr_title": "chore: add smoke_check.sh",
+    "pr_body": "BrightforestX concurrency batch job 3/3 — exercises shell validation_cmd."
+  }
+]

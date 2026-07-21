@@ -97,7 +97,7 @@ Checks that all required environment variables are set:
 ### 3. Sandbox Creation
 
 Creates a sandbox using the configured provider:
-- **Daytona**: Uses `scripts/sandbox/provider.sh create`
+- **Daytona**: Uses the Node `@daytona/sdk` (create / git.clone / process.executeCommand / delete). No `provider.sh` shell wrapper on the hot path.
 - **Northflank**: Uses the Northflank provider
 
 The sandbox ID is extracted from the creation output and stored for later use.

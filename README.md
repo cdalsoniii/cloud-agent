@@ -11,6 +11,7 @@ A complete system for orchestrating cloud agent handoffs via OpenCode skills and
 - **Multi-Provider Support**: Daytona and Northflank sandbox providers
 - **Health Monitoring**: Continuous sandbox monitoring and status checking
 - **Comprehensive Documentation**: Generated architecture, API reference, and usage guides
+- **SDLC Batch Loop**: Multi-provider sandbox batching with formal validation (see [`pybatch/README.md`](pybatch/README.md))
 
 ## Documentation
 

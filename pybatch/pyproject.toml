@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sdlc-batch"
+version = "0.1.0"
+description = "Multi-provider sandbox SDLC batch loop with Baseten + formal validation"
+requires-python = ">=3.11"
+dependencies = [
+    "httpx[http2]>=0.27",
+    "pydantic>=2",
+    "truss>=0.18.0",
+    "daytona>=0.193.0",
+    "e2b>=1.0.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+perf = ["baseten>=0.9.0", "baseten-performance-client"]
+dev = ["pytest>=8", "pytest-asyncio>=0.24", "ruff>=0.5", "mypy>=1.10"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"

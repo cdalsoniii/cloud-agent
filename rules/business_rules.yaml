@@ -128,9 +128,9 @@ rules:
 
 - id: rule-provider-explicit
   name: sandbox-provider-explicit
-  description: The sandbox provider must be explicitly set (daytona or northflank) and passed to all provider.sh subprocess calls. The default must be 'daytona' as per user directive.
+  description: The sandbox provider must be explicitly set (daytona or northflank) and used via the Daytona/Northflank SDK clients (not provider.sh). The default must be 'daytona' as per user directive.
   condition: When orchestrator.ts is initialized
-  action: Verify opts.sandboxProvider is explicitly passed via env to create, bootstrap, connectivity, and exec calls
+  action: Verify opts.sandboxProvider is explicitly passed via env to SDK create, bootstrap, connectivity, and exec calls
   category: compliance
   surrealql_table: environment_state
   surrealql_field: sandbox_provider

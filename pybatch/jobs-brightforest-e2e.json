@@ -1,0 +1,22 @@
+[
+  {
+    "job_id": "bf-meta-scripts-smoke-e2e-001",
+    "repo_url": "https://github.com/BrightforestX/meta-utilities.git",
+    "branch": "main",
+    "task": "Write the following file to scripts/smoke_check.sh (exact content), make it executable (chmod +x), and ensure it prints SMOKE_OK:\n\n#!/usr/bin/env bash\nset -euo pipefail\necho SMOKE_OK\n",
+    "test_cmd": "test -x scripts/smoke_check.sh && ./scripts/smoke_check.sh | grep -q SMOKE_OK",
+    "lint_cmd": "test -s scripts/smoke_check.sh",
+    "validation": {
+      "rule_specs": ["smoke_check.sh must print SMOKE_OK"],
+      "rule_codes": [],
+      "validation_cmd": "test -f scripts/smoke_check.sh && grep -q SMOKE_OK scripts/smoke_check.sh && test -x scripts/smoke_check.sh && ./scripts/smoke_check.sh | grep -q SMOKE_OK",
+      "max_validation_iterations": 4
+    },
+    "max_iterations": 4,
+    "model": "baseten-proxy/qwen-coder",
+    "create_pr": true,
+    "pr_branch_prefix": "sdlc-test",
+    "pr_title": "chore: add smoke_check.sh (SDK dual-token e2e)",
+    "pr_body": "Live E2E: Daytona SDK + dual-account token resolver + validation_cmd source of truth."
+  }
+]

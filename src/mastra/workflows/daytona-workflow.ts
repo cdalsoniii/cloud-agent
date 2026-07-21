@@ -14,9 +14,13 @@ import {
 /**
  * Daytona Sandbox Orchestration Workflow
  *
+ * SDK-first (@daytona/sdk via daytona-tools): create, bootstrap (git.clone +
+ * process.executeCommand), connectivity probes, task exec, and delete.
+ * No provider.sh / sandbox_daytona.py shell wrappers on the hot path.
+ *
  * A formally-verified workflow that:
  * 1. Validates environment prerequisites
- * 2. Creates a Daytona sandbox
+ * 2. Creates a Daytona sandbox via SDK
  * 3. Verifies sandbox creation via business rules
  * 4. Bootstraps the sandbox (git clone + harness install)
  * 5. Verifies bootstrap success
@@ -25,7 +29,7 @@ import {
  * 8. Verifies connectivity via business rules
  * 9. Executes the agent task
  * 10. Verifies task execution
- * 11. Optionally cleans up the sandbox
+ * 11. Optionally cleans up the sandbox (SDK delete + releaseDaytonaClient)
  *
  * Each verification step uses Midspiral formal verification tools.
  */
@@ -142,7 +146,7 @@ const connectivityCheck = new Step({
   execute: async ({ context }) => {
     const dryRun = context.inputData.dryRun;
     const providers = ['baseten', 'fireworks', 'proxy', 'northflank'];
-    const startIndex = providers.indexOf(context.inputData.provider);
+    const startIndex = providers.indexOf(context.inputData.provider as string);
     const orderedProviders = [...providers.slice(startIndex), ...providers.slice(0, startIndex)];
 
     for (const provider of orderedProviders) {

@@ -2,8 +2,10 @@ import { readFileSync, existsSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import yaml from 'yaml';
+import dotenv from 'dotenv';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, '../../../.env') });
 const rulesFile = path.join(__dirname, '../../../rules/business_rules.yaml');
 
 /**
@@ -250,7 +252,7 @@ async function verifyRule(rule: Rule): Promise<{ verified: boolean; details: str
 
 async function main() {
   console.log('╔═══════════════════════════════════════════════════════════╗');
-  console.log('║  Midspiral Business Rules Verification                    ║');
+  console.log('║  Business Rules Verification                              ║');
   console.log('╚═══════════════════════════════════════════════════════════╝');
   console.log();
 

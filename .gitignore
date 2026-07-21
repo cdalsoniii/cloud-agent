@@ -13,3 +13,9 @@ tmp/
 coverage/
 *.tsbuildinfo
 .env
+
+__pycache__/
+*.pyc
+.pytest_cache/
+pybatch/.venv/
+.next/

@@ -15,7 +15,7 @@ import {
  * Daytona Orchestrator Agent
  *
  * A Mastra.ai agent that orchestrates the full Daytona sandbox lifecycle
- * with formal verification at every step using Midspiral business rules.
+ * with formal verification at every step using business rules.
  *
  * Capabilities:
  * - Creates Daytona sandboxes

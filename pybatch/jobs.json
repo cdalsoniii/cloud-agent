@@ -1,0 +1,25 @@
+[
+  {
+    "job_id": "demo-001",
+    "repo_url": "https://github.com/pallets/flask-website",
+    "branch": "main",
+    "task": "Add a /health endpoint that returns JSON {'ok': true}",
+    "test_cmd": "pytest -q",
+    "max_iterations": 3,
+    "model": "zai-org/GLM-5",
+    "validation": {
+      "rule_specs": ["endpoint must return application/json"],
+      "rule_codes": ["return jsonify({'ok': True})"]
+    }
+  },
+  {
+    "job_id": "demo-002",
+    "repo_url": "https://github.com/pallets/flask-website",
+    "branch": "main",
+    "task": "Type-annotate the top-level app factory",
+    "test_cmd": "pytest -q",
+    "lint_cmd": "ruff check .",
+    "max_iterations": 3,
+    "model": "zai-org/GLM-5"
+  }
+]

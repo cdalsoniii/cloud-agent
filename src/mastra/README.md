@@ -6,28 +6,29 @@ This directory contains a **Mastra.ai** agent system that orchestrates the full 
 
 ## Architecture
 
+**SDK-first:** Mastra Daytona tools use Node `@daytona/sdk` (create / git.clone / process.executeCommand / delete). No `provider.sh` or `sandbox_daytona.py` on the hot path.
+
+**Dual-account GitHub tokens:** `src/mastra/lib/github-tokens.ts` (mirrors `pybatch/src/sdlc_batch/tokens.py`):
+
+| Owner | Preference |
+|-------|------------|
+| `BrightforestX` | `~/.config/gh/hosts.yml` OAuth → `GITHUB_TOKEN_BRIGHTFOREST_ORG_PX_CLOUD_AGENT` |
+| `cdalsoniii` | personal env → same gh OAuth |
+
+Publish/bootstrap preflight the target repo via GitHub REST (fail fast on 401/403). Mixed-owner batches resolve a token **per job**, not one global token.
+
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                     Mastra Orchestrator                         │
 │                                                                 │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
 │  │   validate   │→ │   create     │→ │  bootstrap   │         │
-│  │ environment  │  │  sandbox     │  │   sandbox    │         │
+│  │ environment  │  │ @daytona/sdk │  │  sdk git     │         │
 │  └──────────────┘  └──────────────┘  └──────────────┘         │
 │         ↓                 ↓                 ↓                 │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
-│  │ verify-rule  │  │ verify-rule  │  │ verify-rule  │         │
-│  │env-vars     │  │sandbox-id   │  │bootstrap-ok  │         │
-│  └──────────────┘  └──────────────┘  └──────────────┘         │
-│                                                                 │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
 │  │ connectivity │→ │ execute task │→ │   cleanup    │         │
-│  │    check     │  │              │  │   sandbox    │         │
-│  └──────────────┘  └──────────────┘  └──────────────┘         │
-│         ↓                 ↓                 ↓                   │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
-│  │ verify-rule  │  │ verify-rule  │  │ verify-rule  │         │
-│  │connectivity │  │ task-ok      │  │ cleanup-ok   │         │
+│  │  sdk exec    │  │  sdk exec    │  │  sdk delete  │         │
 │  └──────────────┘  └──────────────┘  └──────────────┘         │
 │                                                                 │
 └─────────────────────────────────────────────────────────────────┘
@@ -46,12 +47,12 @@ The `daytonaOrchestratorAgent` is the main AI agent that manages the sandbox lif
 
 The `daytonaOrchestrationWorkflow` is a declarative workflow with 6 steps:
 
-1. **validate-environment** → Verify `DAYTONA_API_KEY`, `GIT_TOKEN`, `GIT_REPO_URL`, `BASETEN_API_KEY`
-2. **create-sandbox** → Create Daytona sandbox via `provider.sh create`
-3. **bootstrap-sandbox** → Clone repo and install harness via `provider.sh bootstrap`
-4. **connectivity-check** → Probe Baseten/proxy endpoint from within sandbox
-5. **execute-task** → Run the agent task via `provider.sh exec`
-6. **cleanup-sandbox** → Destroy the sandbox (optional)
+1. **validate-environment** → Verify `DAYTONA_API_KEY`, `BASETEN_API_KEY` (+ dual-token resolver soft-check)
+2. **create-sandbox** → Create Daytona sandbox via `@daytona/sdk`
+3. **bootstrap-sandbox** → Clone repo via SDK `git.clone` with resolved owner token
+4. **connectivity-check** → Probe Baseten/proxy via SDK `process.executeCommand`
+5. **execute-task** → Run the agent task via SDK exec
+6. **cleanup-sandbox** → Destroy via SDK `delete`
 
 Each step includes **formal verification** of business rules.
 
@@ -80,6 +81,33 @@ Each step includes **formal verification** of business rules.
 Run `npx tsx src/mastra/tools/verify-rules.ts` to verify all business rules against the current environment.
 
 ## Usage
+
+### Cursor MCP (stdio)
+
+Registered as `cloud-agent-mastra` in `~/.cursor/mcp.json` via:
+
+```bash
+npm run mastra:mcp          # stdio (Cursor)
+npm run mastra:mcp:sse       # HTTP SSE on :3002
+```
+
+Tools exposed to the agent:
+
+| Tool | Purpose |
+|------|---------|
+| `env-validation` | Check required secrets |
+| `daytona-create` / `bootstrap` / `connectivity` / `exec` / `shell` / `destroy` | Sandbox lifecycle via `@daytona/sdk` |
+| `opencode-loop` | Orchestration entrypoint → `factory-opencode-loop.ts` |
+| `sdlc-batch` | Orchestration → `pybatch/run_test_batch.py` (Python Daytona SDK + dual-token + PRs) |
+| `mastra-orchestrate` | Full Mastra workflow CLI |
+| `verify-rule` | Heuristic Midspiral-style rule check |
+
+Recommended interactive flow from Cursor:
+
+1. `env-validation`
+2. `daytona-create` → `daytona-bootstrap` → `daytona-connectivity`
+3. `opencode-loop` with `opencodeBaseUrls` set to the sandbox preview URL(s), **or** `sdlc-batch` with `jobs-brightforest-meta.json`
+4. `daytona-destroy` (or leave sandboxes up with `skipCleanup`)
 
 ### Run the Workflow
 
@@ -130,14 +158,21 @@ Step: create-sandbox
 
 ## Configuration
 
-Required environment variables:
+Required environment variables (load via dotenv — do not bash-source `.env`):
 ```bash
 DAYTONA_API_KEY=       # Daytona API key
-GIT_TOKEN=             # GitHub token for repo access
-GIT_REPO_URL=          # Repository to clone into sandbox
 BASETEN_API_KEY=       # Baseten API key for inference
-WARP_BASETEN_QWEN=1    # Enable Baseten Qwen routing
-GPU_INFERENCE_STACK_DIR= # Path to gpu-inference-stack repo
+GIT_REPO_URL=          # Optional default repo for bootstrap
+# Dual-account (prefer gh OAuth in ~/.config/gh/hosts.yml):
+GITHUB_TOKEN_BRIGHTFOREST_ORG_PX_CLOUD_AGENT=  # BrightforestX fallback PAT
+GITHUB_TOKEN_PERSONAL= # cdalsoniii fallback
+WARP_BASETEN_QWEN=1
+GPU_INFERENCE_STACK_DIR= # Optional; only for opencode-loop orchestration
+```
+
+Live batch example:
+```bash
+cd pybatch && SDLC_JOBS_FILE=jobs-brightforest-e2e.json python3 run_test_batch.py
 ```
 
 ## File Structure

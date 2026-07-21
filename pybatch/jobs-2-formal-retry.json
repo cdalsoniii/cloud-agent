@@ -1,0 +1,50 @@
+[
+  {
+    "job_id": "formal-mq-001-midspiral-rule-yaml",
+    "repo_url": "https://github.com/BrightforestX/meta-utilities.git",
+    "branch": "main",
+    "task": "Write the following file to formal/midspiral/rule-sandbox-lifecycle.yaml (exact content):\n\nid: rule-sandbox-lifecycle-sdk\nname: sandbox-lifecycle-sdk-first\ndescription: Daytona sandbox create/bootstrap/exec/delete must use @daytona/sdk or AsyncDaytona, never provider.sh.\ncategory: infrastructure\nstatus: active\nsurrealql_assertion: sandbox_provider == 'daytona' AND sdk_path == true AND shell_provider_sh == false\nmidspiral:\n  tool: verify-rules\n  engines: [business]\n",
+    "test_cmd": "test -f formal/midspiral/rule-sandbox-lifecycle.yaml && grep -q 'rule-sandbox-lifecycle-sdk' formal/midspiral/rule-sandbox-lifecycle.yaml",
+    "lint_cmd": "test -s formal/midspiral/rule-sandbox-lifecycle.yaml",
+    "validation": {
+      "rule_specs": [
+        "sandbox lifecycle rule must forbid provider.sh and require daytona sdk"
+      ],
+      "rule_codes": [
+        "id: rule-sandbox-lifecycle-sdk\nname: sandbox-lifecycle-sdk-first\ndescription: Daytona sandbox create/bootstrap/exec/delete must use @daytona/sdk or AsyncDaytona, never provider.sh.\nsurrealql_assertion: sandbox_provider == 'daytona' AND sdk_path == true AND shell_provider_sh == false\nmidspiral:\n  tool: verify-rules"
+      ],
+      "validation_cmd": "test -f formal/midspiral/rule-sandbox-lifecycle.yaml && grep -q 'rule-sandbox-lifecycle-sdk' formal/midspiral/rule-sandbox-lifecycle.yaml && grep -q 'provider.sh' formal/midspiral/rule-sandbox-lifecycle.yaml && grep -q 'sdk_path == true' formal/midspiral/rule-sandbox-lifecycle.yaml && grep -q 'midspiral:' formal/midspiral/rule-sandbox-lifecycle.yaml && grep -q 'verify-rules' formal/midspiral/rule-sandbox-lifecycle.yaml",
+      "max_validation_iterations": 4
+    },
+    "max_iterations": 4,
+    "model": "baseten-proxy/qwen-coder",
+    "create_pr": true,
+    "pr_branch_prefix": "formal-mq",
+    "pr_title": "formal: add Midspiral sandbox-lifecycle business rule",
+    "pr_body": "Formal validation expansion: Midspiral business-rule YAML for SDK-first Daytona lifecycle (no provider.sh)."
+  },
+  {
+    "job_id": "formal-mq-010-combined-smoke",
+    "repo_url": "https://github.com/cdalsoniii/cloud-agent.git",
+    "branch": "main",
+    "task": "Write the following file to scripts/formal_midspiral_quint_smoke.sh (exact content), then chmod +x it:\n\n#!/usr/bin/env bash\nset -euo pipefail\nROOT=$(cd \"$(dirname \"$0\")/..\" && pwd)\nQNT=${1:-$ROOT/formal/quint/smoke.qnt}\nif [[ ! -f \"$QNT\" ]]; then\n  mkdir -p \"$(dirname \"$QNT\")\"\n  cat > \"$QNT\" <<'Q'\nmodule smoke {\n  var n: int\n  action Init = { n' = 1 }\n  action Next = { n' = n }\n  val Positive = n > 0\n}\nQ\nfi\ngrep -q 'module smoke' \"$QNT\"\nif command -v quint >/dev/null; then\n  quint typecheck \"$QNT\"\nelse\n  npx --yes @informalsystems/quint@0.32.0 typecheck \"$QNT\"\nfi\necho FORMAL_SMOKE_OK\n",
+    "test_cmd": "test -x scripts/formal_midspiral_quint_smoke.sh",
+    "lint_cmd": "test -s scripts/formal_midspiral_quint_smoke.sh",
+    "validation": {
+      "rule_specs": [
+        "formal smoke script must typecheck Quint and print FORMAL_SMOKE_OK"
+      ],
+      "rule_codes": [
+        "#!/usr/bin/env bash\nquint typecheck \"$QNT\"\necho FORMAL_SMOKE_OK"
+      ],
+      "validation_cmd": "chmod +x scripts/formal_midspiral_quint_smoke.sh && ./scripts/formal_midspiral_quint_smoke.sh | grep -q FORMAL_SMOKE_OK && test -f formal/quint/smoke.qnt && grep -q 'module smoke' formal/quint/smoke.qnt",
+      "max_validation_iterations": 4
+    },
+    "max_iterations": 4,
+    "model": "baseten-proxy/qwen-coder",
+    "create_pr": true,
+    "pr_branch_prefix": "formal-mq",
+    "pr_title": "formal: Midspiral+Quint combined smoke script",
+    "pr_body": "Formal validation expansion: smoke script that materializes a tiny Quint module, typechecks it, and prints FORMAL_SMOKE_OK."
+  }
+]

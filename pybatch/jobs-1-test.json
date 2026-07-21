@@ -1,0 +1,26 @@
+[
+  {
+    "job_id": "test-brightforest-meta-utilities-001",
+    "repo_url": "https://github.com/BrightforestX/meta-utilities.git",
+    "branch": "main",
+    "task": "Write the following README.md to the repo folder (you may vary the badge URL and description slightly, but keep the exact words 'Meta-Utilities', 'purpose', and 'status' in the content):\n\n# Meta-Utilities\n\nThis repository contains meta-utility tooling.\n\n## Purpose\n\nThe purpose is to host reusable automation utilities.\n\n![Status](https://img.shields.io/badge/status-active-brightgreen)\n",
+    "test_cmd": "test -f README.md && echo 'README exists'",
+    "lint_cmd": "test -s README.md",
+    "validation": {
+      "rule_specs": [
+        "Meta-Utilities",
+        "status",
+        "purpose"
+      ],
+      "rule_codes": [],
+      "validation_cmd": "grep -E '^# Meta-Utilities|!\\[|## Purpose' README.md",
+      "max_validation_iterations": 4
+    },
+    "max_iterations": 4,
+    "model": "baseten-proxy/qwen-coder",
+    "create_pr": true,
+    "pr_branch_prefix": "sdlc-test",
+    "pr_title": "docs: add README to meta-utilities",
+    "pr_body": "Automated test from SDLC batch on BrightforestX meta-utilities."
+  }
+]
