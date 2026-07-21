@@ -1,0 +1,9 @@
+id: rule-org-budget-soft-degrade
+name: org-budget-soft-degrade
+description: When org token budget remaining is below soft threshold, degrade to smaller model instead of hard-failing the request.
+category: compliance
+status: active
+surrealql_assertion: budget_remaining >= 0 AND (budget_remaining > soft_threshold OR degraded_model == true)
+midspiral:
+  tool: verify-rules
+  engines: [business, integrity]
