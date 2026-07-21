@@ -1,0 +1,91 @@
+# Grounded ontology / formal pointers — relative to cloud-agent root unless absolute.
+
+px_validate:
+  description: Canonical ontology + multi-method formal stack (do not duplicate)
+  # From partners/experiments/01-platform/cloud-agent → Brightforest path varies by machine.
+  # Prefer env PX_VALIDATE_ROOT; fallback absolute for this workspace:
+  root_env: PX_VALIDATE_ROOT
+  root_default: /Users/clifforddalsoniii/Documents/Brightforest/projects/tools/px-validate
+  paths:
+    formal_readme: formal/README.md
+    formal_health: formal/FORMAL_METHODS_HEALTH_REPORT.md
+    official_refs: formal/OFFICIAL_REFERENCES.md
+    ontology_classes: formal/ontology-classes/
+    validation_pipeline: formal/VALIDATION_PIPELINE.md
+    events_shared: formal/shared/events.yaml
+    types_shared: formal/shared/types.yaml
+
+cloud_agent_verification:
+  description: Local formal specs for sandbox lifecycle, tokens, MCP tools
+  root: config/verification/
+  suites:
+    quint: config/verification/quint/sandbox-lifecycle.qnt
+    dafny:
+      - config/verification/dafny/ValidationGate.dfy
+      - config/verification/dafny/TokenIsolation.dfy
+    alloy:
+      - config/verification/alloy/MidspiralTools.als
+      - config/verification/alloy/BusinessRules.als
+  ci: .github/workflows/formal-verification.yml
+  scripts:
+    verify_local: scripts/verify-local.sh
+    setup_tools: scripts/setup-verification-tools.sh
+    smoke_formal: scripts/smoke-formal-happy-path.sh
+
+assistant_ui:
+  description: Product formal happy path (dafny2js, dafny-replay, kernels)
+  root: ../../02-products/assistant-ui
+  gap_analysis: ../../02-products/assistant-ui/.gap-analysis.md
+  verify_apis:
+    dafny2js: packages/web/src/app/api/verify/dafny2js/route.ts
+    dafny_replay: packages/web/src/app/api/verify/dafny-replay/route.ts
+    claimcheck: packages/web/src/app/api/verify/claimcheck
+    health: packages/web/src/app/api/verify/health
+  verification:
+    dafny: config/verification/dafny/
+    lemma_replay: config/verification/lemma/lemmafit/dafny/Replay.dfy
+    lemma_alt: baseten-chains/quint-monitor/config/verification/lemma/lemmafit/dafny/Replay.dfy
+  packages:
+    verified_kernels: packages/verified-kernels/
+    kernel_src: packages/verified-kernels/src/kernel.ts
+  env:
+    DAFNY2JS_PATH: "dotnet project cwd for dafny2js API (spawn cwd)"
+    DAFNY_REPLAY_PATH: "optional path for dafny-replay tooling"
+  cicd:
+    description: Product CI/CD delegates back to this cloud-agent (chainlets + Daytona sandboxes)
+    plan: ../../02-products/assistant-ui/.gsd/plans/cicd-chainlet-sandbox.md
+    milestone: ../../02-products/assistant-ui/.gsd/milestones/M7-cicd-chainlet-sandbox/M7-ROADMAP.md
+    ci_all: ../../02-products/assistant-ui/.github/workflows/ci-all.yml
+    sandbox_driver: ../../02-products/assistant-ui/scripts/ci-sandbox-shards.sh
+    chainlet_delegate: ../../02-products/assistant-ui/scripts/ci-chainlet-delegate.sh
+    px_pointers: ../../02-products/assistant-ui/.px/pointers.yaml  # → cicd_chainlet_sandbox
+    drivers_here:
+      chain_sandbox: src/baseten-chain-sandbox.ts   # npm run chain-sandbox
+      pr_sandbox: src/pr-sandbox-orchestrator.ts     # npm run pr-sandbox
+      remote_formal: scripts/remote-formal-daytona.sh
+
+prd_pack:
+  root: artifacts/prd/smoke-formal-happy-path/
+  milestones: artifacts/prd/smoke-formal-happy-path/06-MILESTONES.md
+  issues: artifacts/prd/smoke-formal-happy-path/03-ISSUE_BACKLOG.md
+  prd: artifacts/prd/smoke-formal-happy-path/04-PRD.md
+  jobs: artifacts/prd/smoke-formal-happy-path/07-jobs.json
+
+osdk_deel_asana_map:
+  description: M6 (product repo) — OSDK "Global workforce + delivery map" (synthetic Deel × Asana; ontology-driven SDK regen; SurrealDB TS; Midspiral). Platform owns verify/smoke for this path.
+  product_root: ../../02-products/assistant-ui
+  product_milestone: ../../02-products/assistant-ui/.gsd/milestones/M6-osdk-deel-asana-map/
+  product_ontology: ../../02-products/assistant-ui/packages/web/src/lib/osdk/schema/deel-asana-map.linkml.yaml
+  product_regen: cd ../../02-products/assistant-ui/packages/web && npm run osdk:regen
+  product_formal:
+    - ../../02-products/assistant-ui/config/verification/quint/osdk-xref.qnt
+    - ../../02-products/assistant-ui/config/verification/alloy/OsdkXref.als
+  platform_verify:
+    smoke_formal: npm run smoke:formal
+    verify_quint: npm run verify:quint
+  evidence_glob: .gsd/evidence/20260721-m6-*
+  req_ids: [REQ-OSDK-MAP, REQ-DEEL-SAMPLE, REQ-ASANA-XREF, REQ-MIDSPIRAL-XREF, REQ-SURREAL-UI, REQ-ONTOLOGY-SDK-REGEN]
+
+gsd:
+  root: .gsd/
+  state: .gsd/STATE.md
