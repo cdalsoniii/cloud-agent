@@ -13,6 +13,20 @@ A complete system for orchestrating cloud agent handoffs via OpenCode skills and
 - **Comprehensive Documentation**: Generated architecture, API reference, and usage guides
 - **SDLC Batch Loop**: Multi-provider sandbox batching with formal validation (see [`pybatch/README.md`](pybatch/README.md))
 
+## Agent state (ontology + GSD)
+
+| Path | Description |
+|------|-------------|
+| [`.px/`](.px/README.md) | Ontology / formal pointers (load before inventing classes) |
+| [`.gsd/`](.gsd/README.md) | OpenGSD loop state for formal happy-path M0–M3 |
+
+```bash
+# Formal happy path (cloud-agent + assistant-ui path probes)
+npm run test:prd
+npm run smoke:formal
+npm run verify:all
+```
+
 ## Documentation
 
 | Document | Description |
@@ -20,6 +34,7 @@ A complete system for orchestrating cloud agent handoffs via OpenCode skills and
 | [ARCHITECTURE.md](docs/ARCHITECTURE.md) | System architecture, data flow, integration points, security |
 | [API.md](docs/API.md) | Complete API reference for all interfaces and CLI commands |
 | [GUIDE.md](docs/GUIDE.md) | Usage examples, patterns, troubleshooting, best practices |
+| [formal-prd-planner.md](docs/formal-prd-planner.md) | Formal System PRD planning pipeline |
 
 ## Architecture
 
@@ -89,7 +104,24 @@ SMART_ROUTER_WATERFALL_SYNC_TIMEOUT_MS=120000
 SANDBOX_PROVIDER=daytona
 DRY_RUN=0
 VERBOSE=0
+
+# Local SurrealDB (sandbox logs + event logger)
+SURREALDB_URL=http://localhost:8000
+SURREALDB_NS=main
+SURREALDB_DB=main
+SURREALDB_USER=root
+SURREALDB_PASS=root
 ```
+
+## Cursor / agent skill
+
+Discoverable skill (preferred for Cursor agents):
+
+- [`.agents/skills/cloud-agent/SKILL.md`](.agents/skills/cloud-agent/SKILL.md)
+
+OpenCode-oriented root skill: [`SKILL.md`](SKILL.md)
+
+Invoke by asking the agent to use the **cloud-agent** skill (handoff, sandbox logs, SurrealDB verify).
 
 ## Usage
 
@@ -171,6 +203,23 @@ npx tsx src/orchestrator.ts --mode chain-sandbox --sandbox-id abc123 --operation
 - No plan generation or execution
 - Use for monitoring, querying, and controlling sandboxes
 
+## Sandbox logs → local SurrealDB
+
+When you fetch sandbox logs (`getSandboxLogs` or `--operation logs`), content is written to the `sandbox_log` table on your local SurrealDB instance (`SURREALDB_URL`).
+
+```bash
+# Probe write/read (requires SurrealDB running)
+npm run logs:verify
+
+# Fetch live sandbox logs and persist
+npm run logs:sync -- --fetch --sandbox-id <id>
+
+# List recent persisted logs
+npm run logs:sync -- --list --limit 10
+```
+
+Schema: [`schema.surql`](schema.surql) (`sandbox_log`). Writer: [`src/event-logger.ts`](src/event-logger.ts).
+
 ## Scripts
 
 | Script | Description |
@@ -179,6 +228,8 @@ npx tsx src/orchestrator.ts --mode chain-sandbox --sandbox-id abc123 --operation
 | `npm run chain-sandbox` | Run chain-sandbox communication |
 | `npm run orchestrate` | Run full orchestrator |
 | `npm run health` | Check health of all services |
+| `npm run logs:verify` | Probe sandbox_log write/read on SurrealDB |
+| `npm run logs:sync` | Fetch / list / manually write sandbox logs |
 | `npm test` | Run unit tests |
 | `npm run test:integration` | Run integration tests |
 | `npm run lint` | Lint code |
@@ -214,12 +265,16 @@ npm run health -- --verbose
 
 ```
 cloud-agent/
+├── .agents/skills/cloud-agent/     # Cursor/agent skill (preferred)
 ├── src/
 │   ├── types.ts                    # Shared types and utilities
 │   ├── cloud-agent-handoff.ts      # Main handoff implementation
 │   ├── baseten-chain-sandbox.ts    # Chain-sandbox communication
+│   ├── event-logger.ts             # SurrealDB event + sandbox_log writer
+│   ├── sync-sandbox-logs.ts        # Verify / sync sandbox logs
 │   ├── orchestrator.ts             # Combined orchestration
 │   └── health-check.ts             # Health check utility
+├── schema.surql                    # SurrealDB tables (incl. sandbox_log)
 ├── tmp/
 │   ├── plans/                      # Generated plans
 │   └── results/                    # Execution results
@@ -244,8 +299,15 @@ cloud-agent/
 | `SMART_ROUTER_WATERFALL_CHAIN_TIMEOUT_MS` | No | `60000` | Chain timeout |
 | `SMART_ROUTER_WATERFALL_SYNC_TIMEOUT_MS` | No | `120000` | Sync timeout |
 | `SANDBOX_PROVIDER` | No | `daytona` | Default sandbox provider |
+| `SURREALDB_URL` | No* | - | Local SurrealDB for sandbox logs (`http://localhost:8000`) |
+| `SURREALDB_NS` | No | `main` | SurrealDB namespace |
+| `SURREALDB_DB` | No | `main` | SurrealDB database |
+| `SURREALDB_USER` | No | `root` | SurrealDB user |
+| `SURREALDB_PASS` | No | `root` | SurrealDB password |
 | `DRY_RUN` | No | `0` | Dry run mode |
 | `VERBOSE` | No | `0` | Verbose logging |
+
+\*Required for durable sandbox log persistence. Without it, logs fall back to in-memory storage.
 
 *At least one sandbox provider API key is required for actual execution.
 

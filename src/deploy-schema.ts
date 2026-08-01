@@ -35,7 +35,7 @@ async function deploySchema() {
     throw new Error(`HTTP ${response.status}: ${text}`);
   }
 
-  const results = await response.json();
+  const results = await response.json() as Array<{ status: string; result?: string; kind?: string }>;
   const errors = results.filter((r: any) => r.status === 'ERR' && !r.result?.includes?.('already exists') && r.kind !== 'AlreadyExists');
   if (errors.length > 0) {
     throw new Error(`Schema deployment errors: ${JSON.stringify(errors)}`);

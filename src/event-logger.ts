@@ -8,12 +8,6 @@ import type {
   FeedbackLoop, LearningPattern, SDLCLearning, Counterexample
 } from './sdlc-types.js';
 
-const SURREALDB_URL = process.env.SURREALDB_URL || '';
-const SURREALDB_USER = process.env.SURREALDB_USER || 'root';
-const SURREALDB_PASS = process.env.SURREALDB_PASS || 'root';
-const SURREALDB_AUTH = Buffer.from(`${SURREALDB_USER}:${SURREALDB_PASS}`).toString('base64');
-const DB_AVAILABLE = SURREALDB_URL.length > 0 && SURREALDB_URL.startsWith('http');
-
 // In-memory fallback when SurrealDB is not available
 const memoryStore: Record<string, unknown[]> = {
   sdlc_event: [],
@@ -21,13 +15,68 @@ const memoryStore: Record<string, unknown[]> = {
   verification_artifact: [],
   feedback_loop: [],
   sdlc_learning: [],
+  sandbox_log: [],
 };
 
 interface SurrealResult { result?: unknown[]; status?: string; }
 
+/** Read SurrealDB target at call time so loadEnv() can populate .env first. */
+function surrealConfig(): {
+  url: string;
+  user: string;
+  pass: string;
+  ns: string;
+  db: string;
+  auth: string;
+  available: boolean;
+} {
+  const url = process.env.SURREALDB_URL || '';
+  const user = process.env.SURREALDB_USER || 'root';
+  const pass = process.env.SURREALDB_PASS || 'root';
+  const ns = process.env.SURREALDB_NS || 'main';
+  const db = process.env.SURREALDB_DB || 'main';
+  return {
+    url,
+    user,
+    pass,
+    ns,
+    db,
+    auth: Buffer.from(`${user}:${pass}`).toString('base64'),
+    available: url.length > 0 && url.startsWith('http'),
+  };
+}
+
+/** Sandbox log record persisted to local SurrealDB */
+export interface SandboxLogRecord {
+  log_id: string;
+  sandbox_id: string;
+  provider?: string;
+  source: 'chain' | 'daytona' | 'manual' | 'sync' | 'verify';
+  content: string;
+  line_count?: number;
+  operation?: string;
+  correlation_id?: string;
+  metadata?: Record<string, unknown>;
+  created_at: string;
+}
+
 export async function surrealQuery(sql: string): Promise<SurrealResult[]> {
-  if (!DB_AVAILABLE) {
-    // In-memory fallback: simple INSERT/SELECT simulation
+  const cfg = surrealConfig();
+  if (!cfg.available) {
+    // In-memory fallback: CREATE / SELECT simulation
+    const createMatch = sql.match(/^CREATE\s+(\w+)\s+CONTENT\s+(.+)$/is);
+    if (createMatch) {
+      const table = createMatch[1];
+      let obj: Record<string, unknown> = { _sql: sql, _inserted: new Date().toISOString() };
+      try {
+        obj = { ...JSON.parse(createMatch[2]), _inserted: new Date().toISOString() };
+      } catch {
+        // keep stub object
+      }
+      if (!memoryStore[table]) memoryStore[table] = [];
+      memoryStore[table].push(obj);
+      return [{ result: [obj], status: 'OK' }];
+    }
     const insertMatch = sql.match(/^INSERT INTO (\w+)\s+(.*)/i);
     if (insertMatch) {
       const table = insertMatch[1];
@@ -43,18 +92,87 @@ export async function surrealQuery(sql: string): Promise<SurrealResult[]> {
     }
     return [{ result: [], status: 'OK' }];
   }
-  const resp = await fetch(`${SURREALDB_URL}/sql`, {
+  const resp = await fetch(`${cfg.url}/sql`, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
-      'NS': 'cloud-agent',
-      'DB': 'rules',
-      'Authorization': `Basic ${SURREALDB_AUTH}`,
+      'Content-Type': 'text/plain',
       'Accept': 'application/json',
+      'surreal-ns': cfg.ns,
+      'surreal-db': cfg.db,
+      'NS': cfg.ns,
+      'DB': cfg.db,
+      'Authorization': `Basic ${cfg.auth}`,
     },
     body: sql,
   });
+  if (!resp.ok) {
+    const text = await resp.text().catch(() => '');
+    throw new Error(`SurrealDB query failed HTTP ${resp.status}: ${text.slice(0, 300)}`);
+  }
   return resp.json() as Promise<SurrealResult[]>;
+}
+
+/** Ensure sandbox_log table exists (idempotent). */
+export async function ensureSandboxLogTable(): Promise<void> {
+  await surrealQuery('DEFINE TABLE IF NOT EXISTS sandbox_log SCHEMALESS');
+  await surrealQuery('DEFINE INDEX IF NOT EXISTS idx_sandbox_log_sandbox ON sandbox_log FIELDS sandbox_id');
+  await surrealQuery('DEFINE INDEX IF NOT EXISTS idx_sandbox_log_created ON sandbox_log FIELDS created_at');
+}
+
+/**
+ * Persist sandbox logs to local SurrealDB (`sandbox_log` table).
+ * Uses SURREALDB_URL / SURREALDB_NS / SURREALDB_DB from env (default localhost:8000 / main / main).
+ */
+export async function logSandboxLogs(
+  record: Omit<SandboxLogRecord, 'log_id' | 'created_at'> & {
+    log_id?: string;
+    created_at?: string;
+  }
+): Promise<string> {
+  const log_id = record.log_id || `slog-${Date.now()}-${crypto.randomBytes(4).toString('hex')}`;
+  const full: SandboxLogRecord = {
+    ...record,
+    log_id,
+    content: typeof record.content === 'string' ? record.content : JSON.stringify(record.content),
+    created_at: record.created_at || new Date().toISOString(),
+  };
+
+  if (surrealConfig().available) {
+    await ensureSandboxLogTable();
+  }
+
+  await surrealQuery(`CREATE sandbox_log CONTENT ${JSON.stringify(full)}`);
+  return log_id;
+}
+
+/** Query recent sandbox logs from SurrealDB (or in-memory fallback). */
+export async function getRecentSandboxLogs(
+  sandboxId?: string,
+  limit = 20
+): Promise<SandboxLogRecord[]> {
+  const safeLimit = Math.max(1, Math.min(limit, 200));
+  const where = sandboxId
+    ? `WHERE sandbox_id = '${sandboxId.replace(/'/g, "\\'")}' `
+    : '';
+  const [r] = await surrealQuery(
+    `SELECT * FROM sandbox_log ${where}ORDER BY created_at DESC LIMIT ${safeLimit}`
+  );
+  return (r?.result || []) as SandboxLogRecord[];
+}
+
+/** True when SURREALDB_URL points at an HTTP SurrealDB endpoint. */
+export function isSurrealDbConfigured(): boolean {
+  return surrealConfig().available;
+}
+
+export function getSurrealDbTarget(): { url: string; ns: string; db: string; configured: boolean } {
+  const cfg = surrealConfig();
+  return {
+    url: cfg.url || '(unset)',
+    ns: cfg.ns,
+    db: cfg.db,
+    configured: cfg.available,
+  };
 }
 
 export async function logChainExecution(log: ChainExecutionLog): Promise<void> {

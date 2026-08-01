@@ -1,5 +1,6 @@
 // SurrealDB schema for comprehensive event logging and recursive improvement
-// Run: surreal import --endpoint http://127.0.0.1:8000 --ns cloud-agent --db rules schema.surql
+// Run (matches .env defaults): surreal import --endpoint http://127.0.0.1:8000 --ns main --db main schema.surql
+// Legacy namespace: surreal import --endpoint http://127.0.0.1:8000 --ns cloud-agent --db rules schema.surql
 
 DEFINE TABLE sdlc_event SCHEMAFULL;
 DEFINE FIELD event_id ON sdlc_event TYPE string ASSERT $value != NONE;
@@ -92,3 +93,9 @@ DEFINE FIELD resolution_event_id ON feedback_loop TYPE string;
 DEFINE FIELD created_at ON feedback_loop TYPE datetime DEFAULT time::now();
 DEFINE INDEX idx_task ON feedback_loop FIELDS task;
 DEFINE INDEX idx_resolved ON feedback_loop FIELDS resolved;
+
+// Sandbox stdout/stderr and chain log payloads (written by event-logger / sync-sandbox-logs)
+DEFINE TABLE sandbox_log SCHEMALESS;
+DEFINE INDEX idx_sandbox_log_sandbox ON sandbox_log FIELDS sandbox_id;
+DEFINE INDEX idx_sandbox_log_created ON sandbox_log FIELDS created_at;
+DEFINE INDEX idx_sandbox_log_source ON sandbox_log FIELDS source;
