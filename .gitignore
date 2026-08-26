@@ -3,6 +3,12 @@ node_modules/
 dist/
 tmp/
 *.log
+.env
+.env.*
+!.env.example
+!.env.example.*
+**/.dev.vars
+**/*.pem
 .env.local
 .env.*.local
 *.swp
@@ -12,10 +18,24 @@ tmp/
 .vscode/
 coverage/
 *.tsbuildinfo
-.env
+.claude/settings.local.json
+
+# Formal PRD planning packs (keep README)
+artifacts/prd/*
+!artifacts/prd/README.md
 
 __pycache__/
 *.pyc
 .pytest_cache/
 pybatch/.venv/
 .next/
+
+# Grok Surreal distribution bundle (installed binaries)
+.grok-bundle/
+grok-dist/.cache/
+
+# Lean live runtime (events, pids — not source)
+.px/lean-live/
+
+# grok-build lean fork clone
+vendor/grok-build-lean/upstream/
