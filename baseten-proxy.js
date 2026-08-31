@@ -28,6 +28,14 @@ if (!BASETEN_API_KEY) {
 const proxy = http.createServer((req, res) => {
   console.log(`${req.method} ${req.url}`);
 
+  // Local health — do not forward to Baseten (upstream can hang on bare GET /).
+  const pathOnly = (req.url || '/').split('?')[0];
+  if (pathOnly === '/health' || pathOnly === '/v1/health') {
+    res.writeHead(200, { 'content-type': 'application/json' });
+    res.end(JSON.stringify({ ok: true, model: BASETEN_MODEL_ID }));
+    return;
+  }
+
   const basePath = new URL(BASETEN_BASE_URL).pathname;
   const reqPath = (req.url || '/').replace(/^\//, '');
   const targetPath = reqPath ? `${basePath}/${reqPath}` : basePath;

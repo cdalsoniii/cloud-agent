@@ -1,0 +1,12 @@
+{
+  "prepaidUsd": 10,
+  "rateUsdPerSec": 0.0004,
+  "startedAt": "2026-08-09T10:32:57.335Z",
+  "autoStopMinutes": 5,
+  "sandboxId": null,
+  "provider": "daytona",
+  "mcpCallCount": 0,
+  "mcpRateUsdPerCall": 0.0015,
+  "currency": "USD",
+  "source": "env"
+}

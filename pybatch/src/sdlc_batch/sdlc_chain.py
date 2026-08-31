@@ -223,12 +223,20 @@ class SdlcJob(pydantic.BaseModel):
     max_iterations: int = 4
     test_cmd: str = "pytest -q"
     lint_cmd: Optional[str] = None
-    model: str = "zai-org/GLM-5"
+    model: str = "baseten-proxy/qwen-coder"
     validation: ValidationConfig = pydantic.Field(default_factory=ValidationConfig)
     create_pr: bool = False
     pr_branch_prefix: str = "sdlc-batch"
     pr_title: Optional[str] = None
     pr_body: Optional[str] = None
+    # plan → research → code → test → formal-verify → PR
+    deep_research: bool = True
+    # After code patches, require formal specs under config/verification/ to stay in sync
+    sync_formal: bool = True
+    # Default formal suite when validation_cmd unset and sync_formal is on
+    default_formal_suite: Optional[str] = "all"
+    # Fail early when coding iterations produce no parseable file patches / empty git diff
+    require_diff: bool = True
 
 
 class ValidationReport(pydantic.BaseModel):
@@ -434,7 +442,7 @@ class OpenCodeWorker(chains.ChainletBase):
     def _default_file_for_task(self, task: str) -> Optional[str]:
         """Infer a default file path from the task description for content fallback."""
         m = re.search(
-            r"Write the following file to\s+([^\s(]+\.(?:md|sh|py|ts|tsx|js|ya?ml|qnt|json))",
+            r"Write the following file to\s+([^\s(]+\.(?:md|sh|py|ts|tsx|js|ya?ml|qnt|json|tla|dfy|als))",
             task,
             re.IGNORECASE,
         )
@@ -508,21 +516,31 @@ class OpenCodeWorker(chains.ChainletBase):
             commands.append(block.strip())
         return commands
 
+    def _loads_model_json(self, raw: str) -> Optional[Dict[str, Any]]:
+        """Parse model JSON; tolerate common invalid escapes (\\' from TS habits)."""
+        candidates = [raw.strip()]
+        # Models often emit \\' inside JSON strings (invalid); neutralize then retry.
+        if "\\'" in raw:
+            candidates.append(raw.replace("\\'", "'"))
+        for candidate in candidates:
+            try:
+                data = json.loads(candidate)
+            except Exception:
+                continue
+            if isinstance(data, dict):
+                return data
+        return None
+
     def _extract_json(self, msg: Dict[str, Any]) -> Optional[Dict[str, Any]]:
         """Extract a JSON object from the model response (fenced or raw)."""
         text = self._extract_text(msg).strip()
-        # Try fenced ```json ... ``` first
-        for block in re.findall(r"```json\s*\n(.*?)\n```", text, re.DOTALL):
-            try:
-                return json.loads(block.strip())
-            except Exception:
-                continue
+        # Try fenced ```json ... ``` first (allow trailing fence without newline)
+        for block in re.findall(r"```json\s*\n(.*?)```", text, re.DOTALL):
+            parsed = self._loads_model_json(block)
+            if parsed is not None:
+                return parsed
         # Try bare JSON object
-        try:
-            return json.loads(text)
-        except Exception:
-            pass
-        return None
+        return self._loads_model_json(text)
 
     def _extract_markdown(self, msg: Dict[str, Any]) -> str:
         """Extract the first markdown code block from a model response, or the whole text."""
@@ -719,6 +737,22 @@ class OpenCodeWorker(chains.ChainletBase):
                 mode="plan",
             )
 
+            if job.deep_research:
+                await self._send(
+                    base,
+                    session,
+                    "Deep-research step (no file edits yet).\n"
+                    "Using the plan and repo context, produce a short research brief:\n"
+                    "1) Relevant existing modules/APIs and constraints\n"
+                    "2) Risks (auth, concurrency, sandbox lifecycle, token isolation)\n"
+                    "3) Which formal specs under `config/verification/` (Quint/Alloy/Dafny) "
+                    "must be updated if behavior changes\n"
+                    "4) Minimal test + validation commands to prove the change\n"
+                    "Bullets only. Cite file paths. Do not modify files.",
+                    model=job.model,
+                    mode="plan",
+                )
+
             # Deterministic seed: if the task embeds exact file content, write it before the loop
             seed_file = self._default_file_for_task(job.task)
             if seed_file and self._sandbox_map.get(base):
@@ -727,10 +761,11 @@ class OpenCodeWorker(chains.ChainletBase):
                 seedable = bool(seed_content) and (
                     "#!/usr/bin" in seed_content
                     or seed_content.startswith("#")
+                    or seed_content.startswith("//")
                     or seed_content.startswith("id:")
                     or seed_content.startswith("module ")
                     or seed_content.startswith("version:")
-                    or seed_file.endswith((".qnt", ".yaml", ".yml", ".sh", ".md"))
+                    or seed_file.endswith((".qnt", ".yaml", ".yml", ".sh", ".md", ".dfy"))
                 )
                 if seedable:
                     await self._apply_json_changes(
@@ -746,22 +781,62 @@ class OpenCodeWorker(chains.ChainletBase):
             last_test_out = ""
             last_diff = ""
             validation_reports: List[ValidationReport] = []
+            empty_patch_streak = 0
 
             for i in range(1, job.max_iterations + 1):
+                summary = ""
                 # Code: ask for a structured JSON patch so we can apply it directly.
+                iter_prefix = ""
+                if empty_patch_streak > 0:
+                    iter_prefix = (
+                        "Previous iteration wrote no files (git status clean / no parseable JSON). "
+                        "You MUST return a non-empty files array.\n\n"
+                    )
+                code_prompt = (
+                    f"{iter_prefix}Iteration {i}: implement the plan. Make the smallest change needed. "
+                    "Respond with a single JSON object (wrapped in ```json ... ```) containing exactly two keys: "
+                    '"files" (list of {path, content}) and "commands" (list of bash strings to run). '
+                    "Do not explain."
+                )
                 code_resp = await self._send(
                     base,
                     session,
-                    f"Iteration {i}: implement the plan. Make the smallest change needed. "
-                    "Respond with a single JSON object (wrapped in ```json ... ```) containing exactly two keys: "
-                    '"files" (list of {path, content}) and "commands" (list of bash strings to run). '
-                    "Do not explain.",
+                    code_prompt,
                     model=job.model,
                     mode="build",
                 )
                 patch = self._extract_json(code_resp)
+                if not (patch and patch.get("files")):
+                    raw_preview = self._extract_text(code_resp)[:800]
+                    print(
+                        f"[sdlc] job={job.job_id} iter={i} empty JSON files patch; "
+                        f"raw_preview={raw_preview!r}"
+                    )
+                    # One strict retry before fallbacks / streak accounting.
+                    retry_resp = await self._send(
+                        base,
+                        session,
+                        "Your previous reply had no parseable JSON with a non-empty "
+                        '"files" array. Return ONLY a markdown json fence:\n'
+                        '```json\n{"files":[{"path":"relative/path","content":"..."}],"commands":[]}\n```\n'
+                        "No other prose.",
+                        model=job.model,
+                        mode="build",
+                    )
+                    retry_patch = self._extract_json(retry_resp)
+                    if retry_patch and retry_patch.get("files"):
+                        patch = retry_patch
+                        code_resp = retry_resp
+                    else:
+                        retry_preview = self._extract_text(retry_resp)[:800]
+                        print(
+                            f"[sdlc] job={job.job_id} iter={i} retry still empty; "
+                            f"raw_preview={retry_preview!r}"
+                        )
+
                 if patch and patch.get("files"):
                     summary, _ = await self._apply_json_changes(base, patch)
+                    empty_patch_streak = 0
                 else:
                     # Fallback: write the response as the default repo file if the task implies one.
                     default_file = self._default_file_for_task(job.task)
@@ -771,11 +846,36 @@ class OpenCodeWorker(chains.ChainletBase):
                             base, {"files": [{"path": default_file, "content": content}]}
                         )
                         summary = f"wrote fallback {default_file}"
+                        empty_patch_streak = 0
                     else:
                         # Fallback to extracting bash commands from the response
-                        for cmd in self._extract_bash_commands(code_resp):
+                        bash_cmds = self._extract_bash_commands(code_resp)
+                        for cmd in bash_cmds:
                             await self._shell(base, session, cmd, model=job.model)
                         summary = "applied bash fallback"
+                        if not bash_cmds:
+                            empty_patch_streak += 1
+
+                # Keep formal verification stack aligned with behavioral changes
+                if job.sync_formal:
+                    formal_resp = await self._send(
+                        base,
+                        session,
+                        "Formal-sync step: inspect the diff you just made.\n"
+                        "If the change affects sandbox lifecycle, Daytona/MCP tools, GitHub token "
+                        "isolation, validation gates, or PR publish rules, update matching specs under "
+                        "`config/verification/` (Quint FSM, Alloy models, Dafny modules) in the SAME "
+                        "JSON patch format: {\"files\":[...],\"commands\":[]}.\n"
+                        "If no formal update is required, return "
+                        "{\"files\":[],\"commands\":[],\"formal_skip_reason\":\"<one line>\"}.\n"
+                        "Do not explain outside the JSON.",
+                        model=job.model,
+                        mode="build",
+                    )
+                    formal_patch = self._extract_json(formal_resp)
+                    if formal_patch and formal_patch.get("files"):
+                        await self._apply_json_changes(base, formal_patch)
+                        summary = f"{summary}; formal-sync applied"
 
                 # Test
                 test_resp = await self._shell(
@@ -796,19 +896,66 @@ class OpenCodeWorker(chains.ChainletBase):
                     lint_text = self._extract_text(lint_resp)
                     lint_ok = "error" not in lint_text.lower() and "failed" not in lint_text.lower()
 
-                # Diff
-                diff_resp = await self._shell(base, session, "cd repo && git diff", model=job.model)
+                # Diff (include untracked new files — plain `git diff` misses them)
+                diff_resp = await self._shell(
+                    base,
+                    session,
+                    "cd repo && (git add -A && git --no-pager diff --cached; "
+                    "git --no-pager status --porcelain)",
+                    model=job.model,
+                )
                 last_diff = self._extract_text(diff_resp)
+                # Treat whitespace-only / tool-noise as empty for require_diff accounting.
+                diff_body = last_diff.strip()
+                has_changes = bool(diff_body) and not diff_body.startswith(
+                    "[daytona exec error]"
+                ) and (
+                    "diff --git" in diff_body
+                    or any(
+                        line and line[0] in "AMDRCU?" for line in diff_body.splitlines()
+                    )
+                )
+                if not has_changes:
+                    if empty_patch_streak == 0 and "wrote" not in summary and "formal-sync" not in summary:
+                        empty_patch_streak += 1
+                else:
+                    empty_patch_streak = 0
+
+                if job.require_diff and empty_patch_streak >= 2:
+                    return SdlcResult(
+                        job_id=job.job_id,
+                        ok=False,
+                        iterations=i,
+                        diff=last_diff,
+                        test_output=last_test_out,
+                        session_id=session,
+                        error=(
+                            "require_diff: 2 consecutive iterations with no parseable "
+                            "file patches / empty git diff — aborting early "
+                            "(check BASETEN_PROXY_BASE_URL / model smoke)"
+                        ),
+                        validation=validation_reports,
+                        validation_passed=False,
+                    )
 
                 # Validation: validation_cmd is source of truth when present;
                 # else expand formal_suite / formal_paths when set.
+                # When sync_formal is on and suite unset, default to default_formal_suite.
                 validation_reports = []
                 try:
                     from sdlc_batch.validation import resolve_validation_cmd
 
+                    suite = job.validation.formal_suite
+                    if (
+                        job.sync_formal
+                        and not job.validation.validation_cmd
+                        and not suite
+                        and job.default_formal_suite
+                    ):
+                        suite = job.default_formal_suite
                     validation_cmd = resolve_validation_cmd(
                         validation_cmd=job.validation.validation_cmd,
-                        formal_suite=job.validation.formal_suite,
+                        formal_suite=suite,
                         formal_paths=job.validation.formal_paths,
                     )
                 except Exception:

@@ -42,6 +42,17 @@ const expected = [
   'sdlc-batch',
   'mastra-orchestrate',
   'verify-rule',
+  'formal-prd-plan',
+  'px_load',
+  'px_sandbox_create',
+  'px_upload_linkml',
+  'px_shacl_validate',
+  'px_shacl_preview',
+  'px_sandbox_destroy',
+  'fleet_run',
+  'tool_io_guard',
+  'px_ontology_mode',
+  'px_ontology_suggest',
 ];
 const missing = expected.filter((n) => !names.includes(n));
 if (missing.length) {

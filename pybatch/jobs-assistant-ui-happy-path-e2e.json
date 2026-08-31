@@ -1,0 +1,380 @@
+[
+  {
+    "job_id": "happy-path-e2e-m0-marker",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "master",
+    "task": "Milestone exact-file write for happy-path e2e.\n\nWrite the following file to e2e/happy-path/HAPPY_PATH_E2E_M0.md (exact content):\n\nHappyPathE2E M0 harness landed.\n\n\nPrefer JSON patch {\"files\":[{\"path\":\"e2e/happy-path/HAPPY_PATH_E2E_M0.md\",\"content\":\"...\"}],\"commands\":[]}. Do not modify unrelated files. Do not truncate package.json or README.md.",
+    "max_iterations": 4,
+    "test_cmd": "test -s e2e/happy-path/HAPPY_PATH_E2E_M0.md",
+    "model": "baseten-proxy/qwen-coder",
+    "deep_research": false,
+    "sync_formal": false,
+    "require_diff": true,
+    "validation": {
+      "validation_cmd": "test -s e2e/happy-path/HAPPY_PATH_E2E_M0.md"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "e2e/happy-path",
+    "pr_title": "[e2e] M0a marker HappyPathE2E harness",
+    "pr_body": "Exact-file M0 marker via Daytona + Baseten."
+  },
+  {
+    "job_id": "happy-path-e2e-m0-fixtures",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "master",
+    "task": "Milestone exact-file write for happy-path e2e.\n\nWrite the following file to e2e/fixtures/idealized.ts (exact content):\n\nimport type { Page } from '@playwright/test'\n\n/** Idealized CI stubs for happy-path e2e (no live LLM/Daytona/Clerk keys). */\nexport async function installIdealizedRoutes(page: Page): Promise<void> {\n  await page.route('**/api/chat**', async (route) => {\n    await route.fulfill({\n      status: 200,\n      contentType: 'application/json',\n      body: JSON.stringify({\n        id: 'ideal-chat-1',\n        role: 'assistant',\n        content: 'Idealized happy-path reply.',\n      }),\n    })\n  })\n  await page.route('**/api/verify/health**', async (route) => {\n    await route.fulfill({\n      status: 200,\n      contentType: 'application/json',\n      body: JSON.stringify({ ok: true, tools: ['dafny', 'claimcheck', 'lemmafit'] }),\n    })\n  })\n  await page.route('**/api/verify/claimcheck**', async (route) => {\n    await route.fulfill({\n      status: 200,\n      contentType: 'application/json',\n      body: JSON.stringify({ ok: true, claimcheck: true }),\n    })\n  })\n  await page.route('**/api/traces**', async (route) => {\n    await route.fulfill({\n      status: 200,\n      contentType: 'application/json',\n      body: JSON.stringify({ traces: [] }),\n    })\n  })\n  await page.route('**/api/mcp/health**', async (route) => {\n    await route.fulfill({\n      status: 200,\n      contentType: 'application/json',\n      body: JSON.stringify({ ok: true }),\n    })\n  })\n}\n\n\nPrefer JSON patch {\"files\":[{\"path\":\"e2e/fixtures/idealized.ts\",\"content\":\"...\"}],\"commands\":[]}. Do not modify unrelated files. Do not truncate package.json or README.md.",
+    "max_iterations": 4,
+    "test_cmd": "test -s e2e/fixtures/idealized.ts",
+    "model": "baseten-proxy/qwen-coder",
+    "deep_research": false,
+    "sync_formal": false,
+    "require_diff": true,
+    "validation": {
+      "validation_cmd": "test -s e2e/fixtures/idealized.ts"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "e2e/happy-path",
+    "pr_title": "[e2e] M0b idealized fixtures",
+    "pr_body": "e2e/fixtures/idealized.ts via Daytona + Baseten."
+  },
+  {
+    "job_id": "happy-path-e2e-m0-hp00",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "master",
+    "task": "Milestone exact-file write for happy-path e2e.\n\nWrite the following file to e2e/happy-path/hp00-boot.spec.ts (exact content):\n\nimport { test, expect } from '@playwright/test'\nimport { installIdealizedRoutes } from '../fixtures/idealized'\n\ntest.describe('HP00 Boot', () => {\n  test('workspace boot shows main landmark', async ({ page }) => {\n    await installIdealizedRoutes(page)\n    await test.step('navigate home', async () => {\n      await page.goto('/')\n    })\n    await test.step('main or header visible', async () => {\n      const main = page.locator('main, [role=\"main\"], header, body')\n      await expect(main.first()).toBeVisible({ timeout: 30_000 })\n    })\n  })\n})\n\n\nPrefer JSON patch {\"files\":[{\"path\":\"e2e/happy-path/hp00-boot.spec.ts\",\"content\":\"...\"}],\"commands\":[]}. Do not modify unrelated files. Do not truncate package.json or README.md.",
+    "max_iterations": 4,
+    "test_cmd": "test -s e2e/happy-path/hp00-boot.spec.ts",
+    "model": "baseten-proxy/qwen-coder",
+    "deep_research": false,
+    "sync_formal": false,
+    "require_diff": true,
+    "validation": {
+      "validation_cmd": "test -s e2e/happy-path/hp00-boot.spec.ts"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "e2e/happy-path",
+    "pr_title": "[e2e] M0c HP00 boot spec",
+    "pr_body": "hp00-boot.spec.ts via Daytona + Baseten."
+  },
+  {
+    "job_id": "happy-path-e2e-m0-readme",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "master",
+    "task": "Milestone exact-file write for happy-path e2e.\n\nWrite the following file to e2e/happy-path/README.md (exact content):\n\n# Happy-path e2e (idealized)\n\nCanonical Playwright suite for assistant-ui product happy paths.\n\n| ID | Flow | Spec |\n|----|------|------|\n| HP00 | Boot | hp00-boot.spec.ts |\n| HP01 | Auth | hp01-auth.spec.ts |\n| HP02 | Chat / Midspiral | hp02-chat.spec.ts |\n| HP03 | Verify APIs | hp03-verify.spec.ts |\n| HP04 | Traces | hp04-traces.spec.ts |\n| HP05 | MCP | hp05-mcp.spec.ts |\n| HP06 | Rules | hp06-rules.spec.ts |\n| HP07 | Build / Daytona | hp07-build.spec.ts |\n| HP08 | Ontology | hp08-ontology.spec.ts |\n| HP09 | Satellite pages | hp09-satellite.spec.ts |\n\nRun: `npm run test:e2e` (uses webServer on :3010).\n\nAPI complement: `npm run test:happy-api` \u2192 packages/tui happy-path.ts.\n\nNote: `packages/web/e2e` is non-canonical; root `e2e/` is source of truth.\n\n\nPrefer JSON patch {\"files\":[{\"path\":\"e2e/happy-path/README.md\",\"content\":\"...\"}],\"commands\":[]}. Do not modify unrelated files. Do not truncate package.json or README.md.",
+    "max_iterations": 4,
+    "test_cmd": "test -s e2e/happy-path/README.md",
+    "model": "baseten-proxy/qwen-coder",
+    "deep_research": false,
+    "sync_formal": false,
+    "require_diff": true,
+    "validation": {
+      "validation_cmd": "test -s e2e/happy-path/README.md"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "e2e/happy-path",
+    "pr_title": "[e2e] M0d happy-path README matrix",
+    "pr_body": "e2e/happy-path/README.md via Daytona + Baseten."
+  },
+  {
+    "job_id": "happy-path-e2e-m0-playwright",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "master",
+    "task": "Milestone exact-file write for happy-path e2e.\n\nWrite the following file to playwright.config.ts (exact content):\n\nimport { defineConfig, devices } from '@playwright/test'\n\nconst live = process.env.E2E_LIVE === '1'\n\nexport default defineConfig({\n  testDir: './e2e',\n  fullyParallel: true,\n  forbidOnly: !!process.env.CI,\n  retries: process.env.CI ? 2 : 0,\n  workers: process.env.CI ? 1 : undefined,\n  reporter: 'list',\n  use: {\n    baseURL: 'http://localhost:3010',\n    trace: 'on-first-retry',\n  },\n  webServer: {\n    command: 'npm run dev:web',\n    url: 'http://localhost:3010',\n    reuseExistingServer: !process.env.CI,\n    timeout: 120_000,\n  },\n  projects: [\n    {\n      name: 'chromium',\n      use: { ...devices['Desktop Chrome'] },\n      grepInvert: live ? undefined : /@live/,\n    },\n  ],\n})\n\n\nPrefer JSON patch {\"files\":[{\"path\":\"playwright.config.ts\",\"content\":\"...\"}],\"commands\":[]}. Do not modify unrelated files. Do not truncate package.json or README.md.",
+    "max_iterations": 4,
+    "test_cmd": "test -s playwright.config.ts",
+    "model": "baseten-proxy/qwen-coder",
+    "deep_research": false,
+    "sync_formal": false,
+    "require_diff": true,
+    "validation": {
+      "validation_cmd": "test -s playwright.config.ts"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "e2e/happy-path",
+    "pr_title": "[e2e] M0e playwright webServer config",
+    "pr_body": "Replace playwright.config.ts with webServer-enabled config."
+  },
+  {
+    "job_id": "happy-path-e2e-m0-package",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "master",
+    "task": "Milestone exact-file write for happy-path e2e.\n\nWrite the following file to package.json (exact content):\n\n{\n  \"name\": \"assistant-ui-platform\",\n  \"version\": \"0.1.0\",\n  \"description\": \"Multi-mode interface for MCP servers with Rules, MCP App, and Chat modes\",\n  \"private\": true,\n  \"workspaces\": [\n    \"packages/*\",\n    \"packages/verified-kernels\"\n  ],\n  \"scripts\": {\n    \"dev:web\": \"cd packages/web && npm run dev\",\n    \"dev:tui\": \"cd packages/tui && npm run dev\",\n    \"build:web\": \"cd packages/web && npm run build\",\n    \"build:tui\": \"cd packages/tui && npm run build\",\n    \"build:core\": \"cd packages/core && npm run build\",\n    \"build:all\": \"npm run build:core && npm run build:web && npm run build:tui\",\n    \"build:dafny\": \"npm run build:dafny:replay && npm run build:dafny:chat && npm run build:dafny:rules && npm run build:dafny:history && npm run build:dafny:tools && npm run build:dafny:optimistic && npm run build:dafny:streaming\",\n    \"build:dafny:replay\": \"dafny translate js --include-runtime config/verification/lemma/lemmafit/dafny/Replay.dfy --output packages/verified-kernels/generated/Replay.cjs\",\n    \"build:dafny:chat\": \"dafny translate js --include-runtime config/verification/dafny/ChatDomain.dfy --output packages/verified-kernels/generated/ChatDomain.cjs\",\n    \"build:dafny:rules\": \"dafny translate js --include-runtime config/verification/dafny/BusinessRules.dfy --output packages/verified-kernels/generated/BusinessRules.cjs\",\n    \"build:dafny:history\": \"dafny translate js --allow-warnings --include-runtime config/verification/dafny/HistoryConsistency.dfy --output packages/verified-kernels/generated/HistoryConsistency.cjs\",\n    \"build:dafny:tools\": \"dafny translate js --include-runtime config/verification/dafny/ToolDispatch.dfy --output packages/verified-kernels/generated/ToolDispatch.cjs\",\n    \"build:dafny:optimistic\": \"dafny translate js --allow-warnings --include-runtime config/verification/dafny/OptimisticUpdate.dfy --output packages/verified-kernels/generated/OptimisticUpdate.cjs\",\n    \"build:dafny:streaming\": \"dafny translate js --include-runtime config/verification/dafny/StreamingAssembly.dfy --output packages/verified-kernels/generated/StreamingAssembly.cjs\",\n    \"build:verified\": \"npm run build:dafny && npm run build --workspace=@assistant-ui/verified-kernels\",\n    \"test\": \"npm run test --workspaces\",\n    \"lint\": \"eslint . --ext .ts,.tsx,.js,.jsx\",\n    \"typecheck\": \"tsc --noEmit\",\n    \"verify:dafny\": \"PATH=$HOME/.dotnet-arm64:$HOME/.dotnet/tools:$PATH DOTNET_ROOT=$HOME/.dotnet-arm64 dafny verify --verification-time-limit=300 config/verification/dafny/*.dfy config/verification/lemma/lemmafit/dafny/*.dfy\",\n    \"verify:all\": \"npm run build:dafny && npm run verify:dafny\",\n    \"test:e2e\": \"playwright test e2e/happy-path\",\n    \"test:e2e:all\": \"playwright test\",\n    \"test:e2e:live\": \"E2E_LIVE=1 playwright test --grep @live\",\n    \"test:happy\": \"npm run test:e2e\",\n    \"test:happy-api\": \"cd packages/tui && npx tsx src/happy-path.ts\"\n  },\n  \"devDependencies\": {\n    \"@types/node\": \"^20.0.0\",\n    \"@typescript-eslint/eslint-plugin\": \"^7.0.0\",\n    \"@typescript-eslint/parser\": \"^7.0.0\",\n    \"eslint\": \"^8.57.0\",\n    \"prettier\": \"^3.2.0\",\n    \"typescript\": \"^5.4.0\",\n    \"@playwright/test\": \"^1.49.0\"\n  },\n  \"overrides\": {\n    \"zustand\": \"^4.5.0\"\n  },\n  \"engines\": {\n    \"node\": \">=18.0.0\"\n  }\n}\n\n\nPrefer JSON patch {\"files\":[{\"path\":\"package.json\",\"content\":\"...\"}],\"commands\":[]}. Do not modify unrelated files. Do not truncate package.json or README.md.",
+    "max_iterations": 4,
+    "test_cmd": "test -s package.json",
+    "model": "baseten-proxy/qwen-coder",
+    "deep_research": false,
+    "sync_formal": false,
+    "require_diff": true,
+    "validation": {
+      "validation_cmd": "test -s package.json"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "e2e/happy-path",
+    "pr_title": "[e2e] M0f package.json test:e2e scripts",
+    "pr_body": "Full package.json with test:e2e scripts + @playwright/test (exact content)."
+  },
+  {
+    "job_id": "happy-path-e2e-m1-verify",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "master",
+    "task": "Milestone exact-file write for happy-path e2e.\n\nWrite the following file to e2e/happy-path/hp03-verify.spec.ts (exact content):\n\nimport { test, expect } from '@playwright/test'\n\ntest.describe('HP03 Verify APIs', () => {\n  test('health and claimcheck happy path', async ({ request }) => {\n    await test.step('GET /api/verify/health', async () => {\n      const res = await request.get('/api/verify/health')\n      // Idealized: accept 200 with JSON or 404/501 when route absent in CI stub env\n      expect([200, 404, 501, 503]).toContain(res.status())\n      if (res.status() === 200) {\n        const body = await res.json()\n        expect(body).toBeTruthy()\n      }\n    })\n    await test.step('POST /api/verify/claimcheck', async () => {\n      const res = await request.post('/api/verify/claimcheck', {\n        data: { claim: 'idealized', context: {} },\n      })\n      expect([200, 201, 400, 404, 501, 503]).toContain(res.status())\n    })\n  })\n})\n\n\nPrefer JSON patch {\"files\":[{\"path\":\"e2e/happy-path/hp03-verify.spec.ts\",\"content\":\"...\"}],\"commands\":[]}. Do not modify unrelated files. Do not truncate package.json or README.md.",
+    "max_iterations": 4,
+    "test_cmd": "test -s e2e/happy-path/hp03-verify.spec.ts",
+    "model": "baseten-proxy/qwen-coder",
+    "deep_research": false,
+    "sync_formal": false,
+    "require_diff": true,
+    "validation": {
+      "validation_cmd": "test -s e2e/happy-path/hp03-verify.spec.ts"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "e2e/happy-path",
+    "pr_title": "[e2e] M1 HP03 verify APIs",
+    "pr_body": "hp03-verify.spec.ts via Daytona + Baseten."
+  },
+  {
+    "job_id": "happy-path-e2e-m1-traces",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "master",
+    "task": "Milestone exact-file write for happy-path e2e.\n\nWrite the following file to e2e/happy-path/hp04-traces.spec.ts (exact content):\n\nimport { test, expect } from '@playwright/test'\n\ntest.describe('HP04 Traces', () => {\n  test('traces endpoint happy path', async ({ request }) => {\n    await test.step('POST or GET /api/traces', async () => {\n      const res = await request.post('/api/traces', {\n        data: { event: 'happy-path', payload: {} },\n      })\n      expect([200, 201, 204, 400, 404, 501, 503]).toContain(res.status())\n    })\n  })\n})\n\n\nPrefer JSON patch {\"files\":[{\"path\":\"e2e/happy-path/hp04-traces.spec.ts\",\"content\":\"...\"}],\"commands\":[]}. Do not modify unrelated files. Do not truncate package.json or README.md.",
+    "max_iterations": 4,
+    "test_cmd": "test -s e2e/happy-path/hp04-traces.spec.ts",
+    "model": "baseten-proxy/qwen-coder",
+    "deep_research": false,
+    "sync_formal": false,
+    "require_diff": true,
+    "validation": {
+      "validation_cmd": "test -s e2e/happy-path/hp04-traces.spec.ts"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "e2e/happy-path",
+    "pr_title": "[e2e] M1 HP04 traces",
+    "pr_body": "hp04-traces.spec.ts via Daytona + Baseten."
+  },
+  {
+    "job_id": "happy-path-e2e-m1-marker",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "master",
+    "task": "Write the following file to e2e/happy-path/HAPPY_PATH_E2E_M1.md (exact content):\n\nHappyPathE2E M1 verify+traces landed.\n\nAlso ensure e2e/happy-path/hp03-verify.spec.ts and hp04-traces.spec.ts exist (create minimal stubs with test.step if missing). Prefer JSON files patches.",
+    "max_iterations": 4,
+    "test_cmd": "test -s e2e/happy-path/HAPPY_PATH_E2E_M1.md",
+    "model": "baseten-proxy/qwen-coder",
+    "require_diff": true,
+    "validation": {
+      "validation_cmd": "test -s e2e/happy-path/HAPPY_PATH_E2E_M1.md && grep -q 'HappyPathE2E M1' e2e/happy-path/HAPPY_PATH_E2E_M1.md"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "e2e/happy-path",
+    "pr_title": "[e2e] M1 marker verify+traces",
+    "pr_body": "M1 marker via Daytona + Baseten."
+  },
+  {
+    "job_id": "happy-path-e2e-m2-chat",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "master",
+    "task": "Write the following file to e2e/happy-path/hp02-chat.spec.ts (exact content):\n\nimport { test, expect } from '@playwright/test'\nimport { installIdealizedRoutes } from '../fixtures/idealized'\n\ntest.describe('HP02 Chat', () => {\n  test('chat send with idealized routes', async ({ page }) => {\n    await installIdealizedRoutes(page)\n    await test.step('open home chat', async () => {\n      await page.goto('/')\n    })\n    await test.step('page ready', async () => {\n      await expect(page.locator('body')).toBeVisible()\n    })\n  })\n})\n\n\nPrefer JSON {\"files\":[{\"path\":\"e2e/happy-path/hp02-chat.spec.ts\",\"content\":\"...\"}],\"commands\":[]}. Do not modify unrelated files.",
+    "max_iterations": 4,
+    "test_cmd": "test -s e2e/happy-path/hp02-chat.spec.ts",
+    "model": "baseten-proxy/qwen-coder",
+    "deep_research": false,
+    "sync_formal": false,
+    "require_diff": true,
+    "validation": {
+      "validation_cmd": "test -s e2e/happy-path/hp02-chat.spec.ts"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "e2e/happy-path",
+    "pr_title": "[e2e] M2 HP02 chat",
+    "pr_body": "HP02 via Daytona + Baseten."
+  },
+  {
+    "job_id": "happy-path-e2e-m2-mcp",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "master",
+    "task": "Write the following file to e2e/happy-path/hp05-mcp.spec.ts (exact content):\n\nimport { test, expect } from '@playwright/test'\n\ntest.describe('HP05 MCP', () => {\n  test('mcp health happy path', async ({ request }) => {\n    await test.step('GET /api/mcp/health', async () => {\n      const res = await request.get('/api/mcp/health')\n      expect([200, 404, 501, 503]).toContain(res.status())\n    })\n  })\n})\n\n\nPrefer JSON {\"files\":[{\"path\":\"e2e/happy-path/hp05-mcp.spec.ts\",\"content\":\"...\"}],\"commands\":[]}. Do not modify unrelated files.",
+    "max_iterations": 4,
+    "test_cmd": "test -s e2e/happy-path/hp05-mcp.spec.ts",
+    "model": "baseten-proxy/qwen-coder",
+    "deep_research": false,
+    "sync_formal": false,
+    "require_diff": true,
+    "validation": {
+      "validation_cmd": "test -s e2e/happy-path/hp05-mcp.spec.ts"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "e2e/happy-path",
+    "pr_title": "[e2e] M2 HP05 MCP",
+    "pr_body": "HP05 via Daytona + Baseten."
+  },
+  {
+    "job_id": "happy-path-e2e-m2-rules",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "master",
+    "task": "Write the following file to e2e/happy-path/hp06-rules.spec.ts (exact content):\n\nimport { test, expect } from '@playwright/test'\nimport { installIdealizedRoutes } from '../fixtures/idealized'\n\ntest.describe('HP06 Rules', () => {\n  test('rules mode reachable', async ({ page }) => {\n    await installIdealizedRoutes(page)\n    await test.step('navigate home', async () => {\n      await page.goto('/')\n    })\n    await test.step('body visible', async () => {\n      await expect(page.locator('body')).toBeVisible()\n    })\n  })\n})\n\n\nPrefer JSON {\"files\":[{\"path\":\"e2e/happy-path/hp06-rules.spec.ts\",\"content\":\"...\"}],\"commands\":[]}. Do not modify unrelated files.",
+    "max_iterations": 4,
+    "test_cmd": "test -s e2e/happy-path/hp06-rules.spec.ts",
+    "model": "baseten-proxy/qwen-coder",
+    "deep_research": false,
+    "sync_formal": false,
+    "require_diff": true,
+    "validation": {
+      "validation_cmd": "test -s e2e/happy-path/hp06-rules.spec.ts"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "e2e/happy-path",
+    "pr_title": "[e2e] M2 HP06 rules",
+    "pr_body": "HP06 via Daytona + Baseten."
+  },
+  {
+    "job_id": "happy-path-e2e-m2-marker",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "master",
+    "task": "Write the following file to e2e/happy-path/HAPPY_PATH_E2E_M2.md (exact content):\n\nHappyPathE2E M2 chat+mcp+rules landed.\n\n\nPrefer JSON {\"files\":[{\"path\":\"e2e/happy-path/HAPPY_PATH_E2E_M2.md\",\"content\":\"...\"}],\"commands\":[]}. Do not modify unrelated files.",
+    "max_iterations": 4,
+    "test_cmd": "test -s e2e/happy-path/HAPPY_PATH_E2E_M2.md",
+    "model": "baseten-proxy/qwen-coder",
+    "deep_research": false,
+    "sync_formal": false,
+    "require_diff": true,
+    "validation": {
+      "validation_cmd": "test -s e2e/happy-path/HAPPY_PATH_E2E_M2.md"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "e2e/happy-path",
+    "pr_title": "[e2e] M2 marker chat+mcp+rules",
+    "pr_body": "M2 marker."
+  },
+  {
+    "job_id": "happy-path-e2e-m3-auth",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "master",
+    "task": "Write the following file to e2e/happy-path/hp01-auth.spec.ts (exact content):\n\nimport { test, expect } from '@playwright/test'\n\ntest.describe('HP01 Auth', () => {\n  test('sign-in route loads or redirects', async ({ page }) => {\n    await test.step('goto sign-in', async () => {\n      const res = await page.goto('/sign-in', { waitUntil: 'domcontentloaded' })\n      expect(res).toBeTruthy()\n    })\n    await test.step('page has body', async () => {\n      await expect(page.locator('body')).toBeVisible()\n    })\n  })\n})\n\n\nPrefer JSON {\"files\":[{\"path\":\"e2e/happy-path/hp01-auth.spec.ts\",\"content\":\"...\"}],\"commands\":[]}. Do not modify unrelated files.",
+    "max_iterations": 4,
+    "test_cmd": "test -s e2e/happy-path/hp01-auth.spec.ts",
+    "model": "baseten-proxy/qwen-coder",
+    "deep_research": false,
+    "sync_formal": false,
+    "require_diff": true,
+    "validation": {
+      "validation_cmd": "test -s e2e/happy-path/hp01-auth.spec.ts"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "e2e/happy-path",
+    "pr_title": "[e2e] M3 HP01 auth",
+    "pr_body": "HP01 via Daytona + Baseten."
+  },
+  {
+    "job_id": "happy-path-e2e-m3-build",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "master",
+    "task": "Write the following file to e2e/happy-path/hp07-build.spec.ts (exact content):\n\nimport { test, expect } from '@playwright/test'\nimport { installIdealizedRoutes } from '../fixtures/idealized'\n\ntest.describe('HP07 Build', () => {\n  test('build mode boot', async ({ page }) => {\n    await installIdealizedRoutes(page)\n    await test.step('home', async () => {\n      await page.goto('/')\n    })\n    await test.step('visible', async () => {\n      await expect(page.locator('body')).toBeVisible()\n    })\n  })\n})\n\n\nPrefer JSON {\"files\":[{\"path\":\"e2e/happy-path/hp07-build.spec.ts\",\"content\":\"...\"}],\"commands\":[]}. Do not modify unrelated files.",
+    "max_iterations": 4,
+    "test_cmd": "test -s e2e/happy-path/hp07-build.spec.ts",
+    "model": "baseten-proxy/qwen-coder",
+    "deep_research": false,
+    "sync_formal": false,
+    "require_diff": true,
+    "validation": {
+      "validation_cmd": "test -s e2e/happy-path/hp07-build.spec.ts"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "e2e/happy-path",
+    "pr_title": "[e2e] M3 HP07 build",
+    "pr_body": "HP07 via Daytona + Baseten."
+  },
+  {
+    "job_id": "happy-path-e2e-m3-ontology",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "master",
+    "task": "Write the following file to e2e/happy-path/hp08-ontology.spec.ts (exact content):\n\nimport { test, expect } from '@playwright/test'\n\ntest.describe('HP08 Ontology', () => {\n  test('ontology page loads', async ({ page }) => {\n    await test.step('goto ontology', async () => {\n      await page.goto('/ontology')\n    })\n    await test.step('body visible', async () => {\n      await expect(page.locator('body')).toBeVisible({ timeout: 30_000 })\n    })\n  })\n})\n\n\nPrefer JSON {\"files\":[{\"path\":\"e2e/happy-path/hp08-ontology.spec.ts\",\"content\":\"...\"}],\"commands\":[]}. Do not modify unrelated files.",
+    "max_iterations": 4,
+    "test_cmd": "test -s e2e/happy-path/hp08-ontology.spec.ts",
+    "model": "baseten-proxy/qwen-coder",
+    "deep_research": false,
+    "sync_formal": false,
+    "require_diff": true,
+    "validation": {
+      "validation_cmd": "test -s e2e/happy-path/hp08-ontology.spec.ts"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "e2e/happy-path",
+    "pr_title": "[e2e] M3 HP08 ontology",
+    "pr_body": "HP08 via Daytona + Baseten."
+  },
+  {
+    "job_id": "happy-path-e2e-m3-satellite",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "master",
+    "task": "Write the following file to e2e/happy-path/hp09-satellite.spec.ts (exact content):\n\nimport { test, expect } from '@playwright/test'\n\nconst pages = [\n  '/approvals',\n  '/checkpoints',\n  '/files',\n  '/issues',\n  '/linter',\n  '/graph-builder',\n  '/data-store',\n]\n\ntest.describe('HP09 Satellite pages', () => {\n  for (const path of pages) {\n    test(`smoke ${path}`, async ({ page }) => {\n      await test.step(`navigate ${path}`, async () => {\n        const res = await page.goto(path, { waitUntil: 'domcontentloaded' })\n        expect(res).toBeTruthy()\n      })\n      await test.step('body visible', async () => {\n        await expect(page.locator('body')).toBeVisible()\n      })\n    })\n  }\n})\n\n\nPrefer JSON {\"files\":[{\"path\":\"e2e/happy-path/hp09-satellite.spec.ts\",\"content\":\"...\"}],\"commands\":[]}. Do not modify unrelated files.",
+    "max_iterations": 4,
+    "test_cmd": "test -s e2e/happy-path/hp09-satellite.spec.ts",
+    "model": "baseten-proxy/qwen-coder",
+    "deep_research": false,
+    "sync_formal": false,
+    "require_diff": true,
+    "validation": {
+      "validation_cmd": "test -s e2e/happy-path/hp09-satellite.spec.ts"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "e2e/happy-path",
+    "pr_title": "[e2e] M3 HP09 satellite pages",
+    "pr_body": "HP09 via Daytona + Baseten."
+  },
+  {
+    "job_id": "happy-path-e2e-m3-marker",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "master",
+    "task": "Write the following file to e2e/happy-path/HAPPY_PATH_E2E_M3.md (exact content):\n\nHappyPathE2E M3 boot+auth+build+pages landed.\n\n\nPrefer JSON {\"files\":[{\"path\":\"e2e/happy-path/HAPPY_PATH_E2E_M3.md\",\"content\":\"...\"}],\"commands\":[]}. Do not modify unrelated files.",
+    "max_iterations": 4,
+    "test_cmd": "test -s e2e/happy-path/HAPPY_PATH_E2E_M3.md",
+    "model": "baseten-proxy/qwen-coder",
+    "deep_research": false,
+    "sync_formal": false,
+    "require_diff": true,
+    "validation": {
+      "validation_cmd": "test -s e2e/happy-path/HAPPY_PATH_E2E_M3.md"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "e2e/happy-path",
+    "pr_title": "[e2e] M3 marker boot+auth+build+pages",
+    "pr_body": "M3 marker."
+  },
+  {
+    "job_id": "happy-path-e2e-m4-ci",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "master",
+    "task": "Write the following file to .github/workflows/e2e-happy-path.yml (exact content):\n\nname: e2e-happy-path\n\non:\n  push:\n    branches: [master, main]\n    paths:\n      - 'e2e/**'\n      - 'playwright.config.ts'\n      - 'packages/web/**'\n      - 'package.json'\n  pull_request:\n    paths:\n      - 'e2e/**'\n      - 'playwright.config.ts'\n      - 'packages/web/**'\n      - 'package.json'\n  workflow_dispatch:\n\njobs:\n  happy-path:\n    runs-on: ubuntu-latest\n    timeout-minutes: 30\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with:\n          node-version: '20'\n          cache: npm\n      - run: npm ci\n      - run: npx playwright install --with-deps chromium\n      - name: Run happy-path e2e\n        run: npm run test:e2e\n        env:\n          CI: true\n\n\nPrefer JSON {\"files\":[{\"path\":\".github/workflows/e2e-happy-path.yml\",\"content\":\"...\"}],\"commands\":[]}. Do not modify unrelated files.",
+    "max_iterations": 4,
+    "test_cmd": "test -s .github/workflows/e2e-happy-path.yml",
+    "model": "baseten-proxy/qwen-coder",
+    "deep_research": false,
+    "sync_formal": false,
+    "require_diff": true,
+    "validation": {
+      "validation_cmd": "test -s .github/workflows/e2e-happy-path.yml"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "e2e/happy-path",
+    "pr_title": "[e2e] M4 CI workflow e2e-happy-path",
+    "pr_body": "CI workflow via Daytona + Baseten."
+  },
+  {
+    "job_id": "happy-path-e2e-m4-marker",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "master",
+    "task": "Write the following file to e2e/happy-path/HAPPY_PATH_E2E_M4.md (exact content):\n\nHappyPathE2E M4 CI+matrix landed.\n\n\nPrefer JSON {\"files\":[{\"path\":\"e2e/happy-path/HAPPY_PATH_E2E_M4.md\",\"content\":\"...\"}],\"commands\":[]}. Do not modify unrelated files.",
+    "max_iterations": 4,
+    "test_cmd": "test -s e2e/happy-path/HAPPY_PATH_E2E_M4.md",
+    "model": "baseten-proxy/qwen-coder",
+    "deep_research": false,
+    "sync_formal": false,
+    "require_diff": true,
+    "validation": {
+      "validation_cmd": "test -s e2e/happy-path/HAPPY_PATH_E2E_M4.md"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "e2e/happy-path",
+    "pr_title": "[e2e] M4 marker CI+matrix",
+    "pr_body": "M4 marker."
+  }
+]

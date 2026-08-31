@@ -27,7 +27,7 @@ async function query(sql: string): Promise<any> {
     throw new Error(`HTTP ${response.status}: ${text}`);
   }
 
-  const results = await response.json();
+  const results = (await response.json()) as Array<{ status: string; result?: string; kind?: string }>;
   const errors = results.filter((r: any) => r.status === "ERR");
   if (errors.length > 0) {
     throw new Error(`Query errors: ${JSON.stringify(errors)}`);
@@ -92,7 +92,7 @@ async function main() {
     }
 
     const sql = `
-      CREATE opencode_sessions CONTENT {
+      UPSERT opencode_sessions CONTENT {
         id: '${s.id}',
         title: '${titleClean.replace(/'/g, "\\'")}',
         status: 'completed',

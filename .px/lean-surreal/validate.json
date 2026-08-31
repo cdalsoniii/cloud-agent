@@ -1,0 +1,10 @@
+{
+  "at": "2026-08-02T03:46:32Z",
+  "ns": "test",
+  "db": "test",
+  "graphqlViolations": 0,
+  "lakeBuildExit": 0,
+  "leanBridgeStatus": "ok",
+  "leanDiagnostics": 0,
+  "status": "pass"
+}

@@ -32,6 +32,18 @@ import {
   sdlcBatchTool,
   mastraOrchestrateTool,
 } from './tools/daytona-tools.js';
+import { formalPrdPlanTool } from './tools/formal-prd-plan.js';
+import {
+  callVerificationMcpTool,
+  VERIFICATION_MCP_SCHEMAS,
+  VERIFICATION_MCP_TOOLS,
+  verificationMcpManifest,
+} from '../verification-sandbox/mcp-tools.js';
+import {
+  isGatedMcpTool,
+  resolvePack,
+} from '../verification-sandbox/pack-resolve.js';
+import { isOntologyEnforcementEnabled } from '../verification-sandbox/px-config.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const CLOUD_AGENT_ROOT = path.resolve(__dirname, '../..');
@@ -209,7 +221,47 @@ const tools: Record<string, ToolEntry> = {
       required: ['ruleSpec', 'ruleCode'],
     },
   },
+  'formal-prd-plan': {
+    tool: formalPrdPlanTool,
+    name: 'formal-prd-plan',
+    description: formalPrdPlanTool.description,
+    inputSchema: {
+      type: 'object',
+      properties: {
+        request: {
+          type: 'string',
+          description:
+            'Natural-language request for formal PRD / happy-path / issue expansion',
+        },
+        target: { type: 'string', default: 'assistant-ui' },
+        dryRun: { type: 'boolean', default: false },
+        writeJobs: { type: 'boolean', default: false },
+        slug: { type: 'string' },
+      },
+      required: ['request'],
+    },
+  },
 };
+
+/** Registry-driven verification tools — always mirror VERIFICATION_MCP_SCHEMAS (no allowlist drift). */
+for (const t of VERIFICATION_MCP_TOOLS) {
+  const schema = VERIFICATION_MCP_SCHEMAS[t.name];
+  if (!schema) continue;
+  tools[t.name] = {
+    tool: {
+      description: schema.description,
+      execute: async ({ context }: { context: Record<string, unknown> }) =>
+        callVerificationMcpTool(t.name, context || {}),
+    },
+    name: t.name,
+    description: schema.description,
+    inputSchema: schema.inputSchema,
+  };
+}
+// px_load uses manifest helper (schema still registered)
+if (tools.px_load) {
+  tools.px_load.tool.execute = async () => verificationMcpManifest();
+}
 
 function createMcpServer(): Server {
   const server = new Server(
@@ -232,10 +284,119 @@ function createMcpServer(): Server {
       throw new Error(`Tool not found: ${name}`);
     }
 
+    const context = { ...(args || {}) } as Record<string, unknown>;
+
     try {
-      const result = await entry.tool.execute({ context: args || {} });
+      // Always-on middleware: resolve pack + optional pre-gate for gated tools
+      const resolved = resolvePack({
+        pack: context.pack as string | undefined,
+        className: context.className as string | undefined,
+        tool: (context.tool as string) || name,
+        text: (context.text as string) || (context.task as string) || '',
+        payload: context.payload ?? context.data ?? context,
+      });
+      if (!context.pack) context.pack = resolved.pack;
+      if (!context.className) context.className = resolved.className;
+
+      let preValidation: unknown = null;
+      if (isGatedMcpTool(name) && isOntologyEnforcementEnabled()) {
+        preValidation = await callVerificationMcpTool('tool_io_guard', {
+          tool: name,
+          phase: 'pre',
+          enforceSchema: true,
+          pack: context.pack,
+          className: context.className,
+          payload: context.payload ?? context.data ?? {
+            tool: name,
+            args: context,
+          },
+        });
+        if (preValidation && typeof preValidation === 'object' && (preValidation as any).ok === false) {
+          return {
+            content: [
+              {
+                type: 'text',
+                text: JSON.stringify(
+                  {
+                    ok: false,
+                    error: 'validation_pre_blocked',
+                    message: `tool_io_guard pre failed for gated tool ${name}`,
+                    phase: 'pre',
+                    packResolve: resolved,
+                    validation: preValidation,
+                  },
+                  null,
+                  2,
+                ),
+              },
+            ],
+            isError: true,
+          };
+        }
+      }
+
+      const result = await entry.tool.execute({ context });
+
+      let postValidation: unknown = null;
+      if (isGatedMcpTool(name) && isOntologyEnforcementEnabled()) {
+        postValidation = await callVerificationMcpTool('tool_io_guard', {
+          tool: name,
+          phase: 'post',
+          enforceSchema: true,
+          pack: context.pack,
+          className: context.className,
+          payload: context.payload ?? context.data,
+          result: typeof result === 'object' && result !== null ? result : { value: result },
+        });
+        // Hard post-block: output must pass cascade before success is returned
+        if (
+          postValidation &&
+          typeof postValidation === 'object' &&
+          (postValidation as any).ok === false
+        ) {
+          return {
+            content: [
+              {
+                type: 'text',
+                text: JSON.stringify(
+                  {
+                    ok: false,
+                    error: 'validation_post_blocked',
+                    message: `tool_io_guard post failed for gated tool ${name}`,
+                    phase: 'post',
+                    packResolve: resolved,
+                    result,
+                    validationPre: preValidation,
+                    validationPost: postValidation,
+                  },
+                  null,
+                  2,
+                ),
+              },
+            ],
+            isError: true,
+          };
+        }
+      }
+
+      // Always attach pack resolve + optional validation envelope for agents
+      const envelope =
+        result && typeof result === 'object' && !Array.isArray(result)
+          ? {
+              ...(result as object),
+              packResolve: resolved,
+              ...(preValidation ? { validationPre: preValidation } : {}),
+              ...(postValidation ? { validationPost: postValidation } : {}),
+            }
+          : {
+              result,
+              packResolve: resolved,
+              ...(preValidation ? { validationPre: preValidation } : {}),
+              ...(postValidation ? { validationPost: postValidation } : {}),
+            };
+
       return {
-        content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
+        content: [{ type: 'text', text: JSON.stringify(envelope, null, 2) }],
       };
     } catch (error: any) {
       return {

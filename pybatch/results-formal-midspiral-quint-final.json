@@ -1,0 +1,463 @@
+[
+  {
+    "job_id": "formal-mq-001-midspiral-rule-yaml",
+    "ok": true,
+    "iterations": 1,
+    "diff": "",
+    "test_output": "__TEST_EXIT__:0",
+    "session_id": "ses_07d0f8c22ffeMIdtESUF8AWVeZ",
+    "error": null,
+    "validation": [
+      {
+        "passed": true,
+        "engine": "validation_cmd",
+        "rule_id": "validation_cmd",
+        "message": "exit=0",
+        "details": {
+          "stdout": "__EXIT__:0",
+          "cmd": "test -f formal/midspiral/rule-sandbox-lifecycle.yaml && grep -q 'rule-sandbox-lifecycle-sdk' formal/midspiral/rule-sandbox-lifecycle.yaml && grep -q 'provider.sh' formal/midspiral/rule-sandbox-lifecycle.yaml && grep -q 'sdk_path == true' formal/midspiral/rule-sandbox-lifecycle.yaml && grep -q 'midspiral:' formal/midspiral/rule-sandbox-lifecycle.yaml && grep -q 'verify-rules' formal/midspiral/rule-sandbox-lifecycle.yaml"
+        }
+      },
+      {
+        "passed": true,
+        "engine": "business-rule",
+        "rule_id": "sandbox lifecycle rule must forbid provider.sh and",
+        "message": "keyword coverage 71%",
+        "details": {
+          "matched": [
+            "sandbox",
+            "lifecycle",
+            "rule",
+            "provider.sh",
+            "daytona"
+          ],
+          "missing": [
+            "forbid",
+            "require"
+          ]
+        }
+      }
+    ],
+    "validation_passed": true,
+    "pr_url": "https://github.com/BrightforestX/meta-utilities/pull/10",
+    "pr_number": 10,
+    "pr_branch": "formal-mq/formal-mq-001-midspiral-rule-yaml",
+    "pr_error": null,
+    "sandbox_id": "522c0a7e-fd36-42f6-b659-9c5d85ac228d"
+  },
+  {
+    "job_id": "formal-mq-002-quint-counter",
+    "ok": true,
+    "iterations": 1,
+    "diff": "",
+    "test_output": "__TEST_EXIT__:0",
+    "session_id": "ses_07d108928ffefIiix4e6Mt0CaW",
+    "error": null,
+    "validation": [
+      {
+        "passed": true,
+        "engine": "validation_cmd",
+        "rule_id": "validation_cmd",
+        "message": "exit=0",
+        "details": {
+          "stdout": "npm notice\nnpm notice New minor version of npm available! 11.12.1 -> 11.18.0\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v11.18.0\nnpm notice To update run: npm install -g npm@11.18.0\nnpm notice\n__EXIT__:0",
+          "cmd": "test -f formal/quint/counter.qnt && grep -q 'module counter' formal/quint/counter.qnt && grep -q 'action Init' formal/quint/counter.qnt && grep -q 'val NonNeg' formal/quint/counter.qnt && (command -v quint >/dev/null && quint typecheck formal/quint/counter.qnt || npx --yes @informalsystems/quint@0.32.0 typecheck formal/quint/counter.qnt)"
+        }
+      },
+      {
+        "passed": true,
+        "engine": "business-rule",
+        "rule_id": "Quint counter module must define Init Inc Next and",
+        "message": "keyword coverage 71%",
+        "details": {
+          "matched": [
+            "counter",
+            "module",
+            "init",
+            "next",
+            "nonneg"
+          ],
+          "missing": [
+            "quint",
+            "define"
+          ]
+        }
+      }
+    ],
+    "validation_passed": true,
+    "pr_url": "https://github.com/BrightforestX/meta-utilities/pull/8",
+    "pr_number": 8,
+    "pr_branch": "formal-mq/formal-mq-002-quint-counter",
+    "pr_error": null,
+    "sandbox_id": "63537dfa-085c-4960-b7ec-d12e2c081864",
+    "sandbox_url": "https://4096-dw6vsikcil4zhurx.daytonaproxy01.net",
+    "repo_url": "https://github.com/BrightforestX/meta-utilities.git"
+  },
+  {
+    "job_id": "formal-mq-003-quint-mutex",
+    "ok": true,
+    "iterations": 1,
+    "diff": "",
+    "test_output": "__TEST_EXIT__:0",
+    "session_id": "ses_07d108758ffddVA0pw5ZfIvnqf",
+    "error": null,
+    "validation": [
+      {
+        "passed": true,
+        "engine": "validation_cmd",
+        "rule_id": "validation_cmd",
+        "message": "exit=0",
+        "details": {
+          "stdout": "npm notice\nnpm notice New minor version of npm available! 11.12.1 -> 11.18.0\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v11.18.0\nnpm notice To update run: npm install -g npm@11.18.0\nnpm notice\n__EXIT__:0",
+          "cmd": "test -f formal/quint/mutex.qnt && grep -q 'module mutex' formal/quint/mutex.qnt && grep -q 'MutualExclusion' formal/quint/mutex.qnt && grep -q 'holders <= 1' formal/quint/mutex.qnt && (command -v quint >/dev/null && quint typecheck formal/quint/mutex.qnt || npx --yes @informalsystems/quint@0.32.0 typecheck formal/quint/mutex.qnt)"
+        }
+      },
+      {
+        "passed": true,
+        "engine": "business-rule",
+        "rule_id": "Quint mutex must enforce MutualExclusion holders <",
+        "message": "keyword coverage 60%",
+        "details": {
+          "matched": [
+            "mutex",
+            "mutualexclusion",
+            "holders"
+          ],
+          "missing": [
+            "quint",
+            "enforce"
+          ]
+        }
+      }
+    ],
+    "validation_passed": true,
+    "pr_url": "https://github.com/BrightforestX/meta-utilities/pull/9",
+    "pr_number": 9,
+    "pr_branch": "formal-mq/formal-mq-003-quint-mutex",
+    "pr_error": null,
+    "sandbox_id": "3f8a25a8-cfed-4b16-b569-e4eaf466941e",
+    "sandbox_url": "https://4096-l6lcc4arbziiwn8k.daytonaproxy01.net",
+    "repo_url": "https://github.com/BrightforestX/meta-utilities.git"
+  },
+  {
+    "job_id": "formal-mq-004-midspiral-verify-script",
+    "ok": true,
+    "iterations": 1,
+    "diff": "",
+    "test_output": "__TEST_EXIT__:0",
+    "session_id": "ses_07d108875ffezWOOf9Iru7Q36z",
+    "error": null,
+    "validation": [
+      {
+        "passed": true,
+        "engine": "validation_cmd",
+        "rule_id": "validation_cmd",
+        "message": "exit=0",
+        "details": {
+          "stdout": "__EXIT__:0",
+          "cmd": "test -f scripts/verify_midspiral_rules.sh && grep -q MIDSPIRAL_OK scripts/verify_midspiral_rules.sh && grep -q surrealql_assertion scripts/verify_midspiral_rules.sh && mkdir -p formal/midspiral && printf '%s\\n' 'id: rule-tmp' 'surrealql_assertion: true' 'midspiral:' '  tool: verify-rules' > formal/midspiral/.tmp-rule.yaml && chmod +x scripts/verify_midspiral_rules.sh && ./scripts/verify_midspiral_rules.sh formal/midspiral/.tmp-rule.yaml | grep -q MIDSPIRAL_OK && rm -f formal/midspiral/.tmp-rule.yaml"
+        }
+      },
+      {
+        "passed": false,
+        "engine": "business-rule",
+        "rule_id": "verify_midspiral_rules.sh must print MIDSPIRAL_OK ",
+        "message": "keyword coverage 33%",
+        "details": {
+          "matched": [
+            "midspiral_ok",
+            "rule"
+          ],
+          "missing": [
+            "verify_midspiral_rules.sh",
+            "print",
+            "fields",
+            "present"
+          ]
+        }
+      }
+    ],
+    "validation_passed": true,
+    "pr_url": "https://github.com/BrightforestX/meta-utilities/pull/6",
+    "pr_number": 6,
+    "pr_branch": "formal-mq/formal-mq-004-midspiral-verify-script",
+    "pr_error": null,
+    "sandbox_id": "25c27abf-74b8-4d8d-aedb-922adb178a72",
+    "sandbox_url": "https://4096-quj85oqdbcc1e6st.daytonaproxy01.net",
+    "repo_url": "https://github.com/BrightforestX/meta-utilities.git"
+  },
+  {
+    "job_id": "formal-mq-005-formal-docs",
+    "ok": true,
+    "iterations": 1,
+    "diff": "",
+    "test_output": "__TEST_EXIT__:0",
+    "session_id": "ses_07d108876ffeBB59ZUn2Q25QEX",
+    "error": null,
+    "validation": [
+      {
+        "passed": true,
+        "engine": "validation_cmd",
+        "rule_id": "validation_cmd",
+        "message": "exit=0",
+        "details": {
+          "stdout": "__EXIT__:0",
+          "cmd": "test -f docs/formal-validation-midspiral-quint.md && grep -q 'Midspiral' docs/formal-validation-midspiral-quint.md && grep -q 'Quint.sh' docs/formal-validation-midspiral-quint.md && grep -q 'formal/midspiral' docs/formal-validation-midspiral-quint.md && grep -q 'formal/quint' docs/formal-validation-midspiral-quint.md && grep -q 'validation_cmd' docs/formal-validation-midspiral-quint.md && grep -q 'verify_midspiral_rules' docs/formal-validation-midspiral-quint.md"
+        }
+      },
+      {
+        "passed": true,
+        "engine": "business-rule",
+        "rule_id": "formal docs must mention Midspiral Quint and valid",
+        "message": "keyword coverage 66%",
+        "details": {
+          "matched": [
+            "formal",
+            "midspiral",
+            "quint",
+            "validation_cmd"
+          ],
+          "missing": [
+            "docs",
+            "mention"
+          ]
+        }
+      }
+    ],
+    "validation_passed": true,
+    "pr_url": "https://github.com/BrightforestX/meta-utilities/pull/7",
+    "pr_number": 7,
+    "pr_branch": "formal-mq/formal-mq-005-formal-docs",
+    "pr_error": null,
+    "sandbox_id": "05c5cf16-40c6-45d5-b4b5-fde63e951255",
+    "sandbox_url": "https://4096-o6kxdfzev4o33kbr.daytonaproxy01.net",
+    "repo_url": "https://github.com/BrightforestX/meta-utilities.git"
+  },
+  {
+    "job_id": "formal-mq-006-cloud-agent-midspiral-budget",
+    "ok": true,
+    "iterations": 1,
+    "diff": "",
+    "test_output": "__TEST_EXIT__:0",
+    "session_id": "ses_07d10886affePUGs8tDCoV3avL",
+    "error": null,
+    "validation": [
+      {
+        "passed": true,
+        "engine": "validation_cmd",
+        "rule_id": "validation_cmd",
+        "message": "exit=0",
+        "details": {
+          "stdout": "__EXIT__:0",
+          "cmd": "test -f rules/midspiral_org_budget.yaml && grep -q 'rule-org-budget-soft-degrade' rules/midspiral_org_budget.yaml && grep -q 'soft_threshold' rules/midspiral_org_budget.yaml && grep -q 'degraded_model' rules/midspiral_org_budget.yaml && grep -q 'midspiral:' rules/midspiral_org_budget.yaml && grep -q 'verify-rules' rules/midspiral_org_budget.yaml"
+        }
+      },
+      {
+        "passed": true,
+        "engine": "business-rule",
+        "rule_id": "org budget Midspiral rule must soft-degrade below ",
+        "message": "keyword coverage 83%",
+        "details": {
+          "matched": [
+            "budget",
+            "midspiral",
+            "rule",
+            "soft-degrade",
+            "threshold"
+          ],
+          "missing": [
+            "below"
+          ]
+        }
+      }
+    ],
+    "validation_passed": true,
+    "pr_url": "https://github.com/cdalsoniii/cloud-agent/pull/3",
+    "pr_number": 3,
+    "pr_branch": "formal-mq/formal-mq-006-cloud-agent-midspiral-budget",
+    "pr_error": null,
+    "sandbox_id": "1fc50fdd-11bd-4f7c-b340-d9ec9f5490ac",
+    "sandbox_url": "https://4096-kgrle9bjz0vn6zxv.daytonaproxy01.net",
+    "repo_url": "https://github.com/cdalsoniii/cloud-agent.git"
+  },
+  {
+    "job_id": "formal-mq-007-cloud-agent-quint-session",
+    "ok": true,
+    "iterations": 1,
+    "diff": "",
+    "test_output": "__TEST_EXIT__:0",
+    "session_id": "ses_07d10876fffea45cg6poEPoU9U",
+    "error": null,
+    "validation": [
+      {
+        "passed": true,
+        "engine": "validation_cmd",
+        "rule_id": "validation_cmd",
+        "message": "exit=0",
+        "details": {
+          "stdout": "npm notice\nnpm notice New minor version of npm available! 11.12.1 -> 11.18.0\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v11.18.0\nnpm notice To update run: npm install -g npm@11.18.0\nnpm notice\n__EXIT__:0",
+          "cmd": "test -f formal/quint/session.qnt && grep -q 'module session' formal/quint/session.qnt && grep -q 'MessagesNonNeg' formal/quint/session.qnt && (command -v quint >/dev/null && quint typecheck formal/quint/session.qnt || npx --yes @informalsystems/quint@0.32.0 typecheck formal/quint/session.qnt)"
+        }
+      },
+      {
+        "passed": false,
+        "engine": "business-rule",
+        "rule_id": "Quint session model must keep MessagesNonNeg",
+        "message": "keyword coverage 40%",
+        "details": {
+          "matched": [
+            "session",
+            "messagesnonneg"
+          ],
+          "missing": [
+            "quint",
+            "model",
+            "keep"
+          ]
+        }
+      }
+    ],
+    "validation_passed": true,
+    "pr_url": "https://github.com/cdalsoniii/cloud-agent/pull/4",
+    "pr_number": 4,
+    "pr_branch": "formal-mq/formal-mq-007-cloud-agent-quint-session",
+    "pr_error": null,
+    "sandbox_id": "072efd16-bb7f-4473-b651-203806d8fe22",
+    "sandbox_url": "https://4096-mxdmejx5s1waz3lv.daytonaproxy01.net",
+    "repo_url": "https://github.com/cdalsoniii/cloud-agent.git"
+  },
+  {
+    "job_id": "formal-mq-008-gpu-quint-alloc",
+    "ok": true,
+    "iterations": 1,
+    "diff": "",
+    "test_output": "__TEST_EXIT__:0",
+    "session_id": "ses_07d10884fffdEIzIFSd97Td27y",
+    "error": null,
+    "validation": [
+      {
+        "passed": true,
+        "engine": "validation_cmd",
+        "rule_id": "validation_cmd",
+        "message": "exit=0",
+        "details": {
+          "stdout": "npm notice\nnpm notice New minor version of npm available! 11.12.1 -> 11.18.0\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v11.18.0\nnpm notice To update run: npm install -g npm@11.18.0\nnpm notice\n__EXIT__:0",
+          "cmd": "test -f formal/quint/gpu_alloc.qnt && grep -q 'module gpu_alloc' formal/quint/gpu_alloc.qnt && grep -q 'WithinCapacity' formal/quint/gpu_alloc.qnt && (command -v quint >/dev/null && quint typecheck formal/quint/gpu_alloc.qnt || npx --yes @informalsystems/quint@0.32.0 typecheck formal/quint/gpu_alloc.qnt)"
+        }
+      },
+      {
+        "passed": true,
+        "engine": "business-rule",
+        "rule_id": "Quint gpu_alloc must enforce WithinCapacity",
+        "message": "keyword coverage 50%",
+        "details": {
+          "matched": [
+            "gpu_alloc",
+            "withincapacity"
+          ],
+          "missing": [
+            "quint",
+            "enforce"
+          ]
+        }
+      }
+    ],
+    "validation_passed": true,
+    "pr_url": "https://github.com/cdalsoniii/gpu-inference-stack/pull/35",
+    "pr_number": 35,
+    "pr_branch": "formal-mq/formal-mq-008-gpu-quint-alloc",
+    "pr_error": null,
+    "repo_url": "https://github.com/cdalsoniii/gpu-inference-stack.git"
+  },
+  {
+    "job_id": "formal-mq-009-claim-check-rule",
+    "ok": true,
+    "iterations": 1,
+    "diff": "",
+    "test_output": "__TEST_EXIT__:0",
+    "session_id": "ses_07d108928ffdjInFUlEUOp2mM2",
+    "error": null,
+    "validation": [
+      {
+        "passed": true,
+        "engine": "validation_cmd",
+        "rule_id": "validation_cmd",
+        "message": "exit=0",
+        "details": {
+          "stdout": "__EXIT__:0",
+          "cmd": "test -f formal/midspiral/rule-claim-check.yaml && grep -q 'rule-claim-check-metric' formal/midspiral/rule-claim-check.yaml && grep -q 'claim_has_registry_id' formal/midspiral/rule-claim-check.yaml && grep -q \"defensibility IN\" formal/midspiral/rule-claim-check.yaml && grep -q 'claim_check:' formal/midspiral/rule-claim-check.yaml && grep -q 'midspiral:' formal/midspiral/rule-claim-check.yaml"
+        }
+      },
+      {
+        "passed": true,
+        "engine": "business-rule",
+        "rule_id": "claim-check Midspiral rule must require registry i",
+        "message": "keyword coverage 83%",
+        "details": {
+          "matched": [
+            "claim-check",
+            "rule",
+            "require",
+            "registry",
+            "defensibility"
+          ],
+          "missing": [
+            "midspiral"
+          ]
+        }
+      }
+    ],
+    "validation_passed": true,
+    "pr_url": "https://github.com/BrightforestX/meta-utilities/pull/5",
+    "pr_number": 5,
+    "pr_branch": "formal-mq/formal-mq-009-claim-check-rule",
+    "pr_error": null,
+    "repo_url": "https://github.com/BrightforestX/meta-utilities.git"
+  },
+  {
+    "job_id": "formal-mq-010-combined-smoke",
+    "ok": true,
+    "iterations": 1,
+    "diff": "",
+    "test_output": "__TEST_EXIT__:0",
+    "session_id": "ses_07d0f8d57ffemvij7KnSxyx0Ko",
+    "error": null,
+    "validation": [
+      {
+        "passed": true,
+        "engine": "validation_cmd",
+        "rule_id": "validation_cmd",
+        "message": "exit=0",
+        "details": {
+          "stdout": "npm notice\nnpm notice New minor version of npm available! 11.12.1 -> 11.18.0\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v11.18.0\nnpm notice To update run: npm install -g npm@11.18.0\nnpm notice\n__EXIT__:0",
+          "cmd": "chmod +x scripts/formal_midspiral_quint_smoke.sh && ./scripts/formal_midspiral_quint_smoke.sh | grep -q FORMAL_SMOKE_OK && test -f formal/quint/smoke.qnt && grep -q 'module smoke' formal/quint/smoke.qnt"
+        }
+      },
+      {
+        "passed": true,
+        "engine": "business-rule",
+        "rule_id": "formal smoke script must typecheck Quint and print",
+        "message": "keyword coverage 71%",
+        "details": {
+          "matched": [
+            "formal",
+            "smoke",
+            "typecheck",
+            "quint",
+            "formal_smoke_ok"
+          ],
+          "missing": [
+            "script",
+            "print"
+          ]
+        }
+      }
+    ],
+    "validation_passed": true,
+    "pr_url": "https://github.com/cdalsoniii/cloud-agent/pull/5",
+    "pr_number": 5,
+    "pr_branch": "formal-mq/formal-mq-010-combined-smoke",
+    "pr_error": null,
+    "sandbox_id": "368a580b-fc0e-49d4-96da-82c3de03f825"
+  }
+]

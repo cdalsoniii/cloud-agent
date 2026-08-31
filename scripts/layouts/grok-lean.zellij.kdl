@@ -1,0 +1,17 @@
+layout {
+  default_tab_template {
+    pane
+  }
+}
+
+session {
+  name "grok-lean"
+}
+
+// Grok Build (cloud-agent project) — single full window, no Lean Live pane
+tab {
+  pane {
+    command "bash"
+    args "-lc" "cd \"${CLOUD_AGENT_ROOT}\" && export PX_GROK_BUNDLE=\"${PX_GROK_BUNDLE}\" PATH=\"${PX_GROK_BUNDLE}/bin:$PATH\" && exec grok"
+  }
+}

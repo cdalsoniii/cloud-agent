@@ -1,0 +1,8 @@
+{"log":
+ [{"message":
+   ".> LEAN_PATH=././.lake/build/lib DYLD_LIBRARY_PATH= /Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments/01-platform/cloud-agent/.grok-bundle/.elan/toolchains/leanprover--lean4---v4.14.0/bin/lean -DautoImplicit=false ././././PxCloudAgent/Trace.lean -R ./././. -o ././.lake/build/lib/PxCloudAgent/Trace.olean -i ././.lake/build/lib/PxCloudAgent/Trace.ilean -c ././.lake/build/ir/PxCloudAgent/Trace.c --json",
+   "level": "trace"},
+  {"message":
+   "././././PxCloudAgent/Trace.lean:22:6: [Meta.Tactic.simp.rewrite] Nat.zero_add:1000, 0 + b ==> b\n[Meta.Tactic.simp.rewrite] Nat.add_zero:1000, b + 0 ==> b\n[Meta.Tactic.simp.rewrite] eq_self:1000, b = b ==> True",
+   "level": "info"}],
+ "depHash": "15773751804319079406"}

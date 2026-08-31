@@ -1,0 +1,61 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${GROK_PLUGIN_ROOT:-${GROK_PROJECT_DIR:-.}/.grok/plugins/px-validation-always}/scripts/session-start.sh\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${GROK_PLUGIN_ROOT:-${GROK_PROJECT_DIR:-.}/.grok/plugins/px-validation-always}/scripts/user-prompt-scope.sh\"",
+            "timeout": 60
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "daytona|shell|Bash|exec|batch|orchestrat|use_tool|CallMcpTool|run_terminal|__daytona|__sdlc|__opencode|__mastra|deploy",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${GROK_PLUGIN_ROOT:-${GROK_PROJECT_DIR:-.}/.grok/plugins/px-validation-always}/scripts/pre-tool-gate.sh\"",
+            "timeout": 120
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "daytona|shell|Bash|exec|batch|orchestrat|use_tool|CallMcpTool|run_terminal|__daytona|__sdlc|__opencode|__mastra|deploy",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${GROK_PLUGIN_ROOT:-${GROK_PROJECT_DIR:-.}/.grok/plugins/px-validation-always}/scripts/post-tool-gate.sh\"",
+            "timeout": 120
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${GROK_PLUGIN_ROOT:-${GROK_PROJECT_DIR:-.}/.grok/plugins/px-validation-always}/scripts/stop-scope-gate.sh\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

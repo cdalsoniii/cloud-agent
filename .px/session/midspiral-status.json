@@ -1,0 +1,58 @@
+{
+  "generatedAt": "2026-08-09T10:32:57.334Z",
+  "tools": [
+    {
+      "id": "lemmafit",
+      "name": "lemmafit",
+      "ready": true,
+      "path": "/Users/clifforddalsoniii/.nvm/versions/node/v22.22.2/bin/lemmafit",
+      "version": "Lemmafit - Verified vibe coding with Claude Code",
+      "note": "Verified vibe coding — Dafny in the agent loop",
+      "installHint": "npm install -g lemmafit"
+    },
+    {
+      "id": "lemmascript",
+      "name": "LemmaScript",
+      "ready": true,
+      "path": "/Users/clifforddalsoniii/.nvm/versions/node/v22.22.2/bin/lsc",
+      "note": "TypeScript //@ specs → Lean 4 / Dafny",
+      "installHint": "npm install -g lemmascript  (CLI binary often named lsc)"
+    },
+    {
+      "id": "lemmacore",
+      "name": "lemmacore",
+      "ready": false,
+      "note": "Coming soon — not on PATH",
+      "installHint": "VS Code extension / Midspiral lemmacore (when published)"
+    },
+    {
+      "id": "claimcheck",
+      "name": "claimcheck",
+      "ready": true,
+      "path": "/Users/clifforddalsoniii/.nvm/versions/node/v22.22.2/bin/claimcheck",
+      "version": "",
+      "note": "Proof ↔ intent (requirements vs lemmas)",
+      "installHint": "npm install -g claimcheck"
+    },
+    {
+      "id": "dafny-replay",
+      "name": "dafny-replay",
+      "ready": true,
+      "path": "/Users/clifforddalsoniii/.dotnet/tools/dafny",
+      "version": "4.11.0+fcb2042d6d043a2634f0854338c08feeaaaf4ae2",
+      "note": "Dafny available — verified kernels / replay methodology",
+      "installHint": "Install Dafny (.NET) or point VERIFIED_KERNELS_PATH at verified kernels"
+    },
+    {
+      "id": "dafny2js",
+      "name": "dafny2js",
+      "ready": false,
+      "note": "not installed — lemmafit compile path may still emit JS",
+      "installHint": "Set DAFNY2JS_PATH or install dafny2js when available"
+    }
+  ],
+  "readyCount": 4,
+  "total": 6,
+  "allowExec": false,
+  "sessionDir": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments/01-platform/cloud-agent/.px/session"
+}

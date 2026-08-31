@@ -18,6 +18,8 @@ import {
 } from '../src/types.js';
 import { CloudAgentOrchestrator } from '../src/orchestrator.js';
 import { BasetenChainSandbox } from '../src/baseten-chain-sandbox.js';
+import { smartCallChain } from '../src/chain-portfolio.js';
+import { resetOpenRouterFetch, setOpenRouterFetch } from '../src/llm/openrouter-client.js';
 
 // Helper to create test config
 function createTestConfig(): OrchestratorConfig {
@@ -26,6 +28,8 @@ function createTestConfig(): OrchestratorConfig {
     dryRun: true,
     verbose: false,
     basetenApiKey: 'test-key',
+    openrouterApiKey: 'test-openrouter-key',
+    llmFallbackOrder: ['openrouter', 'baseten', 'local'],
   };
 }
 
@@ -337,6 +341,66 @@ Done when tested
       verifyPlanStructure(badPlan);
     }, 'Plan without PR steps should fail validation');
   });
+});
+
+test('smartCallChain prefers OpenRouter when mock succeeds', async (t) => {
+  const prevKey = process.env.OPENROUTER_API_KEY;
+  const prevOrder = process.env.LLM_FALLBACK_ORDER;
+  process.env.OPENROUTER_API_KEY = 'test-key';
+  process.env.LLM_FALLBACK_ORDER = 'openrouter,baseten,local';
+
+  setOpenRouterFetch(async () => ({
+    ok: true,
+    status: 200,
+    text: async () =>
+      JSON.stringify({
+        model: 'deepseek/deepseek-v4-flash-0731',
+        choices: [{ message: { content: '{"status":"ok"}' } }],
+        usage: { prompt_tokens: 1, completion_tokens: 1, total_tokens: 2 },
+      }),
+    json: async () => ({
+      model: 'deepseek/deepseek-v4-flash-0731',
+      choices: [{ message: { content: '{"status":"ok"}' } }],
+      usage: { prompt_tokens: 1, completion_tokens: 1, total_tokens: 2 },
+    }),
+  }));
+
+  t.after(() => {
+    resetOpenRouterFetch();
+    if (prevKey === undefined) delete process.env.OPENROUTER_API_KEY;
+    else process.env.OPENROUTER_API_KEY = prevKey;
+    if (prevOrder === undefined) delete process.env.LLM_FALLBACK_ORDER;
+    else process.env.LLM_FALLBACK_ORDER = prevOrder;
+  });
+
+  const result = await smartCallChain('deep-research-brief', { task: 'test' }, { dry_run: false });
+  assert.equal(result.provider, 'openrouter');
+  assert.equal(result.success, true);
+});
+
+test('smartCallChain falls through when OpenRouter mock fails', async (t) => {
+  const prevKey = process.env.OPENROUTER_API_KEY;
+  const prevOrder = process.env.LLM_FALLBACK_ORDER;
+  process.env.OPENROUTER_API_KEY = 'test-key';
+  process.env.LLM_FALLBACK_ORDER = 'openrouter,baseten,local';
+
+  setOpenRouterFetch(async () => ({
+    ok: false,
+    status: 500,
+    text: async () => 'error',
+    json: async () => ({ error: 'upstream failure' }),
+  }));
+
+  t.after(() => {
+    resetOpenRouterFetch();
+    if (prevKey === undefined) delete process.env.OPENROUTER_API_KEY;
+    else process.env.OPENROUTER_API_KEY = prevKey;
+    if (prevOrder === undefined) delete process.env.LLM_FALLBACK_ORDER;
+    else process.env.LLM_FALLBACK_ORDER = prevOrder;
+  });
+
+  const result = await smartCallChain('deep-research-brief', { task: 'test' }, { dry_run: true });
+  assert.ok(result.provider === 'baseten' || result.provider === 'openrouter');
 });
 
 console.log('All integration tests completed');

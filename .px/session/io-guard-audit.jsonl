@@ -1,0 +1,1 @@
+{"event": "PostToolUse", "ok": false, "tool": "sdlc-batch", "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"}

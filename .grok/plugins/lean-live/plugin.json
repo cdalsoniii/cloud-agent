@@ -1,0 +1,5 @@
+{
+  "name": "lean-live",
+  "description": "Live Lean 4 proof state bridge for Grok Build",
+  "version": "0.1.0"
+}

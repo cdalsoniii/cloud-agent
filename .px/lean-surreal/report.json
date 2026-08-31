@@ -1,0 +1,90 @@
+{
+  "at": "2026-08-02T03:46:30.864Z",
+  "ns": "test",
+  "db": "test",
+  "tables": [
+    {
+      "table": "__entity",
+      "exposed": true,
+      "rowCount": 214,
+      "checks": [
+        {
+          "check": "rows_scanned",
+          "violations": 0,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table": "ontology_edge",
+      "exposed": true,
+      "rowCount": 6,
+      "checks": [
+        {
+          "check": "rows_scanned",
+          "violations": 0,
+          "examples": []
+        },
+        {
+          "check": "no_self_loops",
+          "violations": 0,
+          "examples": []
+        },
+        {
+          "check": "no_dangling_edges",
+          "violations": 0,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table": "ontology_node",
+      "exposed": true,
+      "rowCount": 12,
+      "checks": [
+        {
+          "check": "rows_scanned",
+          "violations": 0,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table": "ontology_rule",
+      "exposed": true,
+      "rowCount": 2,
+      "checks": [
+        {
+          "check": "rows_scanned",
+          "violations": 0,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table": "person",
+      "exposed": true,
+      "rowCount": 2,
+      "checks": [
+        {
+          "check": "rows_scanned",
+          "violations": 0,
+          "examples": []
+        }
+      ]
+    },
+    {
+      "table": "sandbox_log",
+      "exposed": true,
+      "rowCount": 1,
+      "checks": [
+        {
+          "check": "rows_scanned",
+          "violations": 0,
+          "examples": []
+        }
+      ]
+    }
+  ],
+  "totalViolations": 0
+}

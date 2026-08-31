@@ -1,0 +1,680 @@
+{
+  "call_id": "vcall-1788043443158-e25b2857",
+  "at": "2026-08-29T22:44:03.158Z",
+  "tool": "opencode-loop",
+  "phase": "pre",
+  "pack": "verifier-fleet",
+  "className": "VerifierFleet",
+  "ok": false,
+  "layers": [
+    "shacl",
+    "lean",
+    "graphql"
+  ],
+  "sandbox_id": null,
+  "provider": null,
+  "input": {
+    "tool": "opencode-loop",
+    "args": {
+      "opencodeBaseUrls": "https://4096-37w8kmegwdxdf7rv.daytonaproxy01.net",
+      "dryRun": true,
+      "timeoutSeconds": 60,
+      "pack": "verifier-fleet",
+      "className": "VerifierFleet"
+    }
+  },
+  "output": {
+    "ok": false,
+    "violations": [
+      {
+        "id": "pre-shacl-v0",
+        "severity": "blocking",
+        "title": "[shacl pre] SHACL constraint violation",
+        "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):",
+        "phase": "pre",
+        "layer": "shacl"
+      },
+      {
+        "id": "pre-shacl-v1",
+        "severity": "blocking",
+        "title": "[shacl pre] SHACL constraint violation",
+        "reason": "Severity: sh:Violation Source Shape: [ sh:class verifier:Verifier ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:IRI ; sh:order Literal(\"4\", datatype=xsd:integer) ; sh:path verifier:verifiers ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:verifiers Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:verifiers",
+        "phase": "pre",
+        "layer": "shacl"
+      },
+      {
+        "id": "pre-shacl-v2",
+        "severity": "blocking",
+        "title": "[shacl pre] SHACL constraint violation",
+        "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):",
+        "phase": "pre",
+        "layer": "shacl"
+      },
+      {
+        "id": "pre-shacl-v3",
+        "severity": "blocking",
+        "title": "[shacl pre] SHACL constraint violation",
+        "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:description Literal(\"Target deployment (local | sandbox).\") ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"2\", datatype=xsd:integer) ; sh:path verifier:environment ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:environment Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:environment",
+        "phase": "pre",
+        "layer": "shacl"
+      },
+      {
+        "id": "pre-shacl-v4",
+        "severity": "blocking",
+        "title": "[shacl pre] SHACL constraint violation",
+        "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):",
+        "phase": "pre",
+        "layer": "shacl"
+      },
+      {
+        "id": "pre-shacl-v5",
+        "severity": "blocking",
+        "title": "[shacl pre] SHACL constraint violation",
+        "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"0\", datatype=xsd:integer) ; sh:path verifier:fleet_id ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:fleet_id Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:fleet_id",
+        "phase": "pre",
+        "layer": "shacl"
+      },
+      {
+        "id": "pre-shacl-v6",
+        "severity": "blocking",
+        "title": "[shacl pre] SHACL constraint violation",
+        "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):",
+        "phase": "pre",
+        "layer": "shacl"
+      },
+      {
+        "id": "pre-shacl-v7",
+        "severity": "blocking",
+        "title": "[shacl pre] SHACL constraint violation",
+        "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"1\", datatype=xsd:integer) ; sh:path verifier:revision ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:revision Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:revision",
+        "phase": "pre",
+        "layer": "shacl"
+      }
+    ],
+    "cascade": {
+      "pre": {
+        "ok": false,
+        "pack": "verifier-fleet",
+        "className": "VerifierFleet",
+        "layers": {
+          "shacl": {
+            "layer": "shacl",
+            "ok": false,
+            "conforms": false,
+            "engine": "pyshacl",
+            "violations": [
+              {
+                "id": "shacl-v0",
+                "severity": "blocking",
+                "title": "SHACL constraint violation",
+                "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):",
+                "layer": "shacl"
+              },
+              {
+                "id": "shacl-v1",
+                "severity": "blocking",
+                "title": "SHACL constraint violation",
+                "reason": "Severity: sh:Violation Source Shape: [ sh:class verifier:Verifier ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:IRI ; sh:order Literal(\"4\", datatype=xsd:integer) ; sh:path verifier:verifiers ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:verifiers Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:verifiers",
+                "layer": "shacl"
+              },
+              {
+                "id": "shacl-v2",
+                "severity": "blocking",
+                "title": "SHACL constraint violation",
+                "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):",
+                "layer": "shacl"
+              },
+              {
+                "id": "shacl-v3",
+                "severity": "blocking",
+                "title": "SHACL constraint violation",
+                "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:description Literal(\"Target deployment (local | sandbox).\") ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"2\", datatype=xsd:integer) ; sh:path verifier:environment ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:environment Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:environment",
+                "layer": "shacl"
+              },
+              {
+                "id": "shacl-v4",
+                "severity": "blocking",
+                "title": "SHACL constraint violation",
+                "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):",
+                "layer": "shacl"
+              },
+              {
+                "id": "shacl-v5",
+                "severity": "blocking",
+                "title": "SHACL constraint violation",
+                "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"0\", datatype=xsd:integer) ; sh:path verifier:fleet_id ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:fleet_id Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:fleet_id",
+                "layer": "shacl"
+              },
+              {
+                "id": "shacl-v6",
+                "severity": "blocking",
+                "title": "SHACL constraint violation",
+                "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):",
+                "layer": "shacl"
+              },
+              {
+                "id": "shacl-v7",
+                "severity": "blocking",
+                "title": "SHACL constraint violation",
+                "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"1\", datatype=xsd:integer) ; sh:path verifier:revision ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:revision Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:revision",
+                "layer": "shacl"
+              }
+            ],
+            "durationMs": 660,
+            "raw": {
+              "ok": false,
+              "conforms": false,
+              "engine": "pyshacl",
+              "violations": [
+                {
+                  "id": "shacl-v0",
+                  "severity": "blocking",
+                  "title": "SHACL constraint violation",
+                  "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+                },
+                {
+                  "id": "shacl-v1",
+                  "severity": "blocking",
+                  "title": "SHACL constraint violation",
+                  "reason": "Severity: sh:Violation Source Shape: [ sh:class verifier:Verifier ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:IRI ; sh:order Literal(\"4\", datatype=xsd:integer) ; sh:path verifier:verifiers ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:verifiers Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:verifiers"
+                },
+                {
+                  "id": "shacl-v2",
+                  "severity": "blocking",
+                  "title": "SHACL constraint violation",
+                  "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+                },
+                {
+                  "id": "shacl-v3",
+                  "severity": "blocking",
+                  "title": "SHACL constraint violation",
+                  "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:description Literal(\"Target deployment (local | sandbox).\") ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"2\", datatype=xsd:integer) ; sh:path verifier:environment ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:environment Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:environment"
+                },
+                {
+                  "id": "shacl-v4",
+                  "severity": "blocking",
+                  "title": "SHACL constraint violation",
+                  "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+                },
+                {
+                  "id": "shacl-v5",
+                  "severity": "blocking",
+                  "title": "SHACL constraint violation",
+                  "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"0\", datatype=xsd:integer) ; sh:path verifier:fleet_id ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:fleet_id Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:fleet_id"
+                },
+                {
+                  "id": "shacl-v6",
+                  "severity": "blocking",
+                  "title": "SHACL constraint violation",
+                  "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+                },
+                {
+                  "id": "shacl-v7",
+                  "severity": "blocking",
+                  "title": "SHACL constraint violation",
+                  "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"1\", datatype=xsd:integer) ; sh:path verifier:revision ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:revision Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:revision"
+                }
+              ],
+              "resultsText": "Validation Report\nConforms: False\nResults (4):\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:class verifier:Verifier ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:IRI ; sh:order Literal(\"4\", datatype=xsd:integer) ; sh:path verifier:verifiers ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:verifiers\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:verifiers\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:datatype xsd:string ; sh:description Literal(\"Target deployment (local | sandbox).\") ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"2\", datatype=xsd:integer) ; sh:path verifier:environment ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:environment\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:environment\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"0\", datatype=xsd:integer) ; sh:path verifier:fleet_id ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:fleet_id\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:fleet_id\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"1\", datatype=xsd:integer) ; sh:path verifier:revision ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:revision\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:revision\n",
+              "durationMs": 660,
+              "raw": {
+                "conforms": false,
+                "engine": "pyshacl",
+                "violations": [
+                  {
+                    "message": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+                  },
+                  {
+                    "message": "Severity: sh:Violation Source Shape: [ sh:class verifier:Verifier ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:IRI ; sh:order Literal(\"4\", datatype=xsd:integer) ; sh:path verifier:verifiers ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:verifiers Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:verifiers"
+                  },
+                  {
+                    "message": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+                  },
+                  {
+                    "message": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:description Literal(\"Target deployment (local | sandbox).\") ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"2\", datatype=xsd:integer) ; sh:path verifier:environment ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:environment Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:environment"
+                  },
+                  {
+                    "message": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+                  },
+                  {
+                    "message": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"0\", datatype=xsd:integer) ; sh:path verifier:fleet_id ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:fleet_id Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:fleet_id"
+                  },
+                  {
+                    "message": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+                  },
+                  {
+                    "message": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"1\", datatype=xsd:integer) ; sh:path verifier:revision ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:revision Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:revision"
+                  }
+                ],
+                "resultsText": "Validation Report\nConforms: False\nResults (4):\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:class verifier:Verifier ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:IRI ; sh:order Literal(\"4\", datatype=xsd:integer) ; sh:path verifier:verifiers ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:verifiers\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:verifiers\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:datatype xsd:string ; sh:description Literal(\"Target deployment (local | sandbox).\") ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"2\", datatype=xsd:integer) ; sh:path verifier:environment ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:environment\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:environment\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"0\", datatype=xsd:integer) ; sh:path verifier:fleet_id ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:fleet_id\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:fleet_id\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"1\", datatype=xsd:integer) ; sh:path verifier:revision ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:revision\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:revision\n",
+                "dataTurtlePreview": "@prefix verifier: <https://midspiral.dev/ontology/verifier-fleet/> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\nverifier:fleet_d0a7e8c28e a verifier:VerifierFleet .\n",
+                "dataTurtle": "@prefix verifier: <https://midspiral.dev/ontology/verifier-fleet/> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\nverifier:fleet_d0a7e8c28e a verifier:VerifierFleet .\n"
+              }
+            }
+          }
+        },
+        "violations": [
+          {
+            "id": "shacl-v0",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):",
+            "layer": "shacl"
+          },
+          {
+            "id": "shacl-v1",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Severity: sh:Violation Source Shape: [ sh:class verifier:Verifier ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:IRI ; sh:order Literal(\"4\", datatype=xsd:integer) ; sh:path verifier:verifiers ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:verifiers Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:verifiers",
+            "layer": "shacl"
+          },
+          {
+            "id": "shacl-v2",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):",
+            "layer": "shacl"
+          },
+          {
+            "id": "shacl-v3",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:description Literal(\"Target deployment (local | sandbox).\") ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"2\", datatype=xsd:integer) ; sh:path verifier:environment ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:environment Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:environment",
+            "layer": "shacl"
+          },
+          {
+            "id": "shacl-v4",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):",
+            "layer": "shacl"
+          },
+          {
+            "id": "shacl-v5",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"0\", datatype=xsd:integer) ; sh:path verifier:fleet_id ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:fleet_id Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:fleet_id",
+            "layer": "shacl"
+          },
+          {
+            "id": "shacl-v6",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):",
+            "layer": "shacl"
+          },
+          {
+            "id": "shacl-v7",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"1\", datatype=xsd:integer) ; sh:path verifier:revision ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:revision Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:revision",
+            "layer": "shacl"
+          }
+        ],
+        "durationMs": 660,
+        "shortCircuited": true
+      }
+    },
+    "schema": {
+      "pre": {
+        "ok": false,
+        "conforms": false,
+        "engine": "pyshacl",
+        "violations": [
+          {
+            "id": "shacl-v0",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+          },
+          {
+            "id": "shacl-v1",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Severity: sh:Violation Source Shape: [ sh:class verifier:Verifier ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:IRI ; sh:order Literal(\"4\", datatype=xsd:integer) ; sh:path verifier:verifiers ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:verifiers Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:verifiers"
+          },
+          {
+            "id": "shacl-v2",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+          },
+          {
+            "id": "shacl-v3",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:description Literal(\"Target deployment (local | sandbox).\") ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"2\", datatype=xsd:integer) ; sh:path verifier:environment ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:environment Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:environment"
+          },
+          {
+            "id": "shacl-v4",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+          },
+          {
+            "id": "shacl-v5",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"0\", datatype=xsd:integer) ; sh:path verifier:fleet_id ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:fleet_id Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:fleet_id"
+          },
+          {
+            "id": "shacl-v6",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+          },
+          {
+            "id": "shacl-v7",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"1\", datatype=xsd:integer) ; sh:path verifier:revision ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:revision Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:revision"
+          }
+        ],
+        "resultsText": "Validation Report\nConforms: False\nResults (4):\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:class verifier:Verifier ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:IRI ; sh:order Literal(\"4\", datatype=xsd:integer) ; sh:path verifier:verifiers ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:verifiers\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:verifiers\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:datatype xsd:string ; sh:description Literal(\"Target deployment (local | sandbox).\") ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"2\", datatype=xsd:integer) ; sh:path verifier:environment ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:environment\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:environment\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"0\", datatype=xsd:integer) ; sh:path verifier:fleet_id ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:fleet_id\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:fleet_id\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"1\", datatype=xsd:integer) ; sh:path verifier:revision ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:revision\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:revision\n",
+        "durationMs": 660,
+        "raw": {
+          "conforms": false,
+          "engine": "pyshacl",
+          "violations": [
+            {
+              "message": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+            },
+            {
+              "message": "Severity: sh:Violation Source Shape: [ sh:class verifier:Verifier ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:IRI ; sh:order Literal(\"4\", datatype=xsd:integer) ; sh:path verifier:verifiers ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:verifiers Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:verifiers"
+            },
+            {
+              "message": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+            },
+            {
+              "message": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:description Literal(\"Target deployment (local | sandbox).\") ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"2\", datatype=xsd:integer) ; sh:path verifier:environment ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:environment Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:environment"
+            },
+            {
+              "message": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+            },
+            {
+              "message": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"0\", datatype=xsd:integer) ; sh:path verifier:fleet_id ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:fleet_id Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:fleet_id"
+            },
+            {
+              "message": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+            },
+            {
+              "message": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"1\", datatype=xsd:integer) ; sh:path verifier:revision ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:revision Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:revision"
+            }
+          ],
+          "resultsText": "Validation Report\nConforms: False\nResults (4):\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:class verifier:Verifier ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:IRI ; sh:order Literal(\"4\", datatype=xsd:integer) ; sh:path verifier:verifiers ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:verifiers\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:verifiers\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:datatype xsd:string ; sh:description Literal(\"Target deployment (local | sandbox).\") ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"2\", datatype=xsd:integer) ; sh:path verifier:environment ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:environment\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:environment\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"0\", datatype=xsd:integer) ; sh:path verifier:fleet_id ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:fleet_id\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:fleet_id\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"1\", datatype=xsd:integer) ; sh:path verifier:revision ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:revision\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:revision\n",
+          "dataTurtlePreview": "@prefix verifier: <https://midspiral.dev/ontology/verifier-fleet/> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\nverifier:fleet_d0a7e8c28e a verifier:VerifierFleet .\n",
+          "dataTurtle": "@prefix verifier: <https://midspiral.dev/ontology/verifier-fleet/> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\nverifier:fleet_d0a7e8c28e a verifier:VerifierFleet .\n"
+        }
+      }
+    }
+  },
+  "violations": [
+    {
+      "id": "pre-shacl-v0",
+      "severity": "blocking",
+      "title": "[shacl pre] SHACL constraint violation",
+      "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):",
+      "phase": "pre",
+      "layer": "shacl"
+    },
+    {
+      "id": "pre-shacl-v1",
+      "severity": "blocking",
+      "title": "[shacl pre] SHACL constraint violation",
+      "reason": "Severity: sh:Violation Source Shape: [ sh:class verifier:Verifier ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:IRI ; sh:order Literal(\"4\", datatype=xsd:integer) ; sh:path verifier:verifiers ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:verifiers Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:verifiers",
+      "phase": "pre",
+      "layer": "shacl"
+    },
+    {
+      "id": "pre-shacl-v2",
+      "severity": "blocking",
+      "title": "[shacl pre] SHACL constraint violation",
+      "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):",
+      "phase": "pre",
+      "layer": "shacl"
+    },
+    {
+      "id": "pre-shacl-v3",
+      "severity": "blocking",
+      "title": "[shacl pre] SHACL constraint violation",
+      "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:description Literal(\"Target deployment (local | sandbox).\") ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"2\", datatype=xsd:integer) ; sh:path verifier:environment ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:environment Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:environment",
+      "phase": "pre",
+      "layer": "shacl"
+    },
+    {
+      "id": "pre-shacl-v4",
+      "severity": "blocking",
+      "title": "[shacl pre] SHACL constraint violation",
+      "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):",
+      "phase": "pre",
+      "layer": "shacl"
+    },
+    {
+      "id": "pre-shacl-v5",
+      "severity": "blocking",
+      "title": "[shacl pre] SHACL constraint violation",
+      "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"0\", datatype=xsd:integer) ; sh:path verifier:fleet_id ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:fleet_id Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:fleet_id",
+      "phase": "pre",
+      "layer": "shacl"
+    },
+    {
+      "id": "pre-shacl-v6",
+      "severity": "blocking",
+      "title": "[shacl pre] SHACL constraint violation",
+      "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):",
+      "phase": "pre",
+      "layer": "shacl"
+    },
+    {
+      "id": "pre-shacl-v7",
+      "severity": "blocking",
+      "title": "[shacl pre] SHACL constraint violation",
+      "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"1\", datatype=xsd:integer) ; sh:path verifier:revision ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:revision Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:revision",
+      "phase": "pre",
+      "layer": "shacl"
+    }
+  ],
+  "linkml_reasoning": {
+    "classesUsed": [
+      "VerifierFleet"
+    ],
+    "resolversUsed": [],
+    "mutationsReferenced": [
+      "writeVerifierFleet"
+    ],
+    "relationshipsUsed": [],
+    "narrative": "### LinkML reasoning (pack=`verifier-fleet` root=`VerifierFleet` tool=`opencode-loop`)\n- **Classes used** (1): VerifierFleet\n- **Relationships used** (0): —\n- **Resolvers used** (0): —\n- **Mutations referenced** (1): writeVerifierFleet\n- All mutations in SDL: writeVerifierFleet→VerifierFleet\n- Artifacts: resolvers=missing, lean-rules=missing, graphql=ok"
+  },
+  "endpoint_ios": [
+    {
+      "io_id": "eio-1788043443158-0-8c70",
+      "call_id": "vcall-1788043443158-e25b2857",
+      "layer": "shacl",
+      "phase": "pre",
+      "ok": false,
+      "engine": "pyshacl",
+      "duration_ms": 660,
+      "request": {
+        "tool": "opencode-loop",
+        "args": {
+          "opencodeBaseUrls": "https://4096-37w8kmegwdxdf7rv.daytonaproxy01.net",
+          "dryRun": true,
+          "timeoutSeconds": 60,
+          "pack": "verifier-fleet",
+          "className": "VerifierFleet"
+        }
+      },
+      "response": {
+        "ok": false,
+        "conforms": false,
+        "engine": "pyshacl",
+        "violations": [
+          {
+            "id": "shacl-v0",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+          },
+          {
+            "id": "shacl-v1",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Severity: sh:Violation Source Shape: [ sh:class verifier:Verifier ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:IRI ; sh:order Literal(\"4\", datatype=xsd:integer) ; sh:path verifier:verifiers ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:verifiers Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:verifiers"
+          },
+          {
+            "id": "shacl-v2",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+          },
+          {
+            "id": "shacl-v3",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:description Literal(\"Target deployment (local | sandbox).\") ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"2\", datatype=xsd:integer) ; sh:path verifier:environment ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:environment Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:environment"
+          },
+          {
+            "id": "shacl-v4",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+          },
+          {
+            "id": "shacl-v5",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"0\", datatype=xsd:integer) ; sh:path verifier:fleet_id ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:fleet_id Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:fleet_id"
+          },
+          {
+            "id": "shacl-v6",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+          },
+          {
+            "id": "shacl-v7",
+            "severity": "blocking",
+            "title": "SHACL constraint violation",
+            "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"1\", datatype=xsd:integer) ; sh:path verifier:revision ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:revision Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:revision"
+          }
+        ],
+        "resultsText": "Validation Report\nConforms: False\nResults (4):\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:class verifier:Verifier ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:IRI ; sh:order Literal(\"4\", datatype=xsd:integer) ; sh:path verifier:verifiers ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:verifiers\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:verifiers\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:datatype xsd:string ; sh:description Literal(\"Target deployment (local | sandbox).\") ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"2\", datatype=xsd:integer) ; sh:path verifier:environment ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:environment\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:environment\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"0\", datatype=xsd:integer) ; sh:path verifier:fleet_id ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:fleet_id\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:fleet_id\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"1\", datatype=xsd:integer) ; sh:path verifier:revision ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:revision\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:revision\n",
+        "durationMs": 660,
+        "raw": {
+          "conforms": false,
+          "engine": "pyshacl",
+          "violations": [
+            {
+              "message": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+            },
+            {
+              "message": "Severity: sh:Violation Source Shape: [ sh:class verifier:Verifier ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:IRI ; sh:order Literal(\"4\", datatype=xsd:integer) ; sh:path verifier:verifiers ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:verifiers Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:verifiers"
+            },
+            {
+              "message": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+            },
+            {
+              "message": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:description Literal(\"Target deployment (local | sandbox).\") ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"2\", datatype=xsd:integer) ; sh:path verifier:environment ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:environment Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:environment"
+            },
+            {
+              "message": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+            },
+            {
+              "message": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"0\", datatype=xsd:integer) ; sh:path verifier:fleet_id ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:fleet_id Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:fleet_id"
+            },
+            {
+              "message": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):"
+            },
+            {
+              "message": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"1\", datatype=xsd:integer) ; sh:path verifier:revision ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:revision Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:revision"
+            }
+          ],
+          "resultsText": "Validation Report\nConforms: False\nResults (4):\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:class verifier:Verifier ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:IRI ; sh:order Literal(\"4\", datatype=xsd:integer) ; sh:path verifier:verifiers ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:verifiers\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:verifiers\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:datatype xsd:string ; sh:description Literal(\"Target deployment (local | sandbox).\") ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"2\", datatype=xsd:integer) ; sh:path verifier:environment ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:environment\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:environment\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"0\", datatype=xsd:integer) ; sh:path verifier:fleet_id ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:fleet_id\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:fleet_id\nConstraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):\n\tSeverity: sh:Violation\n\tSource Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"1\", datatype=xsd:integer) ; sh:path verifier:revision ]\n\tFocus Node: verifier:fleet_d0a7e8c28e\n\tResult Path: verifier:revision\n\tMessage: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:revision\n",
+          "dataTurtlePreview": "@prefix verifier: <https://midspiral.dev/ontology/verifier-fleet/> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\nverifier:fleet_d0a7e8c28e a verifier:VerifierFleet .\n",
+          "dataTurtle": "@prefix verifier: <https://midspiral.dev/ontology/verifier-fleet/> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\nverifier:fleet_d0a7e8c28e a verifier:VerifierFleet .\n"
+        }
+      },
+      "violations": [
+        {
+          "id": "shacl-v0",
+          "severity": "blocking",
+          "title": "SHACL constraint violation",
+          "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):",
+          "layer": "shacl"
+        },
+        {
+          "id": "shacl-v1",
+          "severity": "blocking",
+          "title": "SHACL constraint violation",
+          "reason": "Severity: sh:Violation Source Shape: [ sh:class verifier:Verifier ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:IRI ; sh:order Literal(\"4\", datatype=xsd:integer) ; sh:path verifier:verifiers ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:verifiers Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:verifiers",
+          "layer": "shacl"
+        },
+        {
+          "id": "shacl-v2",
+          "severity": "blocking",
+          "title": "SHACL constraint violation",
+          "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):",
+          "layer": "shacl"
+        },
+        {
+          "id": "shacl-v3",
+          "severity": "blocking",
+          "title": "SHACL constraint violation",
+          "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:description Literal(\"Target deployment (local | sandbox).\") ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"2\", datatype=xsd:integer) ; sh:path verifier:environment ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:environment Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:environment",
+          "layer": "shacl"
+        },
+        {
+          "id": "shacl-v4",
+          "severity": "blocking",
+          "title": "SHACL constraint violation",
+          "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):",
+          "layer": "shacl"
+        },
+        {
+          "id": "shacl-v5",
+          "severity": "blocking",
+          "title": "SHACL constraint violation",
+          "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"0\", datatype=xsd:integer) ; sh:path verifier:fleet_id ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:fleet_id Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:fleet_id",
+          "layer": "shacl"
+        },
+        {
+          "id": "shacl-v6",
+          "severity": "blocking",
+          "title": "SHACL constraint violation",
+          "reason": "Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):",
+          "layer": "shacl"
+        },
+        {
+          "id": "shacl-v7",
+          "severity": "blocking",
+          "title": "SHACL constraint violation",
+          "reason": "Severity: sh:Violation Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal(\"1\", datatype=xsd:integer) ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:nodeKind sh:Literal ; sh:order Literal(\"1\", datatype=xsd:integer) ; sh:path verifier:revision ] Focus Node: verifier:fleet_d0a7e8c28e Result Path: verifier:revision Message: Less than 1 values on verifier:fleet_d0a7e8c28e->verifier:revision",
+          "layer": "shacl"
+        }
+      ],
+      "at": "2026-08-29T22:44:03.158Z"
+    },
+    {
+      "io_id": "eio-1788043443158-1-5d48",
+      "call_id": "vcall-1788043443158-e25b2857",
+      "layer": "guardrails",
+      "phase": "pre",
+      "ok": true,
+      "engine": "routing-labels",
+      "request": {
+        "tool": "opencode-loop"
+      },
+      "response": {
+        "names": [
+          "formal.guardrails.content",
+          "formal.shacl.validate",
+          "cascade.lean-rules-v1",
+          "cascade.linkml-resolvers-v1",
+          "GuardrailsAI.ValidJson"
+        ]
+      },
+      "at": "2026-08-29T22:44:03.158Z"
+    }
+  ],
+  "source": "tool_io_guard"
+}

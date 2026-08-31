@@ -99,3 +99,22 @@ DEFINE TABLE sandbox_log SCHEMALESS;
 DEFINE INDEX idx_sandbox_log_sandbox ON sandbox_log FIELDS sandbox_id;
 DEFINE INDEX idx_sandbox_log_created ON sandbox_log FIELDS created_at;
 DEFINE INDEX idx_sandbox_log_source ON sandbox_log FIELDS source;
+
+// Formal validation cascade + endpoint I/O (host Surreal, not in-sandbox Surreal)
+// Written by tool_io_guard / px_validate_cascade / validation-io-store
+DEFINE TABLE validation_call SCHEMALESS;
+DEFINE INDEX idx_validation_call_at ON validation_call FIELDS at;
+DEFINE INDEX idx_validation_call_tool ON validation_call FIELDS tool;
+DEFINE INDEX idx_validation_call_pack ON validation_call FIELDS pack;
+DEFINE INDEX idx_validation_call_ok ON validation_call FIELDS ok;
+DEFINE INDEX idx_validation_call_sandbox ON validation_call FIELDS sandbox_id;
+
+// Per-layer endpoint I/O (shacl | lean | graphql | guardrails)
+DEFINE TABLE endpoint_io SCHEMALESS;
+DEFINE INDEX idx_endpoint_io_call ON endpoint_io FIELDS call_id;
+DEFINE INDEX idx_endpoint_io_layer ON endpoint_io FIELDS layer;
+DEFINE INDEX idx_endpoint_io_at ON endpoint_io FIELDS at;
+
+// Snapshot of ontology React Flow node/edge colors + status (from validation_call rollup)
+DEFINE TABLE ontology_overlay SCHEMALESS;
+DEFINE INDEX idx_ontology_overlay_at ON ontology_overlay FIELDS generatedAt;

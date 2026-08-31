@@ -8,7 +8,7 @@ const SURREALDB_PASS = process.env.SURREALDB_PASS || 'root';
 const SURREALDB_NS = process.env.SURREALDB_NS || 'main';
 const SURREALDB_DB = process.env.SURREALDB_DB || 'main';
 
-async function query(sql: string) {
+async function query(sql: string): Promise<any> {
   const response = await fetch(new URL('/sql', SURREALDB_URL).toString(), {
     method: 'POST',
     headers: {
@@ -28,7 +28,7 @@ async function verify() {
 
   // 1. Insert a test session using SurrealQL (not JSON interpolation)
   console.log('1. Inserting test session...');
-  const insertResult = await query(`
+  const insertResult = (await query(`
     CREATE opencode_sessions CONTENT {
       title: 'Test Verification Session',
       status: 'completed',
@@ -45,13 +45,13 @@ async function verify() {
       model: 'test',
       summary: { additions: 10, deletions: 2, files: ['test.ts'] }
     }
-  `);
+  `)) as any[];
   console.log('   Insert result:', insertResult[0]?.status === 'OK' ? 'OK' : 'FAILED');
   const insertedId = insertResult[0]?.result?.[0]?.id;
 
   // 2. Query it back
   console.log('\n2. Querying session back...');
-  const queryResult = await query(`SELECT * FROM ${insertedId}`);
+  const queryResult = (await query(`SELECT * FROM ${insertedId}`)) as any[];
   const record = queryResult[0]?.result?.[0];
   console.log('   Found record:', record ? 'YES' : 'NO');
   if (record) {

@@ -1,0 +1,4871 @@
+{
+  "status": "ok",
+  "workspace": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments/01-platform/cloud-agent/config/verification/lean",
+  "updatedAt": "2026-08-02T03:42:59.756Z",
+  "port": 9474,
+  "lastReason": "save:PxCloudAgent/SurrealGraph.lean",
+  "exitCode": 0,
+  "diagnostics": [],
+  "goals": [],
+  "lastBuildAt": "2026-08-02T03:42:59.754Z",
+  "lastOutputTail": "Build completed successfully.\n\n",
+  "reasoningTrail": {
+    "at": "2026-08-02T02:31:42.460Z",
+    "exitCode": 0,
+    "stepCount": 3,
+    "steps": [
+      "[Meta.Tactic.simp.rewrite] Nat.zero_add:1000, 0 + b ==> b",
+      "[Meta.Tactic.simp.rewrite] Nat.add_zero:1000, b + 0 ==> b",
+      "[Meta.Tactic.simp.rewrite] eq_self:1000, b = b ==> True"
+    ]
+  },
+  "goalTree": {
+    "at": "2026-08-02T02:31:44.373Z",
+    "ok": true,
+    "nodes": [
+      {
+        "tactic": "by\n  intro a\n  induction a with\n  | zero =>\n      intro b\n      simp\n  | succ a ih =>\n      intro b\n      calc\n        Nat.succ a + b = Nat.succ (a + b) := by rw [Nat.succ_add]\n        _ = Nat.succ (b + a)     := by rw [ih]\n        _ = b + Nat.succ a       := by rw [Nat.add_succ]",
+        "position": {
+          "line": 17,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 56
+        },
+        "mvarBefore": [
+          "_uniq.65"
+        ],
+        "mvarAfter": [],
+        "id": "t0",
+        "depth": 5,
+        "before": [
+          {
+            "userName": null,
+            "type": "∀ (a b : Nat), a + b = b + a",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "by",
+        "position": {
+          "line": 17,
+          "endLine": 17,
+          "endColumn": 58,
+          "column": 56
+        },
+        "mvarBefore": [
+          "_uniq.65"
+        ],
+        "mvarAfter": [],
+        "id": "t1",
+        "depth": 6,
+        "before": [
+          {
+            "userName": null,
+            "type": "∀ (a b : Nat), a + b = b + a",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "intro a\n  induction a with\n  | zero =>\n      intro b\n      simp\n  | succ a ih =>\n      intro b\n      calc\n        Nat.succ a + b = Nat.succ (a + b) := by rw [Nat.succ_add]\n        _ = Nat.succ (b + a)     := by rw [ih]\n        _ = b + Nat.succ a       := by rw [Nat.add_succ]",
+        "position": {
+          "line": 18,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 2
+        },
+        "mvarBefore": [
+          "_uniq.65"
+        ],
+        "mvarAfter": [],
+        "id": "t2",
+        "depth": 7,
+        "before": [
+          {
+            "userName": null,
+            "type": "∀ (a b : Nat), a + b = b + a",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "intro a\n  induction a with\n  | zero =>\n      intro b\n      simp\n  | succ a ih =>\n      intro b\n      calc\n        Nat.succ a + b = Nat.succ (a + b) := by rw [Nat.succ_add]\n        _ = Nat.succ (b + a)     := by rw [ih]\n        _ = b + Nat.succ a       := by rw [Nat.add_succ]",
+        "position": {
+          "line": 18,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 2
+        },
+        "mvarBefore": [
+          "_uniq.65"
+        ],
+        "mvarAfter": [],
+        "id": "t3",
+        "depth": 8,
+        "before": [
+          {
+            "userName": null,
+            "type": "∀ (a b : Nat), a + b = b + a",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "intro a",
+        "position": {
+          "line": 18,
+          "endLine": 18,
+          "endColumn": 9,
+          "column": 2
+        },
+        "mvarBefore": [
+          "_uniq.65"
+        ],
+        "mvarAfter": [
+          "_uniq.67"
+        ],
+        "id": "t4",
+        "depth": 9,
+        "before": [
+          {
+            "userName": null,
+            "type": "∀ (a b : Nat), a + b = b + a",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              }
+            ]
+          }
+        ],
+        "after": [
+          {
+            "userName": null,
+            "type": "∀ (b : Nat), a + b = b + a",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tactic": "induction a with\n  | zero =>\n      intro b\n      simp\n  | succ a ih =>\n      intro b\n      calc\n        Nat.succ a + b = Nat.succ (a + b) := by rw [Nat.succ_add]\n        _ = Nat.succ (b + a)     := by rw [ih]\n        _ = b + Nat.succ a       := by rw [Nat.add_succ]",
+        "position": {
+          "line": 19,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 2
+        },
+        "mvarBefore": [
+          "_uniq.67"
+        ],
+        "mvarAfter": [],
+        "id": "t5",
+        "depth": 9,
+        "before": [
+          {
+            "userName": null,
+            "type": "∀ (b : Nat), a + b = b + a",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "induction a with\n  | zero =>\n      intro b\n      simp\n  | succ a ih =>\n      intro b\n      calc\n        Nat.succ a + b = Nat.succ (a + b) := by rw [Nat.succ_add]\n        _ = Nat.succ (b + a)     := by rw [ih]\n        _ = b + Nat.succ a       := by rw [Nat.add_succ]",
+        "position": {
+          "line": 19,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 2
+        },
+        "mvarBefore": [
+          "_uniq.67"
+        ],
+        "mvarAfter": [
+          "_uniq.67"
+        ],
+        "id": "t6",
+        "depth": 10,
+        "before": [
+          {
+            "userName": null,
+            "type": "∀ (b : Nat), a + b = b + a",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              }
+            ]
+          }
+        ],
+        "after": [
+          {
+            "userName": null,
+            "type": "∀ (b : Nat), a + b = b + a",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tactic": "| zero =>",
+        "position": {
+          "line": 20,
+          "endLine": 20,
+          "endColumn": 11,
+          "column": 2
+        },
+        "mvarBefore": [
+          "_uniq.84"
+        ],
+        "mvarAfter": [],
+        "id": "t7",
+        "depth": 11,
+        "before": [
+          {
+            "userName": "zero",
+            "type": "∀ (b : Nat), 0 + b = b + 0",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "intro b\n      simp",
+        "position": {
+          "line": 21,
+          "endLine": 22,
+          "endColumn": 10,
+          "column": 6
+        },
+        "mvarBefore": [
+          "_uniq.84"
+        ],
+        "mvarAfter": [],
+        "id": "t8",
+        "depth": 12,
+        "before": [
+          {
+            "userName": "zero",
+            "type": "∀ (b : Nat), 0 + b = b + 0",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "intro b\n      simp",
+        "position": {
+          "line": 21,
+          "endLine": 22,
+          "endColumn": 10,
+          "column": 6
+        },
+        "mvarBefore": [
+          "_uniq.84"
+        ],
+        "mvarAfter": [],
+        "id": "t9",
+        "depth": 13,
+        "before": [
+          {
+            "userName": "zero",
+            "type": "∀ (b : Nat), 0 + b = b + 0",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "intro b",
+        "position": {
+          "line": 21,
+          "endLine": 21,
+          "endColumn": 13,
+          "column": 6
+        },
+        "mvarBefore": [
+          "_uniq.84"
+        ],
+        "mvarAfter": [
+          "_uniq.86"
+        ],
+        "id": "t10",
+        "depth": 14,
+        "before": [
+          {
+            "userName": "zero",
+            "type": "∀ (b : Nat), 0 + b = b + 0",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              }
+            ]
+          }
+        ],
+        "after": [
+          {
+            "userName": "zero",
+            "type": "0 + b = b + 0",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tactic": "simp",
+        "position": {
+          "line": 22,
+          "endLine": 22,
+          "endColumn": 10,
+          "column": 6
+        },
+        "mvarBefore": [
+          "_uniq.86"
+        ],
+        "mvarAfter": [],
+        "id": "t11",
+        "depth": 14,
+        "before": [
+          {
+            "userName": "zero",
+            "type": "0 + b = b + 0",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "| succ a ih =>",
+        "position": {
+          "line": 23,
+          "endLine": 23,
+          "endColumn": 16,
+          "column": 2
+        },
+        "mvarBefore": [
+          "_uniq.138"
+        ],
+        "mvarAfter": [],
+        "id": "t12",
+        "depth": 11,
+        "before": [
+          {
+            "userName": "succ",
+            "type": "∀ (b : Nat), a + 1 + b = b + (a + 1)",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "intro b\n      calc\n        Nat.succ a + b = Nat.succ (a + b) := by rw [Nat.succ_add]\n        _ = Nat.succ (b + a)     := by rw [ih]\n        _ = b + Nat.succ a       := by rw [Nat.add_succ]",
+        "position": {
+          "line": 24,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 6
+        },
+        "mvarBefore": [
+          "_uniq.138"
+        ],
+        "mvarAfter": [],
+        "id": "t13",
+        "depth": 12,
+        "before": [
+          {
+            "userName": "succ",
+            "type": "∀ (b : Nat), a + 1 + b = b + (a + 1)",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "intro b\n      calc\n        Nat.succ a + b = Nat.succ (a + b) := by rw [Nat.succ_add]\n        _ = Nat.succ (b + a)     := by rw [ih]\n        _ = b + Nat.succ a       := by rw [Nat.add_succ]",
+        "position": {
+          "line": 24,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 6
+        },
+        "mvarBefore": [
+          "_uniq.138"
+        ],
+        "mvarAfter": [],
+        "id": "t14",
+        "depth": 13,
+        "before": [
+          {
+            "userName": "succ",
+            "type": "∀ (b : Nat), a + 1 + b = b + (a + 1)",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "intro b",
+        "position": {
+          "line": 24,
+          "endLine": 24,
+          "endColumn": 13,
+          "column": 6
+        },
+        "mvarBefore": [
+          "_uniq.138"
+        ],
+        "mvarAfter": [
+          "_uniq.140"
+        ],
+        "id": "t15",
+        "depth": 14,
+        "before": [
+          {
+            "userName": "succ",
+            "type": "∀ (b : Nat), a + 1 + b = b + (a + 1)",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              }
+            ]
+          }
+        ],
+        "after": [
+          {
+            "userName": "succ",
+            "type": "a + 1 + b = b + (a + 1)",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tactic": "calc\n        Nat.succ a + b = Nat.succ (a + b) := by rw [Nat.succ_add]\n        _ = Nat.succ (b + a)     := by rw [ih]\n        _ = b + Nat.succ a       := by rw [Nat.add_succ]",
+        "position": {
+          "line": 25,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 6
+        },
+        "mvarBefore": [
+          "_uniq.140"
+        ],
+        "mvarAfter": [],
+        "id": "t16",
+        "depth": 14,
+        "before": [
+          {
+            "userName": "succ",
+            "type": "a + 1 + b = b + (a + 1)",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "Nat.succ a + b = Nat.succ (a + b) := by rw [Nat.succ_add]\n        _ = Nat.succ (b + a)     := by rw [ih]\n        _ = b + Nat.succ a       := by rw [Nat.add_succ]",
+        "position": {
+          "line": 26,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 8
+        },
+        "mvarBefore": [],
+        "mvarAfter": [],
+        "id": "t17",
+        "depth": 15,
+        "before": [],
+        "after": []
+      },
+      {
+        "tactic": "by rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 45
+        },
+        "mvarBefore": [
+          "_uniq.187"
+        ],
+        "mvarAfter": [],
+        "id": "t18",
+        "depth": 16,
+        "before": [
+          {
+            "userName": null,
+            "type": "a.succ + b = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "by",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 47,
+          "column": 45
+        },
+        "mvarBefore": [
+          "_uniq.187"
+        ],
+        "mvarAfter": [],
+        "id": "t19",
+        "depth": 17,
+        "before": [
+          {
+            "userName": null,
+            "type": "a.succ + b = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.187"
+        ],
+        "mvarAfter": [],
+        "id": "t20",
+        "depth": 18,
+        "before": [
+          {
+            "userName": null,
+            "type": "a.succ + b = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.187"
+        ],
+        "mvarAfter": [],
+        "id": "t21",
+        "depth": 19,
+        "before": [
+          {
+            "userName": null,
+            "type": "a.succ + b = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.187"
+        ],
+        "mvarAfter": [],
+        "id": "t22",
+        "depth": 20,
+        "before": [
+          {
+            "userName": null,
+            "type": "a.succ + b = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.187"
+        ],
+        "mvarAfter": [],
+        "id": "t23",
+        "depth": 21,
+        "before": [
+          {
+            "userName": null,
+            "type": "a.succ + b = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.187"
+        ],
+        "mvarAfter": [],
+        "id": "t24",
+        "depth": 22,
+        "before": [
+          {
+            "userName": null,
+            "type": "a.succ + b = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.187"
+        ],
+        "mvarAfter": [],
+        "id": "t25",
+        "depth": 23,
+        "before": [
+          {
+            "userName": null,
+            "type": "a.succ + b = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.187"
+        ],
+        "mvarAfter": [
+          "_uniq.369"
+        ],
+        "id": "t26",
+        "depth": 24,
+        "before": [
+          {
+            "userName": null,
+            "type": "a.succ + b = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.187"
+        ],
+        "mvarAfter": [
+          "_uniq.187"
+        ],
+        "id": "t27",
+        "depth": 25,
+        "before": [
+          {
+            "userName": null,
+            "type": "a.succ + b = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": [
+          {
+            "userName": null,
+            "type": "a.succ + b = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tactic": "Nat.succ_add",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 64,
+          "column": 52
+        },
+        "mvarBefore": [
+          "_uniq.187"
+        ],
+        "mvarAfter": [
+          "_uniq.369"
+        ],
+        "id": "t28",
+        "depth": 25,
+        "before": [
+          {
+            "userName": null,
+            "type": "a.succ + b = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.369"
+        ],
+        "mvarAfter": [
+          "_uniq.369"
+        ],
+        "id": "t29",
+        "depth": 24,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.369"
+        ],
+        "mvarAfter": [],
+        "id": "t30",
+        "depth": 24,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 64
+        },
+        "mvarBefore": [
+          "_uniq.369"
+        ],
+        "mvarAfter": [],
+        "id": "t31",
+        "depth": 25,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.369"
+        ],
+        "mvarAfter": [],
+        "id": "t32",
+        "depth": 26,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.369"
+        ],
+        "mvarAfter": [],
+        "id": "t33",
+        "depth": 27,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.369"
+        ],
+        "mvarAfter": [],
+        "id": "t34",
+        "depth": 28,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.369"
+        ],
+        "mvarAfter": [],
+        "id": "t35",
+        "depth": 29,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.369"
+        ],
+        "mvarAfter": [],
+        "id": "t36",
+        "depth": 30,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.369"
+        ],
+        "mvarAfter": [],
+        "id": "t37",
+        "depth": 31,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.369"
+        ],
+        "mvarAfter": [],
+        "id": "t38",
+        "depth": 32,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.369"
+        ],
+        "mvarAfter": [],
+        "id": "t39",
+        "depth": 33,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.369"
+        ],
+        "mvarAfter": [],
+        "id": "t40",
+        "depth": 34,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.369"
+        ],
+        "mvarAfter": [],
+        "id": "t41",
+        "depth": 35,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.369"
+        ],
+        "mvarAfter": [],
+        "id": "t42",
+        "depth": 36,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.369"
+        ],
+        "mvarAfter": [],
+        "id": "t43",
+        "depth": 37,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.369"
+        ],
+        "mvarAfter": [],
+        "id": "t44",
+        "depth": 38,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.369"
+        ],
+        "mvarAfter": [],
+        "id": "t45",
+        "depth": 39,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.succ_add]",
+        "position": {
+          "line": 26,
+          "endLine": 26,
+          "endColumn": 65,
+          "column": 48
+        },
+        "mvarBefore": [
+          "_uniq.369"
+        ],
+        "mvarAfter": [],
+        "id": "t46",
+        "depth": 40,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (a + b).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "by rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 36
+        },
+        "mvarBefore": [
+          "_uniq.215"
+        ],
+        "mvarAfter": [],
+        "id": "t47",
+        "depth": 16,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "by",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 38,
+          "column": 36
+        },
+        "mvarBefore": [
+          "_uniq.215"
+        ],
+        "mvarAfter": [],
+        "id": "t48",
+        "depth": 17,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.215"
+        ],
+        "mvarAfter": [],
+        "id": "t49",
+        "depth": 18,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.215"
+        ],
+        "mvarAfter": [],
+        "id": "t50",
+        "depth": 19,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.215"
+        ],
+        "mvarAfter": [],
+        "id": "t51",
+        "depth": 20,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.215"
+        ],
+        "mvarAfter": [],
+        "id": "t52",
+        "depth": 21,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.215"
+        ],
+        "mvarAfter": [],
+        "id": "t53",
+        "depth": 22,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.215"
+        ],
+        "mvarAfter": [],
+        "id": "t54",
+        "depth": 23,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.215"
+        ],
+        "mvarAfter": [
+          "_uniq.378"
+        ],
+        "id": "t55",
+        "depth": 24,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.215"
+        ],
+        "mvarAfter": [
+          "_uniq.215"
+        ],
+        "id": "t56",
+        "depth": 25,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tactic": "ih",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 45,
+          "column": 43
+        },
+        "mvarBefore": [
+          "_uniq.215"
+        ],
+        "mvarAfter": [
+          "_uniq.378"
+        ],
+        "id": "t57",
+        "depth": 25,
+        "before": [
+          {
+            "userName": null,
+            "type": "(a + b).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.378"
+        ],
+        "mvarAfter": [
+          "_uniq.378"
+        ],
+        "id": "t58",
+        "depth": 24,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.378"
+        ],
+        "mvarAfter": [],
+        "id": "t59",
+        "depth": 24,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 45
+        },
+        "mvarBefore": [
+          "_uniq.378"
+        ],
+        "mvarAfter": [],
+        "id": "t60",
+        "depth": 25,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.378"
+        ],
+        "mvarAfter": [],
+        "id": "t61",
+        "depth": 26,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.378"
+        ],
+        "mvarAfter": [],
+        "id": "t62",
+        "depth": 27,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.378"
+        ],
+        "mvarAfter": [],
+        "id": "t63",
+        "depth": 28,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.378"
+        ],
+        "mvarAfter": [],
+        "id": "t64",
+        "depth": 29,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.378"
+        ],
+        "mvarAfter": [],
+        "id": "t65",
+        "depth": 30,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.378"
+        ],
+        "mvarAfter": [],
+        "id": "t66",
+        "depth": 31,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.378"
+        ],
+        "mvarAfter": [],
+        "id": "t67",
+        "depth": 32,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.378"
+        ],
+        "mvarAfter": [],
+        "id": "t68",
+        "depth": 33,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.378"
+        ],
+        "mvarAfter": [],
+        "id": "t69",
+        "depth": 34,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.378"
+        ],
+        "mvarAfter": [],
+        "id": "t70",
+        "depth": 35,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.378"
+        ],
+        "mvarAfter": [],
+        "id": "t71",
+        "depth": 36,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.378"
+        ],
+        "mvarAfter": [],
+        "id": "t72",
+        "depth": 37,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.378"
+        ],
+        "mvarAfter": [],
+        "id": "t73",
+        "depth": 38,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.378"
+        ],
+        "mvarAfter": [],
+        "id": "t74",
+        "depth": 39,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [ih]",
+        "position": {
+          "line": 27,
+          "endLine": 27,
+          "endColumn": 46,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.378"
+        ],
+        "mvarAfter": [],
+        "id": "t75",
+        "depth": 40,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "by rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 36
+        },
+        "mvarBefore": [
+          "_uniq.309"
+        ],
+        "mvarAfter": [],
+        "id": "t76",
+        "depth": 16,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = b + a.succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "by",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 38,
+          "column": 36
+        },
+        "mvarBefore": [
+          "_uniq.309"
+        ],
+        "mvarAfter": [],
+        "id": "t77",
+        "depth": 17,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = b + a.succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.309"
+        ],
+        "mvarAfter": [],
+        "id": "t78",
+        "depth": 18,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = b + a.succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.309"
+        ],
+        "mvarAfter": [],
+        "id": "t79",
+        "depth": 19,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = b + a.succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.309"
+        ],
+        "mvarAfter": [],
+        "id": "t80",
+        "depth": 20,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = b + a.succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.309"
+        ],
+        "mvarAfter": [],
+        "id": "t81",
+        "depth": 21,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = b + a.succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.309"
+        ],
+        "mvarAfter": [],
+        "id": "t82",
+        "depth": 22,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = b + a.succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.309"
+        ],
+        "mvarAfter": [],
+        "id": "t83",
+        "depth": 23,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = b + a.succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.309"
+        ],
+        "mvarAfter": [
+          "_uniq.389"
+        ],
+        "id": "t84",
+        "depth": 24,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = b + a.succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.309"
+        ],
+        "mvarAfter": [
+          "_uniq.309"
+        ],
+        "id": "t85",
+        "depth": 25,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = b + a.succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = b + a.succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tactic": "Nat.add_succ",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 55,
+          "column": 43
+        },
+        "mvarBefore": [
+          "_uniq.309"
+        ],
+        "mvarAfter": [
+          "_uniq.389"
+        ],
+        "id": "t86",
+        "depth": 25,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = b + a.succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.389"
+        ],
+        "mvarAfter": [
+          "_uniq.389"
+        ],
+        "id": "t87",
+        "depth": 24,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.389"
+        ],
+        "mvarAfter": [],
+        "id": "t88",
+        "depth": 24,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 55
+        },
+        "mvarBefore": [
+          "_uniq.389"
+        ],
+        "mvarAfter": [],
+        "id": "t89",
+        "depth": 25,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.389"
+        ],
+        "mvarAfter": [],
+        "id": "t90",
+        "depth": 26,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.389"
+        ],
+        "mvarAfter": [],
+        "id": "t91",
+        "depth": 27,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.389"
+        ],
+        "mvarAfter": [],
+        "id": "t92",
+        "depth": 28,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.389"
+        ],
+        "mvarAfter": [],
+        "id": "t93",
+        "depth": 29,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.389"
+        ],
+        "mvarAfter": [],
+        "id": "t94",
+        "depth": 30,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.389"
+        ],
+        "mvarAfter": [],
+        "id": "t95",
+        "depth": 31,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.389"
+        ],
+        "mvarAfter": [],
+        "id": "t96",
+        "depth": 32,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.389"
+        ],
+        "mvarAfter": [],
+        "id": "t97",
+        "depth": 33,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.389"
+        ],
+        "mvarAfter": [],
+        "id": "t98",
+        "depth": 34,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.389"
+        ],
+        "mvarAfter": [],
+        "id": "t99",
+        "depth": 35,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.389"
+        ],
+        "mvarAfter": [],
+        "id": "t100",
+        "depth": 36,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.389"
+        ],
+        "mvarAfter": [],
+        "id": "t101",
+        "depth": 37,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.389"
+        ],
+        "mvarAfter": [],
+        "id": "t102",
+        "depth": 38,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.389"
+        ],
+        "mvarAfter": [],
+        "id": "t103",
+        "depth": 39,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      },
+      {
+        "tactic": "rw [Nat.add_succ]",
+        "position": {
+          "line": 28,
+          "endLine": 28,
+          "endColumn": 56,
+          "column": 39
+        },
+        "mvarBefore": [
+          "_uniq.389"
+        ],
+        "mvarAfter": [],
+        "id": "t104",
+        "depth": 40,
+        "before": [
+          {
+            "userName": null,
+            "type": "(b + a).succ = (b + a).succ",
+            "hypotheses": [
+              {
+                "value": null,
+                "type": "∀ (a b : Nat), a + b = b + a",
+                "name": "add_comm_traced"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "a"
+              },
+              {
+                "value": null,
+                "type": "∀ (b : Nat), a + b = b + a",
+                "name": "ih"
+              },
+              {
+                "value": null,
+                "type": "Nat",
+                "name": "b"
+              }
+            ]
+          }
+        ],
+        "after": []
+      }
+    ],
+    "messages": [],
+    "exitCode": 0,
+    "error": null
+  }
+}

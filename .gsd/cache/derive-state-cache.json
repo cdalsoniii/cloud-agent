@@ -1,0 +1,42 @@
+{
+  "state": {
+    "activeMilestone": {
+      "id": "M3",
+      "title": "CI + E2E happy path"
+    },
+    "activeSlice": null,
+    "activeTask": null,
+    "phase": "complete",
+    "recentDecisions": [],
+    "blockers": [],
+    "nextAction": "All milestones complete.",
+    "registry": [
+      {
+        "id": "M1",
+        "title": "Prove → translate → kernels",
+        "status": "complete"
+      },
+      {
+        "id": "M3",
+        "title": "CI + E2E happy path",
+        "status": "complete"
+      }
+    ],
+    "requirements": {
+      "active": 0,
+      "validated": 0,
+      "deferred": 0,
+      "outOfScope": 0,
+      "blocked": 0,
+      "total": 0
+    },
+    "progress": {
+      "milestones": {
+        "done": 2,
+        "total": 2
+      }
+    }
+  },
+  "timestamp": 1785630671693,
+  "version": "1.0"
+}

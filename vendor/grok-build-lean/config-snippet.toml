@@ -1,0 +1,5 @@
+[ui]
+# Path C — native Lean pane in grok-build fork (see vendor/grok-build-lean/)
+lean_pane_enabled = false
+lean_live_url = "http://127.0.0.1:9474"
+lean_pane_width_percent = 35

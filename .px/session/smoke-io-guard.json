@@ -1,0 +1,111 @@
+{
+  "ok": false,
+  "decision": "deny",
+  "reason": "payload matches high-risk shell pattern",
+  "tool": "run_terminal_command",
+  "phase": "pre",
+  "gated": true,
+  "pack": "verifier-fleet",
+  "className": "VerifierFleet",
+  "validation": {
+    "ok": false,
+    "tool": "run_terminal_command",
+    "phase": "pre",
+    "violations": [
+      {
+        "id": "pre-danger",
+        "severity": "blocking",
+        "title": "[pre] dangerous command pattern",
+        "reason": "payload matches high-risk shell pattern",
+        "phase": "pre"
+      }
+    ],
+    "schema": {},
+    "cascade": {},
+    "ontologyHookContext": {
+      "phase": "pre",
+      "tool": "run_terminal_command",
+      "pack": "verifier-fleet",
+      "className": "VerifierFleet",
+      "relevantOntologyTag": "there_is_one_relevant_ontology",
+      "relevantOntologyCount": 1,
+      "ontologies": [
+        {
+          "id": "acme-fleet",
+          "pack": "verifier-fleet",
+          "name": "Acme Validation Fleet",
+          "metamodelFile": "verifier-metamodel.linkml.yaml",
+          "linkmlDir": "linkml/verifiers",
+          "rootClass": "VerifierFleet",
+          "shaclFile": "verifier-fleet.shacl.ttl",
+          "relevant": true,
+          "reason": "Active pack for this tool_io_guard call (pack=verifier-fleet)"
+        }
+      ],
+      "guardrails": [
+        {
+          "name": "formal.guardrails.content",
+          "kind": "formal_service",
+          "port": 7003,
+          "relevant": true,
+          "reason": "Packed sandbox content-check service on :7003"
+        },
+        {
+          "name": "formal.shacl.validate",
+          "kind": "cascade_layer",
+          "port": 7004,
+          "relevant": true,
+          "reason": "SHACL shapes server / host pySHACL (port 7004 in sandbox)"
+        },
+        {
+          "name": "cascade.lean-rules-v1",
+          "kind": "cascade_layer",
+          "relevant": true,
+          "reason": "Lean well-formedness layer after SHACL"
+        },
+        {
+          "name": "cascade.linkml-resolvers-v1",
+          "kind": "cascade_layer",
+          "relevant": true,
+          "reason": "GraphQL SDL + LinkML resolver completeness layer"
+        },
+        {
+          "name": "GuardrailsAI.ValidJson",
+          "kind": "guardrails_ai",
+          "relevant": true,
+          "reason": "Routing label for tool=run_terminal_command (Guardrails AI-style validator name)"
+        }
+      ],
+      "shapes": [
+        {
+          "shapeId": "verifier-fleet:VerifierFleet",
+          "targetClass": "VerifierFleet",
+          "source": "lean-rules",
+          "shapesFile": "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments/02-products/assistant-ui/.px/generated/verifier-fleet.shacl.ttl",
+          "relevant": true,
+          "reason": "Root class for validation"
+        }
+      ],
+      "relationships": []
+    },
+    "layers": [
+      "shacl",
+      "lean",
+      "graphql"
+    ],
+    "sandboxId": null,
+    "ontologyEnforcement": true,
+    "ontologyEditing": true,
+    "ontologySuggestions": [
+      {
+        "kind": "data",
+        "title": "[pre] dangerous command pattern",
+        "detail": "payload matches high-risk shell pattern"
+      }
+    ],
+    "cot": "### Ontology check (pre)\n- Status: **FAIL**\n- Engine: rules\n- Violations (1):\n  1. [pre] dangerous command pattern — payload matches high-risk shell pattern\n- Suggestion mode: **ON** (/ontology-edit)\n- Ontology suggestions:\n  1. [data] [pre] dangerous command pattern: payload matches high-risk shell pattern\n- Apply only after user confirms (do not auto-DDL).\n\n### Scope (structured ontologyHookContext)\n- Phase **pre** tool=`run_terminal_command` pack=`verifier-fleet` root=`VerifierFleet` tag=`there_is_one_relevant_ontology` (n=1)\n  - Ontologies: verifier-fleet\n  - Guardrails: formal.guardrails.content, formal.shacl.validate, cascade.lean-rules-v1, cascade.linkml-resolvers-v1, GuardrailsAI.ValidJson\n  - Shapes: VerifierFleet\n  - Relationships: ",
+    "reasoningSummary": "### Ontology check (pre)\n- Status: **FAIL**\n- Engine: rules\n- Violations (1):\n  1. [pre] dangerous command pattern — payload matches high-risk shell pattern\n- Suggestion mode: **ON** (/ontology-edit)\n- Ontology suggestions:\n  1. [data] [pre] dangerous command pattern: payload matches high-risk shell pattern\n- Apply only after user confirms (do not auto-DDL).\n\n### Scope (structured ontologyHookContext)\n- Phase **pre** tool=`run_terminal_command` pack=`verifier-fleet` root=`VerifierFleet` tag=`there_is_one_relevant_ontology` (n=1)\n  - Ontologies: verifier-fleet\n  - Guardrails: formal.guardrails.content, formal.shacl.validate, cascade.lean-rules-v1, cascade.linkml-resolvers-v1, GuardrailsAI.ValidJson\n  - Shapes: VerifierFleet\n  - Relationships: "
+  },
+  "bareTool": "run_terminal_command",
+  "at": "2026-08-09T08:12:20.740Z"
+}

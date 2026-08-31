@@ -78,7 +78,7 @@ export class PerformanceValidator implements Validator {
         },
         {
           name: 'Count nodes',
-          query: `SELECT count() FROM ontology_node WHERE namespace = "${context.namespace}" AND database = "${context.database}" GROUP BY ALL`
+          query: `SELECT count() AS count FROM ontology_node WHERE namespace = "${context.namespace}" AND database = "${context.database}"`
         }
       ];
 
@@ -134,7 +134,7 @@ export class PerformanceValidator implements Validator {
   private async checkNodeCount(context: ValidationContext): Promise<ValidationResult> {
     try {
       const result = await context.surrealClient.query(
-        `SELECT count() FROM ontology_node WHERE namespace = "${context.namespace}" AND database = "${context.database}" GROUP BY ALL`
+        `SELECT count() AS count FROM ontology_node WHERE namespace = "${context.namespace}" AND database = "${context.database}"`
       );
       
       const count = result?.[0]?.count || 0;
@@ -189,7 +189,7 @@ export class PerformanceValidator implements Validator {
   private async checkEdgeCount(context: ValidationContext): Promise<ValidationResult> {
     try {
       const result = await context.surrealClient.query(
-        `SELECT count() FROM ontology_edge WHERE namespace = "${context.namespace}" AND database = "${context.database}" GROUP BY ALL`
+        `SELECT count() AS count FROM ontology_edge WHERE namespace = "${context.namespace}" AND database = "${context.database}"`
       );
       
       const count = result?.[0]?.count || 0;
@@ -460,7 +460,8 @@ export class PerformanceValidator implements Validator {
   private async checkConnectionHealth(context: ValidationContext): Promise<ValidationResult> {
     try {
       const startTime = Date.now();
-      await context.surrealClient.query('SELECT 1');
+      // Most compatible health probe for current SurrealDB
+      await context.surrealClient.query('INFO FOR DB');
       const responseTime = Date.now() - startTime;
       
       if (responseTime > 1000) {

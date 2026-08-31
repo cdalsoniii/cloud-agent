@@ -139,6 +139,49 @@ async function checkNorthflank(config: OrchestratorConfig): Promise<HealthCheckR
   }
 }
 
+async function checkOpenRouter(config: OrchestratorConfig): Promise<HealthCheckResult['checks'][0]> {
+  if (!config.openrouterApiKey) {
+    return {
+      name: 'OpenRouter API',
+      status: 'warning',
+      details: 'OPENROUTER_API_KEY not configured',
+    };
+  }
+
+  try {
+    const { routeOpenRouter } = await import('./llm/route-request.js');
+    const result = await routeOpenRouter({
+      tier: config.openrouterDefaultTier || 'bulk',
+      messages: [{ role: 'user', content: 'Reply exactly: ZDR_OK' }],
+      max_tokens: 128,
+      timeout_sec: 45,
+    });
+
+    const content = result.content.trim();
+    if (!content.includes('ZDR_OK')) {
+      return {
+        name: 'OpenRouter API',
+        status: 'warning',
+        details: `Unexpected response from ${result.modelUsed}: ${content.slice(0, 80)}`,
+      };
+    }
+
+    const zdr = result.requestBody?.provider?.zdr;
+    const dataCollection = result.requestBody?.provider?.data_collection;
+    return {
+      name: 'OpenRouter API',
+      status: 'ok',
+      details: `Model ${result.modelUsed} (${result.latencyMs}ms, zdr=${zdr}, data_collection=${dataCollection})`,
+    };
+  } catch (err) {
+    return {
+      name: 'OpenRouter API',
+      status: 'error',
+      details: `Probe failed: ${err instanceof Error ? err.message : String(err)}`,
+    };
+  }
+}
+
 async function checkEnvironment(): Promise<HealthCheckResult['checks'][0]> {
   const required = ['BASETEN_API_KEY'];
   const missing = required.filter(key => !process.env[key]);
@@ -151,7 +194,16 @@ async function checkEnvironment(): Promise<HealthCheckResult['checks'][0]> {
     };
   }
 
-  const optional = ['DAYTONA_API_KEY', 'NORTHFLANK_API_TOKEN', 'SMART_ROUTER_MODE'];
+  const optional = [
+    'DAYTONA_API_KEY',
+    'NORTHFLANK_API_TOKEN',
+    'OPENROUTER_API_KEY',
+    'OPENROUTER_BASE_URL',
+    'OPENROUTER_ZDR_DEFAULT',
+    'LLM_FALLBACK_ORDER',
+    'SMART_ROUTER_MODE',
+    'SURREALDB_URL',
+  ];
   const present = optional.filter(key => process.env[key]);
 
   return {
@@ -161,9 +213,38 @@ async function checkEnvironment(): Promise<HealthCheckResult['checks'][0]> {
   };
 }
 
+async function checkSurrealDb(): Promise<HealthCheckResult['checks'][0]> {
+  const url = process.env.SURREALDB_URL || '';
+  if (!url.startsWith('http')) {
+    return {
+      name: 'SurrealDB (sandbox logs)',
+      status: 'warning',
+      details: 'SURREALDB_URL not configured — sandbox logs will use in-memory fallback',
+    };
+  }
+
+  try {
+    const { surrealQuery, getSurrealDbTarget } = await import('./event-logger.js');
+    const target = getSurrealDbTarget();
+    await surrealQuery('INFO FOR DB');
+    return {
+      name: 'SurrealDB (sandbox logs)',
+      status: 'ok',
+      details: `Connected ${target.url} NS=${target.ns} DB=${target.db}`,
+    };
+  } catch (err) {
+    return {
+      name: 'SurrealDB (sandbox logs)',
+      status: 'error',
+      details: `Connection failed: ${err instanceof Error ? err.message : String(err)}`,
+    };
+  }
+}
+
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
   const verbose = args.includes('--verbose') || args.includes('-v');
+  const openrouterOnly = args.includes('--openrouter-only');
   
   if (verbose) {
     process.env.VERBOSE = '1';
@@ -175,12 +256,16 @@ async function main(): Promise<void> {
   const config = getDefaultConfig();
   log.info('Running health checks...');
 
-  const checks = await Promise.all([
-    checkEnvironment(),
-    checkBasetenChain(config),
-    checkDaytona(config),
-    checkNorthflank(config),
-  ]);
+  const checks = openrouterOnly
+    ? [await checkOpenRouter(config)]
+    : await Promise.all([
+        checkEnvironment(),
+        checkSurrealDb(),
+        checkOpenRouter(config),
+        checkBasetenChain(config),
+        checkDaytona(config),
+        checkNorthflank(config),
+      ]);
 
   const result: HealthCheckResult = {
     ok: checks.every(c => c.status !== 'error'),

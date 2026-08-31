@@ -1,0 +1,5 @@
+# Placeholder patch for grok-build Lean pane integration.
+# Full layout wiring is done manually after copying vendor/grok-build-lean/src/lean_pane.rs
+# into crates/xai_grok_pager/src/ and adding config keys from config-snippet.toml.
+#
+# build-grok-lean.sh copies lean_pane.rs and runs cargo install.

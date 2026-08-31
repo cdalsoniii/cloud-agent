@@ -33,7 +33,7 @@ repos:
 
   # Assistant UI — Next.js 14 monorepo with AI chat platform
   assistant-ui:
-    url: https://github.com/cdalsoniii/assistant-ui.git
+    url: https://github.com/BrightforestX/assistant-ui.git
     provider: github
     token_env: GIT_TOKEN
     default_branch: main

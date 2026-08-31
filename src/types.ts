@@ -28,6 +28,10 @@ export interface AgentHandoffRequest {
   branchPrefix?: string;
   /** Tags for categorization */
   tags?: string[];
+  /** Generate plan only, skip execution */
+  planOnly?: boolean;
+  /** Existing sandbox ID to communicate with */
+  sandboxId?: string;
 }
 
 export interface AgentHandoffResult {
@@ -79,7 +83,7 @@ export interface SandboxChainResponse {
   /** Sandbox state */
   sandboxState?: {
     id: string;
-    status: 'running' | 'paused' | 'stopped' | 'error';
+    status: 'running' | 'paused' | 'stopped' | 'error' | 'unknown';
     url?: string;
     lastActivity?: string;
   };
@@ -90,6 +94,10 @@ export interface SandboxChainResponse {
   /** Timestamp */
   timestamp: string;
 }
+
+export type LlmFallbackProvider = 'openrouter' | 'baseten' | 'local';
+
+export type OpenRouterDefaultTier = 'triage' | 'bulk' | 'coding' | 'frontier';
 
 export interface OrchestratorConfig {
   /** Router mode */
@@ -102,6 +110,16 @@ export interface OrchestratorConfig {
   chainPortfolioId: string;
   /** Baseten API key */
   basetenApiKey: string;
+  /** OpenRouter API key */
+  openrouterApiKey: string;
+  /** OpenRouter API base URL */
+  openrouterBaseUrl: string;
+  /** Enforce ZDR provider routing by default */
+  openrouterZdrDefault: boolean;
+  /** LLM provider fallback order */
+  llmFallbackOrder: LlmFallbackProvider[];
+  /** Default OpenRouter tier when specialty is unknown */
+  openrouterDefaultTier: OpenRouterDefaultTier;
   /** Daytona API key */
   daytonaApiKey?: string;
   /** Northflank API token */
@@ -256,7 +274,7 @@ export function loadEnv(dir: string): void {
 }
 
 /** Parse CLI arguments into structured options */
-export function parseArgs<T extends Record<string, string | boolean | string[]>>(
+export function parseArgs<T extends Record<string, unknown>>(
   argv: string[],
   defaults: T
 ): T {
@@ -316,14 +334,32 @@ export async function retry<T>(
   throw lastError;
 }
 
+function parseLlmFallbackOrder(raw: string | undefined): LlmFallbackProvider[] {
+  const order = (raw || 'openrouter,baseten,local')
+    .split(',')
+    .map((s) => s.trim().toLowerCase())
+    .filter(Boolean);
+  const allowed: LlmFallbackProvider[] = ['openrouter', 'baseten', 'local'];
+  const parsed = order.filter((p): p is LlmFallbackProvider => allowed.includes(p as LlmFallbackProvider));
+  return parsed.length ? parsed : ['openrouter', 'baseten', 'local'];
+}
+
 /** Default configuration from environment */
 export function getDefaultConfig(): OrchestratorConfig {
+  const openrouterDefaultTier =
+    (process.env.OPENROUTER_DEFAULT_TIER as OpenRouterDefaultTier | undefined) || 'bulk';
+
   return {
     mode: (process.env.SMART_ROUTER_MODE as OrchestratorConfig['mode']) || 'waterfall',
     defaultSandboxProvider: (process.env.SANDBOX_PROVIDER as 'daytona' | 'northflank') || 'daytona',
     defaultChainSpecialty: process.env.SMART_ROUTER_CHAIN_SPECIALTY || 'opencode-agent-wiring',
     chainPortfolioId: process.env.BASETEN_CHAIN_PORTFOLIO_ID || 'nwxlx5wy',
     basetenApiKey: process.env.BASETEN_API_KEY || '',
+    openrouterApiKey: process.env.OPENROUTER_API_KEY || '',
+    openrouterBaseUrl: process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1',
+    openrouterZdrDefault: process.env.OPENROUTER_ZDR_DEFAULT !== '0',
+    llmFallbackOrder: parseLlmFallbackOrder(process.env.LLM_FALLBACK_ORDER),
+    openrouterDefaultTier: openrouterDefaultTier,
     daytonaApiKey: process.env.DAYTONA_API_KEY,
     northflankApiToken: process.env.NORTHFLANK_API_TOKEN,
     chainTimeoutMs: parseInt(process.env.SMART_ROUTER_WATERFALL_CHAIN_TIMEOUT_MS || '60000', 10),

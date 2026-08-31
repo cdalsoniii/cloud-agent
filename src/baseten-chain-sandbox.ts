@@ -20,8 +20,58 @@ import {
   sleep,
   retry,
 } from './types.js';
+import { logSandboxLogs } from './event-logger.js';
+import { formalPrdSpecialtyMap } from './formal-prd/specialty-payloads.js';
 
 const log = createLogger('baseten-chain-sandbox', process.env.VERBOSE === '1');
+
+/** Extract a string log body from a chain/sandbox response for SurrealDB persistence. */
+function extractLogContent(response: SandboxChainResponse): string {
+  const data = response.data;
+  if (typeof data === 'string') return data;
+  if (data && typeof data === 'object') {
+    const record = data as Record<string, unknown>;
+    for (const key of ['logs', 'log', 'stdout', 'output', 'content', 'result']) {
+      const value = record[key];
+      if (typeof value === 'string' && value.length > 0) return value;
+      if (Array.isArray(value)) return value.map(String).join('\n');
+    }
+    return JSON.stringify(data);
+  }
+  if (response.error) return String(response.error);
+  return JSON.stringify(response);
+}
+
+/** Persist fetched sandbox logs to local SurrealDB (best-effort; never throws). */
+async function persistSandboxLogsToSurreal(
+  sandboxId: string,
+  response: SandboxChainResponse,
+  lines: number
+): Promise<void> {
+  try {
+    const content = extractLogContent(response);
+    if (!content) return;
+    const logId = await logSandboxLogs({
+      sandbox_id: sandboxId,
+      provider: process.env.SANDBOX_PROVIDER || 'daytona',
+      source: 'chain',
+      content: content.slice(0, 500_000),
+      line_count: lines,
+      operation: 'logs',
+      metadata: {
+        ok: response.ok,
+        error: response.error,
+        timestamp: response.timestamp,
+      },
+    });
+    log.info('Persisted sandbox logs to SurrealDB', { sandboxId, logId });
+  } catch (err) {
+    log.warn(
+      'Failed to persist sandbox logs to SurrealDB',
+      err instanceof Error ? err.message : String(err)
+    );
+  }
+}
 
 /** Baseten chain portfolio API client */
 export class BasetenChainSandbox {
@@ -112,7 +162,7 @@ export class BasetenChainSandbox {
 
     // Convert to OpenAI-compatible chat completion for standard LLM models
     const chatPayload = {
-      model: this.modelId,
+      model: this.config.chainPortfolioId || 'default-model',
       messages: [
         {
           role: 'system',
@@ -263,14 +313,16 @@ export class BasetenChainSandbox {
     });
   }
 
-  /** Get sandbox logs */
+  /** Get sandbox logs (also writes content to local SurrealDB `sandbox_log`) */
   async getSandboxLogs(sandboxId: string, lines = 100): Promise<SandboxChainResponse> {
-    return this.communicateWithSandbox({
+    const response = await this.communicateWithSandbox({
       specialty: 'dev-router',
       sandboxId,
       operation: 'logs',
       payload: { lines },
     });
+    await persistSandboxLogsToSurreal(sandboxId, response, lines);
+    return response;
   }
 
   /** Pause sandbox */
@@ -330,11 +382,7 @@ export class BasetenChainSandbox {
   private buildChainPayload(specialty: string, input: Record<string, unknown>): Record<string, unknown> {
     // Map specialties to their expected input formats
     const specialtyMap: Record<string, (input: Record<string, unknown>) => Record<string, unknown>> = {
-      'roadmap': (i) => ({
-        request: i,
-        specialty: 'roadmap',
-        mode: 'execute',
-      }),
+      ...formalPrdSpecialtyMap,
       'opencode-agent-wiring': (i) => ({
         request: {
           task: i.task,
@@ -424,10 +472,10 @@ export class BasetenChainSandbox {
     if (typeof state === 'object' && state !== null) {
       const s = state as Record<string, unknown>;
       return {
-        id: (s.id || s.sandbox_id || sandboxId) as string,
-        status: (s.status || s.state || 'unknown') as SandboxChainResponse['sandboxState']['status'],
-        url: s.url as string | undefined,
-        lastActivity: s.last_activity || s.lastActivity as string | undefined,
+      id: (s.id || s.sandbox_id || sandboxId) as string,
+      status: (s.status || s.state || 'unknown') as NonNullable<SandboxChainResponse['sandboxState']>['status'],
+      url: s.url as string | undefined,
+      lastActivity: (s.last_activity || s.lastActivity) as string | undefined,
       };
     }
 
@@ -512,13 +560,17 @@ Options:
     process.exit(0);
   }
 
-  const response = await client.communicateWithSandbox({
-    specialty,
-    sandboxId,
-    operation,
-    payload,
-    timeout,
-  });
+  // Prefer getSandboxLogs so SurrealDB persistence always runs for --operation logs
+  const response =
+    operation === 'logs'
+      ? await client.getSandboxLogs(sandboxId, Number(payload.lines) || 100)
+      : await client.communicateWithSandbox({
+          specialty,
+          sandboxId,
+          operation,
+          payload,
+          timeout,
+        });
 
   console.log(JSON.stringify(response, null, 2));
   process.exit(response.ok ? 0 : 1);

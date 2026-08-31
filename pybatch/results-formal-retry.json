@@ -1,0 +1,94 @@
+[
+  {
+    "job_id": "formal-mq-001-midspiral-rule-yaml",
+    "ok": true,
+    "iterations": 1,
+    "diff": "",
+    "test_output": "__TEST_EXIT__:0",
+    "session_id": "ses_07d0f8c22ffeMIdtESUF8AWVeZ",
+    "error": null,
+    "validation": [
+      {
+        "passed": true,
+        "engine": "validation_cmd",
+        "rule_id": "validation_cmd",
+        "message": "exit=0",
+        "details": {
+          "stdout": "__EXIT__:0",
+          "cmd": "test -f formal/midspiral/rule-sandbox-lifecycle.yaml && grep -q 'rule-sandbox-lifecycle-sdk' formal/midspiral/rule-sandbox-lifecycle.yaml && grep -q 'provider.sh' formal/midspiral/rule-sandbox-lifecycle.yaml && grep -q 'sdk_path == true' formal/midspiral/rule-sandbox-lifecycle.yaml && grep -q 'midspiral:' formal/midspiral/rule-sandbox-lifecycle.yaml && grep -q 'verify-rules' formal/midspiral/rule-sandbox-lifecycle.yaml"
+        }
+      },
+      {
+        "passed": true,
+        "engine": "business-rule",
+        "rule_id": "sandbox lifecycle rule must forbid provider.sh and",
+        "message": "keyword coverage 71%",
+        "details": {
+          "matched": [
+            "sandbox",
+            "lifecycle",
+            "rule",
+            "provider.sh",
+            "daytona"
+          ],
+          "missing": [
+            "forbid",
+            "require"
+          ]
+        }
+      }
+    ],
+    "validation_passed": true,
+    "pr_url": "https://github.com/BrightforestX/meta-utilities/pull/10",
+    "pr_number": 10,
+    "pr_branch": "formal-mq/formal-mq-001-midspiral-rule-yaml",
+    "pr_error": null,
+    "sandbox_id": "522c0a7e-fd36-42f6-b659-9c5d85ac228d"
+  },
+  {
+    "job_id": "formal-mq-010-combined-smoke",
+    "ok": true,
+    "iterations": 1,
+    "diff": "",
+    "test_output": "__TEST_EXIT__:0",
+    "session_id": "ses_07d0f8d57ffemvij7KnSxyx0Ko",
+    "error": null,
+    "validation": [
+      {
+        "passed": true,
+        "engine": "validation_cmd",
+        "rule_id": "validation_cmd",
+        "message": "exit=0",
+        "details": {
+          "stdout": "npm notice\nnpm notice New minor version of npm available! 11.12.1 -> 11.18.0\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v11.18.0\nnpm notice To update run: npm install -g npm@11.18.0\nnpm notice\n__EXIT__:0",
+          "cmd": "chmod +x scripts/formal_midspiral_quint_smoke.sh && ./scripts/formal_midspiral_quint_smoke.sh | grep -q FORMAL_SMOKE_OK && test -f formal/quint/smoke.qnt && grep -q 'module smoke' formal/quint/smoke.qnt"
+        }
+      },
+      {
+        "passed": true,
+        "engine": "business-rule",
+        "rule_id": "formal smoke script must typecheck Quint and print",
+        "message": "keyword coverage 71%",
+        "details": {
+          "matched": [
+            "formal",
+            "smoke",
+            "typecheck",
+            "quint",
+            "formal_smoke_ok"
+          ],
+          "missing": [
+            "script",
+            "print"
+          ]
+        }
+      }
+    ],
+    "validation_passed": true,
+    "pr_url": "https://github.com/cdalsoniii/cloud-agent/pull/5",
+    "pr_number": 5,
+    "pr_branch": "formal-mq/formal-mq-010-combined-smoke",
+    "pr_error": null,
+    "sandbox_id": "368a580b-fc0e-49d4-96da-82c3de03f825"
+  }
+]

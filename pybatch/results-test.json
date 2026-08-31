@@ -1,0 +1,28 @@
+[
+  {
+    "job_id": "bf-meta-scripts-smoke-e2e-001",
+    "ok": true,
+    "iterations": 1,
+    "diff": "",
+    "test_output": "__TEST_EXIT__:0",
+    "session_id": "ses_07d1544f8ffedLFhXaPWwRCrhg",
+    "error": null,
+    "validation": [
+      {
+        "passed": true,
+        "engine": "validation_cmd",
+        "rule_id": "validation_cmd",
+        "message": "exit=0",
+        "details": {
+          "stdout": "__EXIT__:0",
+          "cmd": "test -f scripts/smoke_check.sh && grep -q SMOKE_OK scripts/smoke_check.sh && test -x scripts/smoke_check.sh && ./scripts/smoke_check.sh | grep -q SMOKE_OK"
+        }
+      }
+    ],
+    "validation_passed": true,
+    "pr_url": "https://github.com/BrightforestX/meta-utilities/pull/4",
+    "pr_number": 4,
+    "pr_branch": "sdlc-test/bf-meta-scripts-smoke-e2e-001",
+    "pr_error": null
+  }
+]

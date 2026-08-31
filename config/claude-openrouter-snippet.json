@@ -1,0 +1,14 @@
+{
+  "_comment": "Merge into cloud-agent/.claude/settings.json or ~/.claude/settings.json. Set ANTHROPIC_AUTH_TOKEN via shell (see scripts/claude-openrouter.sh) — do not commit API keys.",
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://openrouter.ai/api",
+    "ANTHROPIC_AUTH_TOKEN": "${OPENROUTER_API_KEY}",
+    "ANTHROPIC_API_KEY": "",
+    "OPENROUTER_HTTP_REFERER": "https://brightforestx.com",
+    "OPENROUTER_APP_TITLE": "cloud-agent"
+  },
+  "model": "anthropic/claude-sonnet-5",
+  "frontier_model": "anthropic/claude-opus-4.8",
+  "coding_model": "deepseek/deepseek-v4-pro",
+  "bulk_model": "deepseek/deepseek-v4-flash-0731"
+}

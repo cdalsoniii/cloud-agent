@@ -365,13 +365,13 @@ export class DataIntegrityValidator implements Validator {
   private async checkDuplicateNodeIds(context: ValidationContext): Promise<ValidationResult> {
     try {
       const result = await context.surrealClient.query(
-        `SELECT node_id, count() as count FROM ontology_node 
+        `SELECT node_id, count() AS count FROM ontology_node 
          WHERE namespace = "${context.namespace}" AND database = "${context.database}"
-         GROUP BY node_id
-         HAVING count > 1`
+         GROUP BY node_id`
       );
       
-      const duplicates = result || [];
+      const all = (result || []) as any[];
+      const duplicates = all.filter((r: any) => (r.count ?? 0) > 1);
       
       if (duplicates.length > 0) {
         return {
@@ -408,13 +408,13 @@ export class DataIntegrityValidator implements Validator {
   private async checkDuplicateEdgeIds(context: ValidationContext): Promise<ValidationResult> {
     try {
       const result = await context.surrealClient.query(
-        `SELECT edge_id, count() as count FROM ontology_edge 
+        `SELECT edge_id, count() AS count FROM ontology_edge 
          WHERE namespace = "${context.namespace}" AND database = "${context.database}"
-         GROUP BY edge_id
-         HAVING count > 1`
+         GROUP BY edge_id`
       );
       
-      const duplicates = result || [];
+      const all = (result || []) as any[];
+      const duplicates = all.filter((r: any) => (r.count ?? 0) > 1);
       
       if (duplicates.length > 0) {
         return {

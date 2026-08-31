@@ -1,0 +1,20 @@
+diff --git a/node_modules/surqlize/dist/index.d.ts b/node_modules/surqlize/dist/index.d.ts
+index 38e2ffe..0c8f768 100644
+--- a/node_modules/surqlize/dist/index.d.ts
++++ b/node_modules/surqlize/dist/index.d.ts
+@@ -1385,13 +1385,13 @@ declare function literal<T extends string | number | boolean>(value: T extends s
+ /** Create a record reference type, optionally scoped to a specific table. */
+ declare function record<T extends string | undefined>(table?: T extends string ? T : T extends undefined ? T : never): RecordType<T>;
+ /** Extract the inferred TypeScript type from a type definition or workable. */
+-type infer<T extends AbstractType | Workable> = T extends Workable<WorkableContext, infer T> ? T["infer"] : T extends AbstractType ? T["infer"] : never;
++type inferType<T extends AbstractType | Workable> = T extends Workable<WorkableContext, infer T> ? T["infer"] : T extends AbstractType ? T["infer"] : never;
+ 
+ declare const t__null: typeof _null;
+ declare const t_array: typeof array;
+ declare const t_bool: typeof bool;
+ declare const t_date: typeof date;
+-type t_infer<T extends AbstractType | Workable> = infer<T>;
++type t_infer<T extends AbstractType | Workable> = inferType<T>;
+ declare const t_literal: typeof literal;
+ declare const t_never: typeof never;
+ declare const t_none: typeof none;

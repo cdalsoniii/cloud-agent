@@ -1,10 +1,14 @@
 # Multi-Provider SDLC Batch Loop
 
 A Python package that implements a **Baseten Chains**-based SDLC loop
-(plan → code → test → validation → review → patch) across multiple sandbox
-providers, with **Daytona** as the primary target and **E2B** and **Northflank**
-as secondary options. It adds **formal validation** to the batch loop, using
-the existing TypeScript validation framework and local business-rule heuristics.
+(plan → deep_research → code → formal_sync → test → validation → PR) across
+multiple sandbox providers, with **Daytona** as the primary target and **E2B**
+and **Northflank** as secondary options. It adds **formal validation** to the
+batch loop, using `config/verification/` (Quint/Alloy/Dafny), the TypeScript
+validation framework, and local business-rule heuristics.
+
+Scaling guide: [`../docs/sdlc-batch-scaling.md`](../docs/sdlc-batch-scaling.md)
+(`SDLC_WAVE_SIZE`, `SDLC_SANDBOX_COUNT`, remote Chains).
 
 ## Structure
 
@@ -69,6 +73,44 @@ export NORTHFLANK_API_TOKEN=...
 # For PR creation
 export GITHUB_TOKEN=...
 ```
+
+### Daytona → Baseten host proxy (required)
+
+Baseten blocks Daytona sandbox IPs. OpenCode in the sandbox must call a **host**
+proxy exposed via ngrok (or similar), not `https://inference.baseten.co/v1` directly.
+
+```bash
+# 1. Start proxy on the host (injects BASETEN_API_KEY)
+cd cloud-agent
+export BASETEN_API_KEY=...
+export BASETEN_MODEL_ID=qelg6953   # optional
+node baseten-proxy.js &            # listens on :9876
+
+# 2. Tunnel
+ngrok http 9876 &
+# copy the https public_url
+
+# 3. Point SDLC at the tunnel (include /v1)
+export BASETEN_PROXY_BASE_URL=https://<ngrok-host>/v1
+export PROXY_API_KEY=sk-proxy
+
+# 4. Ensure Daytona domain allow-list includes *.ngrok-free.app (DOMAIN_ALLOW in .env)
+
+# 5. Run batch (fail-fast proxy health + model smoke run automatically)
+SDLC_JOBS_FILE=pybatch/jobs-from-prd-expand-web-formal-stack.json \
+SDLC_WAVE_SIZE=1 \
+SANDBOX_PROVIDER=daytona \
+pybatch/.venv/bin/python pybatch/run_formal_batch.py
+```
+
+Optional knobs:
+
+| Env | Meaning |
+|-----|---------|
+| `SDLC_REQUIRE_PROXY=0` | Allow direct inference base (not recommended for Daytona) |
+| `SDLC_SKIP_MODEL_SMOKE=1` | Skip pre-wave OpenCode JSON smoke |
+| `SDLC_JOB_FILTER=job_id,...` | Run a subset of jobs |
+| `SDLC_MODEL_OVERRIDE=baseten-proxy/qwen-coder` | Force model on all jobs |
 
 ## 1. Spawn sandboxes (gather OPENCODE_BASE_URLS)
 

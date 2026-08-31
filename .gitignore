@@ -39,3 +39,7 @@ grok-dist/.cache/
 
 # grok-build lean fork clone
 vendor/grok-build-lean/upstream/
+
+# Preview tokens / live evidence — never commit
+.gsd/evidence/
+

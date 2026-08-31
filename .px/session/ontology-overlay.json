@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "generatedAt": "2026-08-29T22:44:03.287Z",
+  "source": "surreal",
+  "staleAfterMs": 86400000,
+  "nodes": {
+    "class-VerifierFleet": {
+      "id": "class-VerifierFleet",
+      "kind": "node",
+      "color": "#f87171",
+      "strokeWidth": 2.5,
+      "status": "fail",
+      "lastAt": "2026-08-29T22:44:03.158Z",
+      "lastOk": false,
+      "failCount": 3,
+      "passCount": 0,
+      "layers": [
+        "shacl",
+        "lean",
+        "graphql"
+      ],
+      "tools": [
+        "opencode-loop",
+        "daytona-create"
+      ],
+      "classes": [
+        "VerifierFleet"
+      ],
+      "callIds": [
+        "vcall-1788043443158-e25b2857",
+        "vcall-1788043434574-f015a922",
+        "vcall-1787779841082-22f0988c"
+      ],
+      "note": "0 pass / 3 fail in window"
+    }
+  },
+  "edges": {},
+  "summary": {
+    "pass": 0,
+    "fail": 1,
+    "mixed": 0,
+    "stale": 0,
+    "unknown": 0,
+    "totalNodes": 1,
+    "totalEdges": 0,
+    "callCount": 3
+  }
+}

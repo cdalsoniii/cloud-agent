@@ -1,0 +1,25 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${GROK_PROJECT_DIR:-.}/.grok/plugins/lean-live/scripts/session-start.sh\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${GROK_PROJECT_DIR:-.}/.grok/plugins/lean-live/scripts/post-tool-lean.sh\""
+          }
+        ]
+      }
+    ]
+  }
+}

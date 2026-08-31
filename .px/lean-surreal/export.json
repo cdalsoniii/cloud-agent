@@ -1,0 +1,197 @@
+{
+  "at": "2026-08-02T03:46:31.942Z",
+  "ns": "test",
+  "db": "test",
+  "nodeCount": 22,
+  "edgeCount": 6,
+  "shapes": [
+    {
+      "table": "ontology_edge",
+      "fields": [
+        "id",
+        "created_at",
+        "database",
+        "edge_id",
+        "namespace",
+        "properties",
+        "relationship_type",
+        "source_id",
+        "target_id",
+        "weight"
+      ],
+      "rowCount": 6
+    },
+    {
+      "table": "ontology_node",
+      "fields": [
+        "id",
+        "created_at",
+        "database",
+        "description",
+        "name",
+        "namespace",
+        "node_id",
+        "node_type",
+        "properties",
+        "updated_at"
+      ],
+      "rowCount": 12
+    },
+    {
+      "table": "ontology_rule",
+      "fields": [
+        "id",
+        "applies_to",
+        "created_at",
+        "database",
+        "enabled",
+        "namespace",
+        "priority",
+        "rule_action",
+        "rule_condition",
+        "rule_id",
+        "rule_type"
+      ],
+      "rowCount": 2
+    },
+    {
+      "table": "person",
+      "fields": [
+        "id",
+        "name"
+      ],
+      "rowCount": 2
+    },
+    {
+      "table": "sandbox_log",
+      "fields": [
+        "id",
+        "content",
+        "created_at",
+        "line_count",
+        "log_id",
+        "operation",
+        "provider",
+        "sandbox_id",
+        "source"
+      ],
+      "rowCount": 1
+    }
+  ],
+  "nodes": [
+    {
+      "index": 0,
+      "id": "sdlc_phase_research"
+    },
+    {
+      "index": 1,
+      "id": "sdlc_phase_implement"
+    },
+    {
+      "index": 2,
+      "id": "report_type_technical"
+    },
+    {
+      "index": 3,
+      "id": "report_type_finding"
+    },
+    {
+      "index": 4,
+      "id": "sdlc_phase_verify"
+    },
+    {
+      "index": 5,
+      "id": "0qyly7x5hvrlzxxkgvys"
+    },
+    {
+      "index": 6,
+      "id": "50mpe6sz9y4u9vlx4jtr"
+    },
+    {
+      "index": 7,
+      "id": "b5zc0zy7a66grtzw06gj"
+    },
+    {
+      "index": 8,
+      "id": "bms11fivolj3m2js4tyq"
+    },
+    {
+      "index": 9,
+      "id": "c2a76kcbwum6nbq2qsrs"
+    },
+    {
+      "index": 10,
+      "id": "c3d9ys7f8t9mbrsnnan7"
+    },
+    {
+      "index": 11,
+      "id": "fbvkirxqjx640rc95gcx"
+    },
+    {
+      "index": 12,
+      "id": "lmxmju2mv05i2s7wowph"
+    },
+    {
+      "index": 13,
+      "id": "r75in84fx32xx78onphl"
+    },
+    {
+      "index": 14,
+      "id": "uow6lxe7mpvbzxhx0enn"
+    },
+    {
+      "index": 15,
+      "id": "uxaxyiad0xg77dkrwsgh"
+    },
+    {
+      "index": 16,
+      "id": "x1cmlvbndihaxghaj60h"
+    },
+    {
+      "index": 17,
+      "id": "c1t6eeu6drkiyi6bp1c7"
+    },
+    {
+      "index": 18,
+      "id": "x8ijjcsobcg0loqy0aoz"
+    },
+    {
+      "index": 19,
+      "id": "alice"
+    },
+    {
+      "index": 20,
+      "id": "bob"
+    },
+    {
+      "index": 21,
+      "id": "demo"
+    }
+  ],
+  "edges": [
+    {
+      "source": 0,
+      "target": 1
+    },
+    {
+      "source": 2,
+      "target": 3
+    },
+    {
+      "source": 0,
+      "target": 1
+    },
+    {
+      "source": 1,
+      "target": 4
+    },
+    {
+      "source": 2,
+      "target": 3
+    },
+    {
+      "source": 1,
+      "target": 4
+    }
+  ]
+}

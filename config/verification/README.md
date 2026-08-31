@@ -47,7 +47,13 @@ npm run verify:quint
 npm run verify:dafny
 npm run verify:alloy
 npm run verify:all
+
+# Formal happy-path smoke (writes .gsd/evidence/*; probes assistant-ui paths)
+npm run smoke:formal
 ```
+
+Agent ontology pointers: [`.px/`](../../.px/README.md). Milestone state: [`.gsd/`](../../.gsd/README.md).
+Product formal APIs live under `../../02-products/assistant-ui` (see `.px/pointers.yaml`).
 
 ### Individual tools
 

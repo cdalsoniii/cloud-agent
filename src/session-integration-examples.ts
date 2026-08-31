@@ -22,7 +22,9 @@ export class PRSandboxSessionIntegration {
       repoUrl,
       prNumbers,
       branch: 'main',
-      tags: ['pr-sandbox', 'automated-testing', 'cloudflare-tunnel']
+      tags: ['pr-sandbox', 'automated-testing', 'cloudflare-tunnel'],
+      costUsd: 0,
+      tokenCount: 0,
     });
 
     // Set up monitoring for this session
@@ -40,14 +42,16 @@ export class PRSandboxSessionIntegration {
    */
   async logPRSandboxEvent(
     sessionId: string, 
-    eventType: string, 
+    eventType: 'session_start' | 'session_pause' | 'session_resume' | 'session_complete' | 'session_fail' | 'file_modified' | 'test_run' | 'test_result' | 'code_generated' | 'research_completed' | 'error_occurred' | 'milestone_reached', 
     details: Record<string, any>
   ): Promise<void> {
     await sessionTracker.logEvent({
       sessionId,
       eventType,
       eventTime: new Date().toISOString(),
-      details
+      details,
+      costIncrement: 0,
+      tokenIncrement: 0,
     });
   }
 
@@ -104,6 +108,8 @@ export class ResearchSessionIntegration {
       title: `Research: ${topic}`,
       description: `${researchType} research session`,
       tags: ['research', researchType, topic.toLowerCase().replace(/\s+/g, '-')],
+      costUsd: 0,
+      tokenCount: 0,
       metadata: {
         researchTopic: topic,
         researchType,
@@ -132,13 +138,15 @@ export class ResearchSessionIntegration {
         sources,
         confidence,
         timestamp: new Date().toISOString()
-      }
+      },
+      costIncrement: 0,
+      tokenIncrement: 0,
     });
 
     // Update session with research findings
     const session = await sessionTracker.getSession(sessionId);
-    if (session) {
-      const currentSources = session.metadata?.sources || [];
+    if (session && session.metadata) {
+      const currentSources = Array.isArray(session.metadata.sources) ? session.metadata.sources : [];
       await sessionTracker.updateSession(sessionId, {
         metadata: {
           ...session.metadata,
@@ -190,6 +198,8 @@ export class DebugSessionIntegration {
       title: `Debug: ${issue}`,
       description: `Debugging session for ${component}`,
       tags: ['debugging', component, severity],
+      costUsd: 0,
+      tokenCount: 0,
       metadata: {
         issue,
         component,
@@ -222,16 +232,19 @@ export class DebugSessionIntegration {
         success,
         filesExamined,
         timestamp: new Date().toISOString()
-      }
+      },
+      costIncrement: 0,
+      tokenIncrement: 0,
     });
 
     // Update session with investigation steps
     const session = await sessionTracker.getSession(sessionId);
-    if (session) {
-      const currentSteps = session.metadata?.investigationSteps || [];
+    if (session && session.metadata) {
+      const meta = session.metadata as Record<string, unknown>;
+      const currentSteps = Array.isArray(meta.investigationSteps) ? meta.investigationSteps : [];
       await sessionTracker.updateSession(sessionId, {
         metadata: {
-          ...session.metadata,
+          ...meta,
           investigationSteps: [...currentSteps, { step, result, success, timestamp: new Date().toISOString() }],
           lastStep: step,
           lastStepTime: new Date().toISOString()
@@ -257,7 +270,9 @@ export class DebugSessionIntegration {
         context,
         stack: error.stack,
         timestamp: new Date().toISOString()
-      }
+      },
+      costIncrement: 0,
+      tokenIncrement: 0,
     });
   }
 

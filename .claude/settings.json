@@ -1,0 +1,35 @@
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://openrouter.ai/api",
+    "ANTHROPIC_API_KEY": "",
+    "OPENROUTER_HTTP_REFERER": "https://brightforestx.com",
+    "OPENROUTER_APP_TITLE": "cloud-agent"
+  },
+  "model": "anthropic/claude-sonnet-5",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/lean-session-start.sh",
+            "timeout": 15,
+            "statusMessage": "Lean live stack"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/lean-post-tool.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

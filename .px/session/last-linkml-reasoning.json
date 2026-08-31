@@ -1,0 +1,23 @@
+{
+  "at": "2026-08-29T22:44:03.157Z",
+  "tool": "opencode-loop",
+  "phase": "pre",
+  "pack": "verifier-fleet",
+  "className": "VerifierFleet",
+  "ok": false,
+  "layers": [
+    "shacl",
+    "lean",
+    "graphql"
+  ],
+  "classesUsed": [
+    "VerifierFleet"
+  ],
+  "resolversUsed": [],
+  "mutationsReferenced": [
+    "writeVerifierFleet"
+  ],
+  "relationshipsUsed": [],
+  "sandboxId": null,
+  "narrative": "### LinkML reasoning (pack=`verifier-fleet` root=`VerifierFleet` tool=`opencode-loop`)\n- **Classes used** (1): VerifierFleet\n- **Relationships used** (0): —\n- **Resolvers used** (0): —\n- **Mutations referenced** (1): writeVerifierFleet\n- All mutations in SDL: writeVerifierFleet→VerifierFleet\n- Artifacts: resolvers=missing, lean-rules=missing, graphql=ok"
+}
