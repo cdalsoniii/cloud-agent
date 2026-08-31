@@ -1,0 +1,27 @@
+{
+  "source": "artifacts/prd/smoke-formal-happy-path/03-issues.json",
+  "updated": "2026-07-21",
+  "items": [
+    {"id": "FORMAL-001", "milestone": "M0", "status": "done", "evidence": [".gsd/evidence/20260721T051753Z-verify-all.txt", "config/verification/dafny/"]},
+    {"id": "FORMAL-002", "milestone": "M0", "status": "done", "evidence": [".gsd/evidence/20260721T051753Z-smoke-formal.md", "../../02-products/assistant-ui/packages/verified-kernels/"]},
+    {"id": "FORMAL-003", "milestone": "M0", "status": "accepted", "notes": "Route present; live POST blocked without DAFNY2JS_PATH", "evidence": [".gsd/evidence/20260721T051753Z-smoke-formal.md"]},
+    {"id": "FORMAL-004", "milestone": "M1", "status": "done", "evidence": [".gsd/evidence/20260721T051753Z-smoke-formal.md"]},
+    {"id": "FORMAL-005", "milestone": "M1", "status": "done", "evidence": [".gsd/evidence/20260721T051753Z-smoke-formal.md"]},
+    {"id": "FORMAL-006", "milestone": "M1", "status": "done", "notes": "Build/opencode prompt claimcheck pre/post accepted; chat hard-gate still soft-suggest", "evidence": [".gsd/evidence/20260721T052400Z-formal-006-claimcheck.md"]},
+    {"id": "GAP-DF-1", "milestone": "M1", "status": "deferred"},
+    {"id": "GAP-DF-2", "milestone": "M1", "status": "open", "notes": "cloud-agent CI installs tools; assistant-ui verify.yml still gap"},
+    {"id": "GAP-DF-3", "milestone": "M1", "status": "deferred"},
+    {"id": "GAP-DF-4", "milestone": "M1", "status": "deferred"},
+    {"id": "GAP-DF-5", "milestone": "M1", "status": "deferred"},
+    {"id": "FORMAL-007", "milestone": "M2", "status": "done", "evidence": [".github/workflows/formal-verification.yml", ".gsd/evidence/20260721T051753Z-verify-all.txt"]},
+    {"id": "FORMAL-008", "milestone": "M2", "status": "done", "evidence": [".gsd/gaps/tracking.md"]},
+    {"id": "FORMAL-009", "milestone": "M2", "status": "done", "evidence": ["scripts/smoke-formal-happy-path.sh", ".gsd/evidence/20260721T051753Z-smoke-formal.md"]},
+    {"id": "GAP-M-1", "milestone": "M2", "status": "open"},
+    {"id": "GAP-M-2", "milestone": "M2", "status": "open"},
+    {"id": "GAP-M-3", "milestone": "M2", "status": "deferred"},
+    {"id": "GAP-M-4", "milestone": "M2", "status": "deferred"},
+    {"id": "GAP-M-5", "milestone": "M2", "status": "open"},
+    {"id": "GAP-QW-1", "milestone": "M2", "status": "deferred"},
+    {"id": "GAP-QW-2", "milestone": "M2", "status": "open"}
+  ]
+}

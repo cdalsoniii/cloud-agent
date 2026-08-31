@@ -1,0 +1,34 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugin": ["./.opencode/plugins/surreal-schema.ts"],
+  "mcp": {
+    "surrealmcp": {
+      "type": "local",
+      "enabled": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-i",
+        "-e",
+        "SURREALDB_URL=ws://host.docker.internal:8000/rpc",
+        "-e",
+        "SURREALDB_NS=test",
+        "-e",
+        "SURREALDB_DB=test",
+        "-e",
+        "SURREALDB_USER=root",
+        "-e",
+        "SURREALDB_PASS=root",
+        "surrealdb/surrealmcp:latest",
+        "start"
+      ],
+      "environment": {},
+      "timeout": 30000
+    }
+  },
+  "permission": {
+    "surreal_schema_apply": "ask",
+    "surreal_schema_sync": "ask"
+  }
+}

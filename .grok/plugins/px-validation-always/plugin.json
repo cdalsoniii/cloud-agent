@@ -1,0 +1,5 @@
+{
+  "name": "px-validation-always",
+  "version": "0.2.0",
+  "description": "Harness plugin: UserPromptSubmit scope + PreToolUse/PostToolUse tool_io_guard + Stop gate. Works with cloud-agent-mastra MCP and remote SHACL sandboxes for full pre/post I/O enforcement."
+}

@@ -1,0 +1,61 @@
+# Merge into ~/.grok/config.toml — OpenRouter ZDR tiered models for Grok CLI
+# Note: Grok CLI cannot pass provider.zdr per request; enable account-level ZDR
+# in OpenRouter privacy settings for strict enforcement.
+
+[ui]
+fork_secondary_model = "openrouter-pro-zdr"
+
+[models]
+default = "openrouter-flash-zdr"
+
+[model.openrouter-flash-zdr]
+model = "deepseek/deepseek-v4-flash-0731"
+base_url = "https://openrouter.ai/api/v1"
+name = "OpenRouter Flash ZDR (bulk)"
+description = "DeepSeek V4 Flash via OpenRouter — bulk tier default"
+env_key = "OPENROUTER_API_KEY"
+api_backend = "chat_completions"
+context_window = 128000
+
+[model.openrouter-flash-zdr.extra_headers]
+HTTP-Referer = "https://brightforestx.com"
+X-Title = "cloud-agent"
+
+[model.openrouter-pro-zdr]
+model = "deepseek/deepseek-v4-pro"
+base_url = "https://openrouter.ai/api/v1"
+name = "OpenRouter Pro ZDR (coding)"
+description = "DeepSeek V4 Pro via OpenRouter — coding tier"
+env_key = "OPENROUTER_API_KEY"
+api_backend = "chat_completions"
+context_window = 128000
+
+[model.openrouter-pro-zdr.extra_headers]
+HTTP-Referer = "https://brightforestx.com"
+X-Title = "cloud-agent"
+
+[model.openrouter-frontier-zdr]
+model = "anthropic/claude-sonnet-5"
+base_url = "https://openrouter.ai/api/v1"
+name = "OpenRouter Frontier ZDR"
+description = "Claude Sonnet 5 via OpenRouter — frontier escalation"
+env_key = "OPENROUTER_API_KEY"
+api_backend = "chat_completions"
+context_window = 200000
+
+[model.openrouter-frontier-zdr.extra_headers]
+HTTP-Referer = "https://brightforestx.com"
+X-Title = "cloud-agent"
+
+[model.openrouter-grok-build]
+model = "x-ai/grok-build-0.1"
+base_url = "https://openrouter.ai/api/v1"
+name = "Grok Build (OpenRouter)"
+description = "Grok Build via OpenRouter"
+env_key = "OPENROUTER_API_KEY"
+api_backend = "chat_completions"
+context_window = 200000
+
+[model.openrouter-grok-build.extra_headers]
+HTTP-Referer = "https://brightforestx.com"
+X-Title = "cloud-agent"

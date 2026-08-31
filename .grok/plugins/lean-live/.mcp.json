@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "lean-live": {
+      "command": "node",
+      "args": [
+        "${GROK_PROJECT_DIR}/.grok/plugins/lean-live/scripts/lean-live-mcp.mjs"
+      ],
+      "env": {
+        "LEAN_LIVE_PORT": "9474"
+      }
+    }
+  }
+}

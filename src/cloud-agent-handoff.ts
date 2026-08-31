@@ -81,7 +81,7 @@ function parseHandoffArgs(argv: string[]): HandoffOptions {
     verbose: false,
   };
 
-  return parseArgs(argv, defaults) as HandoffOptions;
+  return parseArgs(argv, defaults as unknown as Record<string, string | boolean | string[]>) as unknown as HandoffOptions;
 }
 
 function validateConfig(opts: HandoffOptions, config: OrchestratorConfig): void {

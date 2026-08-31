@@ -1,0 +1,441 @@
+/**
+ * Blueprint.js Dense UI Components for Formal Verification Workbench
+ * 
+ * These components provide a Palantir Foundry-style dense information layout
+ * optimized for viewing formal verification results, traces, and ontology data.
+ */
+
+'use client';
+
+import React, { useState, useMemo } from 'react';
+import {
+  Navbar,
+  NavbarGroup,
+  NavbarHeading,
+  Button,
+  ButtonGroup,
+  Icon,
+  Tooltip,
+  Popover,
+  Menu,
+  MenuItem,
+  Tag,
+  Intent,
+  Callout,
+  Card,
+  Elevation,
+  Divider,
+  Collapse,
+  Classes,
+  H4,
+  H5,
+  H6,
+  Text,
+  ProgressBar
+} from '@blueprintjs/core';
+import {
+  Table2,
+  Column,
+  Cell,
+  TruncatedFormat
+} from '@blueprintjs/table';
+import {
+  Tree,
+  type TreeNodeInfo
+} from '@blueprintjs/core';
+import '@blueprintjs/core/lib/css/blueprint.css';
+import '@blueprintjs/table/lib/css/table.css';
+
+// Type definitions for verification data
+interface VerificationResult {
+  id: string;
+  tool: string;
+  spec: string;
+  status: 'verified' | 'failed' | 'pending' | 'error';
+  errors: string[];
+  warnings: string[];
+  timeMs: number;
+  timestamp: string;
+  metadata?: Record<string, any>;
+}
+
+interface TraceEvent {
+  id: string;
+  timestamp: string;
+  type: string;
+  sessionId: string;
+  data: any;
+  metadata?: Record<string, any>;
+}
+
+interface InvariantViolation {
+  id: string;
+  invariant: string;
+  traceId: string;
+  timestamp: string;
+  state: any;
+  message: string;
+}
+
+// Verification Status Panel
+export function VerificationStatusPanel({ 
+  results 
+}: { 
+  results: VerificationResult[] 
+}) {
+  const stats = useMemo(() => {
+    const total = results.length;
+    const verified = results.filter(r => r.status === 'verified').length;
+    const failed = results.filter(r => r.status === 'failed').length;
+    const pending = results.filter(r => r.status === 'pending').length;
+    const error = results.filter(r => r.status === 'error').length;
+    
+    return { total, verified, failed, pending, error };
+  }, [results]);
+
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center gap-4">
+        <StatusTag count={stats.verified} intent={Intent.SUCCESS} label="Verified" />
+        <StatusTag count={stats.failed} intent={Intent.DANGER} label="Failed" />
+        <StatusTag count={stats.pending} intent={Intent.WARNING} label="Pending" />
+        <StatusTag count={stats.error} intent={Intent.PRIMARY} label="Error" />
+      </div>
+      
+      <ProgressBar 
+        value={stats.total > 0 ? stats.verified / stats.total : 0}
+        intent={stats.failed > 0 ? Intent.DANGER : Intent.SUCCESS}
+        stripes={stats.pending > 0}
+      />
+      
+      <Text className={Classes.TEXT_SMALL}>
+        {stats.verified}/{stats.total} verified ({((stats.verified / stats.total) * 100).toFixed(1)}%)
+      </Text>
+    </div>
+  );
+}
+
+function StatusTag({ count, intent, label }: { count: number; intent: Intent; label: string }) {
+  return (
+    <Tag 
+      intent={intent} 
+      minimal={count === 0}
+      className="px-2 py-1"
+    >
+      {count} {label}
+    </Tag>
+  );
+}
+
+// Verification Results Table
+export function VerificationResultsTable({ 
+  results,
+  onSelectResult
+}: { 
+  results: VerificationResult[];
+  onSelectResult?: (result: VerificationResult) => void;
+}) {
+  const cellRenderer = (rowIndex: number, columnIndex: number) => {
+    const result = results[rowIndex];
+    if (!result) return <Cell />;
+    
+    switch (columnIndex) {
+      case 0:
+        return <Cell><Tag intent={getIntent(result.status)}>{result.status}</Tag></Cell>;
+      case 1:
+        return <Cell>{result.tool}</Cell>;
+      case 2:
+        return <Cell><TruncatedFormat>{result.spec}</TruncatedFormat></Cell>;
+      case 3:
+        return <Cell>{result.timeMs}ms</Cell>;
+      case 4:
+        return <Cell>{result.errors.length > 0 ? <Tag intent={Intent.DANGER}>{result.errors.length} errors</Tag> : <Tag minimal>Clean</Tag>}</Cell>;
+      case 5:
+        return <Cell>{new Date(result.timestamp).toLocaleTimeString()}</Cell>;
+      default:
+        return <Cell />;
+    }
+  };
+
+  return (
+    <div className="h-64">
+      <Table2
+        numRows={results.length}
+        selectionModes={[]}
+        onRowClick={(rowIndex) => onSelectResult?.(results[rowIndex])}
+      >
+        <Column name="Status" cellRenderer={cellRenderer} />
+        <Column name="Tool" cellRenderer={cellRenderer} />
+        <Column name="Spec" cellRenderer={cellRenderer} />
+        <Column name="Time" cellRenderer={cellRenderer} />
+        <Column name="Errors" cellRenderer={cellRenderer} />
+        <Column name="Timestamp" cellRenderer={cellRenderer} />
+      </Table2>
+    </div>
+  );
+}
+
+function getIntent(status: string): Intent {
+  switch (status) {
+    case 'verified': return Intent.SUCCESS;
+    case 'failed': return Intent.DANGER;
+    case 'pending': return Intent.WARNING;
+    case 'error': return Intent.PRIMARY;
+    default: return Intent.NONE;
+  }
+}
+
+// Trace Event Tree
+export function TraceEventTree({ 
+  traces,
+  onSelectTrace
+}: { 
+  traces: TraceEvent[];
+  onSelectTrace?: (trace: TraceEvent) => void;
+}) {
+  const [expandedNodes, setExpandedNodes] = useState<Record<string, boolean>>({});
+
+  const treeNodes: TreeNodeInfo[] = useMemo(() => {
+    // Group traces by session
+    const bySession: Record<string, TraceEvent[]> = {};
+    traces.forEach(trace => {
+      if (!bySession[trace.sessionId]) {
+        bySession[trace.sessionId] = [];
+      }
+      bySession[trace.sessionId].push(trace);
+    });
+
+    return Object.entries(bySession).map(([sessionId, sessionTraces], index) => ({
+      id: index,
+      label: `Session ${sessionId} (${sessionTraces.length} events)`,
+      icon: 'folder-close',
+      isExpanded: expandedNodes[index] || false,
+      childNodes: sessionTraces.map((trace, childIndex) => ({
+        id: `${index}-${childIndex}`,
+        label: `${trace.type} - ${new Date(trace.timestamp).toLocaleTimeString()}`,
+        icon: getTraceIcon(trace.type),
+        secondaryLabel: trace.type === 'error' ? 'Error' : undefined,
+        onClick: () => onSelectTrace?.(trace)
+      }))
+    }));
+  }, [traces, expandedNodes, onSelectTrace]);
+
+  const handleNodeExpand = (node: TreeNodeInfo) => {
+    setExpandedNodes(prev => ({ ...prev, [node.id]: true }));
+  };
+
+  const handleNodeCollapse = (node: TreeNodeInfo) => {
+    setExpandedNodes(prev => ({ ...prev, [node.id]: false }));
+  };
+
+  return (
+    <Tree
+      contents={treeNodes}
+      onNodeExpand={handleNodeExpand}
+      onNodeCollapse={handleNodeCollapse}
+      className="h-64 overflow-auto"
+    />
+  );
+}
+
+function getTraceIcon(type: string): string {
+  switch (type) {
+    case 'action': return 'play';
+    case 'state': return 'document';
+    case 'invariant': return 'shield';
+    case 'error': return 'error';
+    default: return 'circle';
+  }
+}
+
+// Invariant Violation Panel
+export function InvariantViolationPanel({ 
+  violations,
+  onFixViolation
+}: { 
+  violations: InvariantViolation[];
+  onFixViolation?: (violation: InvariantViolation) => void;
+}) {
+  if (violations.length === 0) {
+    return (
+      <Callout intent={Intent.SUCCESS} title="All Invariants Passing">
+        No invariant violations detected in the current trace.
+      </Callout>
+    );
+  }
+
+  return (
+    <div className="space-y-2">
+      <Callout intent={Intent.DANGER} title={`${violations.length} Invariant Violations Detected`}>
+        The following invariants were violated during execution. Review and fix the issues.
+      </Callout>
+      
+      {violations.map(violation => (
+        <Card key={violation.id} elevation={Elevation.TWO} className="p-3">
+          <div className="flex items-start justify-between">
+            <div>
+              <H6 className="mb-1">
+                <Icon icon="shield" intent={Intent.DANGER} className="mr-2" />
+                {violation.invariant}
+              </H6>
+              <Text className={Classes.TEXT_SMALL}>
+                {violation.message}
+              </Text>
+              <Text className={`${Classes.TEXT_SMALL} ${Classes.TEXT_MUTED}`}>
+                Trace: {violation.traceId} | {new Date(violation.timestamp).toLocaleTimeString()}
+              </Text>
+            </div>
+            <Button 
+              intent={Intent.WARNING} 
+              small
+              onClick={() => onFixViolation?.(violation)}
+            >
+              Fix
+            </Button>
+          </div>
+          <Collapse>
+            <pre className="mt-2 p-2 bg-gray-100 rounded text-xs overflow-auto">
+              {JSON.stringify(violation.state, null, 2)}
+            </pre>
+          </Collapse>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+// Three-Panel Layout (Foundry-style)
+export function ThreePanelLayout({
+  leftPanel,
+  centerPanel,
+  rightPanel
+}: {
+  leftPanel: React.ReactNode;
+  centerPanel: React.ReactNode;
+  rightPanel: React.ReactNode;
+}) {
+  return (
+    <div className="flex h-screen bg-gray-50">
+      {/* Left Panel - Navigation/Tree */}
+      <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
+        <Navbar className="bg-gray-100 border-b border-gray-200">
+          <NavbarGroup>
+            <NavbarHeading>Navigation</NavbarHeading>
+          </NavbarGroup>
+        </Navbar>
+        <div className="flex-1 overflow-auto">
+          {leftPanel}
+        </div>
+      </div>
+
+      {/* Center Panel - Main Content */}
+      <div className="flex-1 flex flex-col min-w-0">
+        <Navbar className="bg-white border-b border-gray-200">
+          <NavbarGroup>
+            <NavbarHeading>Verification Results</NavbarHeading>
+          </NavbarGroup>
+          <NavbarGroup align="right">
+            <ButtonGroup minimal>
+              <Button icon="refresh">Refresh</Button>
+              <Button icon="export">Export</Button>
+              <Button icon="settings">Settings</Button>
+            </ButtonGroup>
+          </NavbarGroup>
+        </Navbar>
+        <div className="flex-1 overflow-auto p-4">
+          {centerPanel}
+        </div>
+      </div>
+
+      {/* Right Panel - Inspector/Details */}
+      <div className="w-80 bg-white border-l border-gray-200 flex flex-col">
+        <Navbar className="bg-gray-100 border-b border-gray-200">
+          <NavbarGroup>
+            <NavbarHeading>Inspector</NavbarHeading>
+          </NavbarGroup>
+        </Navbar>
+        <div className="flex-1 overflow-auto p-4">
+          {rightPanel}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Main Verification Workbench
+export function VerificationWorkbench() {
+  const [results] = useState<VerificationResult[]>([
+    {
+      id: '1',
+      tool: 'Dafny',
+      spec: 'Replay.dfy',
+      status: 'verified',
+      errors: [],
+      warnings: [],
+      timeMs: 2340,
+      timestamp: new Date().toISOString()
+    },
+    {
+      id: '2',
+      tool: 'Quint',
+      spec: 'mcp-proxy.qnt',
+      status: 'failed',
+      errors: ['Invariant violated: valid_mode'],
+      warnings: [],
+      timeMs: 1200,
+      timestamp: new Date().toISOString()
+    },
+    {
+      id: '3',
+      tool: 'TLA+',
+      spec: 'MCProxy.tla',
+      status: 'verified',
+      errors: [],
+      warnings: ['Deadlock potential in HandleError'],
+      timeMs: 5600,
+      timestamp: new Date().toISOString()
+    }
+  ]);
+
+  const [traces] = useState<TraceEvent[]>([
+    { id: '1', timestamp: new Date().toISOString(), type: 'action', sessionId: 's1', data: { action: 'Init' } },
+    { id: '2', timestamp: new Date().toISOString(), type: 'state', sessionId: 's1', data: { state: 'idle' } },
+    { id: '3', timestamp: new Date().toISOString(), type: 'action', sessionId: 's1', data: { action: 'NAVIGATE' } }
+  ]);
+
+  const [violations] = useState<InvariantViolation[]>([
+    {
+      id: '1',
+      invariant: 'valid_mode',
+      traceId: 't1',
+      timestamp: new Date().toISOString(),
+      state: { mode: 'invalid' },
+      message: 'Mode "invalid" is not in the allowed set of modes'
+    }
+  ]);
+
+  return (
+    <ThreePanelLayout
+      leftPanel={<TraceEventTree traces={traces} />}
+      centerPanel={
+        <div className="space-y-4">
+          <VerificationStatusPanel results={results} />
+          <VerificationResultsTable results={results} />
+          <InvariantViolationPanel violations={violations} />
+        </div>
+      }
+      rightPanel={
+        <div className="space-y-4">
+          <Card>
+            <H5>Selected Trace</H5>
+            <Text>Click a trace to see details</Text>
+          </Card>
+          <Card>
+            <H5>Kernel State</H5>
+            <Text>Current state will be shown here</Text>
+          </Card>
+        </div>
+      }
+    />
+  );
+}

@@ -1,0 +1,42 @@
+# PX Grok Surreal bundle — pinned versions for aarch64-apple-darwin
+platform: aarch64-apple-darwin
+
+surreal:
+  version: "3.2.3"
+  url: https://download.surrealdb.com/v3.2.3/surreal-v3.2.3.darwin-arm64.tgz
+  archive: tgz
+  binary: surreal
+
+surrealkit:
+  version: "0.5.3"
+  url: https://github.com/surrealdb/surrealkit/releases/download/v0.5.3/surrealkit-v0.5.3-aarch64-apple-darwin.tar.gz
+  sha256: 0bf2b5a9d1d1127cb2b96a233f70cc6cbd8947b520e33bcae0c2683f1c03a8c5
+  archive: tar.gz
+  binary: surrealkit
+
+surrealmcp:
+  git: https://github.com/surrealdb/surrealmcp
+  tag: v0.4.0
+  binary: surrealmcp
+
+lean:
+  toolchain: "leanprover/lean4:v4.14.0"
+  elan_init_url: https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh
+  binaries:
+    - lean
+    - lake
+    - elan
+
+lean_live:
+  port: 9474
+  runtime_dir: .px/lean-live
+  default_workspace: config/verification/lean
+
+defaults:
+  http_url: http://127.0.0.1:8000
+  ws_url: ws://127.0.0.1:8000/rpc
+  ns: test
+  db: test
+  user: root
+  pass: root
+  bind: 127.0.0.1:8000

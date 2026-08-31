@@ -1,0 +1,2385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ontology sandbox viewer</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reactflow@11.11.4/dist/style.css" />
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: #111827;
+      --border: #1f2937;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #6366f1;
+      --ok: #10b981;
+      --warn: #f59e0b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--panel);
+      flex-shrink: 0;
+    }
+    header h1 { font-size: 1rem; margin: 0; font-weight: 600; }
+    header .meta { font-size: 0.75rem; color: var(--muted); }
+    .badge {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(99,102,241,.15);
+      color: #a5b4fc;
+      border: 1px solid rgba(99,102,241,.35);
+    }
+    #app { flex: 1; min-height: 0; display: flex; }
+    #flow { flex: 1; min-width: 0; position: relative; }
+    aside.side {
+      width: 22rem;
+      border-left: 1px solid var(--border);
+      background: var(--panel);
+      overflow: auto;
+      padding: 0.85rem 1rem 1.25rem;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+    aside h2 {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--muted);
+      margin: 0.85rem 0 0.45rem;
+    }
+    aside h2:first-child { margin-top: 0; }
+    aside dl { margin: 0 0 0.75rem; }
+    aside dt { color: var(--muted); }
+    aside dd { margin: 0 0 .35rem; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .list { list-style: none; padding: 0; margin: 0 0 0.75rem; }
+    .list li {
+      padding: .35rem .5rem;
+      border: 1px solid var(--border);
+      border-radius: .4rem;
+      margin-bottom: .35rem;
+      background: #0f172a;
+    }
+    .list li.hit {
+      cursor: pointer;
+      border-color: #334155;
+    }
+    .list li.hit:hover, .list li.hit.active {
+      border-color: var(--accent);
+      background: #1e1b4b;
+    }
+    .list li.hit .sub { color: var(--muted); font-size: 0.68rem; }
+    .err { color: #f87171; padding: 2rem; }
+    .search-wrap { position: relative; margin-bottom: 0.5rem; }
+    .search-wrap input {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 6px;
+      padding: 0.45rem 1.8rem 0.45rem 0.55rem;
+      font-size: 0.8rem;
+    }
+    .search-wrap input:focus { outline: 1px solid var(--accent); border-color: var(--accent); }
+    .search-wrap button.clear {
+      position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+      background: transparent; border: 0; color: var(--muted); cursor: pointer; font-size: 1rem;
+      padding: 0.2rem 0.4rem;
+    }
+    .filter-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.35rem 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .filter-grid label, .filter-row label {
+      display: flex; align-items: center; gap: 0.35rem;
+      font-size: 0.75rem; color: var(--text); cursor: pointer;
+      user-select: none;
+    }
+    .filter-row { margin-bottom: 0.4rem; }
+    .filter-actions { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0.4rem 0 0.6rem; }
+    .filter-actions button, header button {
+      background: #1e293b; color: var(--text); border: 1px solid var(--border);
+      border-radius: 6px; padding: 0.3rem 0.55rem; font-size: 0.72rem; cursor: pointer;
+    }
+    .filter-actions button.primary, header button.primary {
+      background: var(--accent); border-color: transparent; color: white;
+    }
+    .filter-actions button:hover, header button:hover { filter: brightness(1.1); }
+    .count-pill {
+      font-size: 0.68rem; color: var(--muted); margin-bottom: 0.35rem;
+    }
+    .panel-tabs {
+      display: flex; gap: 0.25rem; margin: 0 0 0.75rem; border-bottom: 1px solid var(--border);
+      padding-bottom: 0.4rem; flex-wrap: wrap;
+    }
+    .panel-tabs button {
+      background: transparent; border: 1px solid transparent; color: var(--muted);
+      border-radius: 6px; padding: 0.35rem 0.65rem; font-size: 0.75rem; cursor: pointer;
+    }
+    .panel-tabs button:hover { color: var(--text); background: #1e293b; }
+    .panel-tabs button.active {
+      background: rgba(99,102,241,.2); color: #c7d2fe; border-color: rgba(99,102,241,.4);
+      font-weight: 600;
+    }
+    .panel-tabs button[data-tab="search"],
+    .panel-tabs button[data-tab="logs"] { /* structural anchors for tests */ }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 0.3rem; margin: 0.4rem 0 0.6rem; }
+    .tag-chip {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      background: #1e293b; border: 1px solid #334155; border-radius: 999px;
+      padding: 0.15rem 0.45rem; font-size: 0.7rem;
+    }
+    .tag-chip button {
+      background: transparent; border: 0; color: var(--muted); cursor: pointer; padding: 0 0.1rem;
+    }
+    .tag-input-row { display: flex; gap: 0.35rem; margin-bottom: 0.5rem; }
+    .tag-input-row input {
+      flex: 1; background: #0f172a; border: 1px solid var(--border); color: var(--text);
+      border-radius: 6px; padding: 0.35rem 0.5rem; font-size: 0.75rem;
+    }
+    pre.reason {
+      white-space: pre-wrap; font-size: 10px; color: var(--muted);
+      margin: 0 0 0.75rem; max-height: 10rem; overflow: auto;
+      background: #0f172a; padding: 0.45rem; border-radius: 6px; border: 1px solid var(--border);
+    }
+    .react-flow__node {
+      font-size: 11px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: #e2e8f0;
+      min-width: 120px;
+      box-shadow: 0 4px 12px rgba(0,0,0,.35);
+    }
+    .react-flow__node.dim { opacity: 0.22; }
+    .react-flow__node.selected-hit {
+      box-shadow: 0 0 0 2px var(--accent), 0 4px 12px rgba(0,0,0,.35);
+    }
+    .react-flow__node-input { border-color: #6366f1; }
+    .react-flow__node-output { border-color: #10b981; }
+    .schema-class {
+      min-width: 180px; border-radius: 8px; border: 1px solid #475569;
+      background: #0f172a; overflow: hidden; box-shadow: 0 4px 14px rgba(0,0,0,.4);
+    }
+    .schema-class-hdr {
+      display: flex; align-items: center; gap: 6px; padding: 6px 10px;
+      background: #1e293b; border-bottom: 1px solid #334155; font-weight: 600; font-size: 11px;
+    }
+    .schema-field {
+      position: relative; display: flex; align-items: center; gap: 4px;
+      padding: 4px 8px; border-top: 1px solid #1e293b; font-size: 10px; font-family: ui-monospace, monospace;
+    }
+    .schema-field .range { margin-left: auto; color: #64748b; font-size: 9px; }
+    .node-title { font-weight: 600; margin-bottom: 2px; }
+    .node-detail { color: #94a3b8; font-size: 10px; max-width: 180px; word-break: break-word; }
+    .overlay-legend {
+      display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0.35rem 0 0.6rem;
+    }
+    .overlay-swatch {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      font-size: 0.68rem; color: var(--muted);
+    }
+    .overlay-swatch i {
+      width: 10px; height: 10px; border-radius: 2px; display: inline-block;
+    }
+    .status-pill {
+      font-size: 9px; font-weight: 600; text-transform: uppercase;
+      padding: 1px 5px; border-radius: 999px; letter-spacing: .03em;
+    }
+    .ms-dot {
+      width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+      margin-right: 6px;
+    }
+    .ms-dot.ready { background: #10b981; }
+    .ms-dot.missing { background: #475569; }
+    /* Bottom status / breadcrumbs — prepaid credit countdown (AUI-style) */
+    footer.bottom-status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 36px;
+      min-height: 36px;
+      padding: 0 0.35rem;
+      background: #181a1f;
+      border-top: 1px solid #2c2e33;
+      color: #d4d4d4;
+      font-size: 11px;
+      flex-shrink: 0;
+      overflow: hidden;
+      gap: 0.25rem;
+    }
+    footer.bottom-status .bs-group {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      min-width: 0;
+    }
+    footer.bottom-status .bs-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0 0.5rem;
+      height: 100%;
+      color: #858585;
+      white-space: nowrap;
+      max-width: 180px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    footer.bottom-status .bs-item strong {
+      color: #cccccc;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    footer.bottom-status .bs-item .accent { color: #c586c0; font-variant-numeric: tabular-nums; }
+    footer.bottom-status .bs-item .money { color: #635bff; font-variant-numeric: tabular-nums; font-weight: 600; }
+    footer.bottom-status .bs-item .ok { color: #89d185; }
+    footer.bottom-status .bs-item .warn { color: #cca700; }
+    footer.bottom-status .bs-item .err { color: #f48771; }
+    footer.bottom-status .bs-sep {
+      width: 1px; height: 14px; background: #2c2e33; margin: 0 2px; flex-shrink: 0;
+    }
+    footer.bottom-status .credit-bar {
+      width: 72px; height: 6px; background: #2c2e33; border-radius: 999px; overflow: hidden;
+    }
+    footer.bottom-status .credit-bar > i {
+      display: block; height: 100%; border-radius: 999px;
+      background: #635bff; transition: width 0.8s linear;
+    }
+    footer.bottom-status .credit-bar.warn > i { background: #cca700; }
+    footer.bottom-status .credit-bar.err > i { background: #f48771; }
+    footer.bottom-status .crumb {
+      color: #858585;
+    }
+    footer.bottom-status .crumb::after {
+      content: '›';
+      margin: 0 0.35rem;
+      color: #475569;
+    }
+    footer.bottom-status .crumb:last-child::after { content: none; }
+    footer.bottom-status .crumb strong { color: #d4d4d4; font-weight: 500; }
+  </style>
+</head>
+<body>
+  <div id="root" style="display:flex;flex-direction:column;height:100vh"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reactflow@11.11.4/dist/umd/index.js"></script>
+  <script src="./ontology-panel-state.js"></script>
+  <script>
+    const { useEffect, useMemo, useState, useCallback, useRef } = React;
+    const ReactFlowLib = window.ReactFlow;
+    const ReactFlow = ReactFlowLib.default || ReactFlowLib;
+    const {
+      Background, Controls, MiniMap, Handle, Position,
+      ReactFlowProvider, useReactFlow,
+    } = ReactFlowLib;
+
+    function nodeKind(n) {
+      const k = (n.data && n.data.kind) || '';
+      if (k === 'class' || n.type === 'schemaClass') return 'class';
+      if (k === 'enum') return 'enum';
+      if (k === 'shape') return 'shape';
+      if (k === 'fleetRoot') return 'fleetRoot';
+      if (n.type === 'input') return 'fleetRoot';
+      if (n.type === 'output') return 'shape';
+      return k || 'other';
+    }
+
+    function nodeSearchText(n) {
+      const d = n.data || {};
+      const fields = Array.isArray(d.fields)
+        ? d.fields.map((f) => [f.name, f.range, f.id].filter(Boolean).join(' ')).join(' ')
+        : '';
+      return [n.id, d.label, d.detail, d.kind, fields].filter(Boolean).join(' ').toLowerCase();
+    }
+
+    function CustomNode({ data, selected }) {
+      const fields = Array.isArray(data.fields) ? data.fields : [];
+      const isSchema = data.kind === 'class' || fields.length > 0;
+      const dimClass = data._dim ? ' dim' : '';
+      const hitClass = data._hit ? ' selected-hit' : '';
+      const ov = data.overlay || null;
+      const ovColor = data.overlayColor || (ov && ov.color) || null;
+      const ovStatus = data.overlayStatus || (ov && ov.status) || null;
+      const statusPill =
+        ovStatus && ovStatus !== 'unknown'
+          ? React.createElement(
+              'span',
+              {
+                className: 'status-pill',
+                style: {
+                  background: (ovColor || '#334155') + '33',
+                  color: ovColor || '#94a3b8',
+                  border: '1px solid ' + (ovColor || '#334155'),
+                },
+              },
+              ovStatus,
+            )
+          : null;
+      if (!isSchema) {
+        return React.createElement(
+          'div',
+          {
+            className: (dimClass + hitClass).trim() || undefined,
+            style: ovColor
+              ? { borderColor: ovColor, boxShadow: '0 0 0 1px ' + ovColor + '55' }
+              : undefined,
+          },
+          React.createElement(Handle, { type: 'target', position: Position.Top }),
+          React.createElement(
+            'div',
+            { className: 'node-title', style: { display: 'flex', gap: 6, alignItems: 'center' } },
+            data.label || '',
+            statusPill,
+          ),
+          data.detail ? React.createElement('div', { className: 'node-detail' }, data.detail) : null,
+          Array.isArray(data.tags) && data.tags.length
+            ? React.createElement(
+                'div',
+                { className: 'node-detail', style: { color: '#a5b4fc' } },
+                data.tags.join(', '),
+              )
+            : null,
+          React.createElement(Handle, { type: 'source', position: Position.Bottom }),
+        );
+      }
+      const classHandle = (data.label || 'class') + '.__class__';
+      return React.createElement(
+        'div',
+        {
+          className: 'schema-class' + dimClass + hitClass,
+          'data-schema-class': data.label || '',
+          style: {
+            cursor: 'pointer',
+            borderColor: ovColor || undefined,
+            boxShadow: ovColor ? '0 0 0 1px ' + ovColor + '55, 0 4px 14px rgba(0,0,0,.4)' : undefined,
+          },
+        },
+        React.createElement(Handle, { type: 'target', position: Position.Top, id: classHandle }),
+        React.createElement('div', {
+          className: 'schema-class-hdr',
+          style: ovColor ? { borderBottomColor: ovColor } : undefined,
+        },
+          React.createElement('span', null, data.label || 'Class'),
+          statusPill,
+          React.createElement('span', { style: { marginLeft: 'auto', opacity: 0.6, fontWeight: 400 } }, fields.length + ' fields'),
+        ),
+        Array.isArray(data.tags) && data.tags.length
+          ? React.createElement(
+              'div',
+              {
+                style: {
+                  padding: '2px 8px',
+                  fontSize: 9,
+                  color: '#a5b4fc',
+                  borderTop: '1px solid #1e293b',
+                },
+              },
+              data.tags.join(', '),
+            )
+          : null,
+        fields.map(function (f) {
+          return React.createElement(
+            'div',
+            { className: 'schema-field', key: f.id || f.name, 'data-field-id': f.id },
+            React.createElement(Handle, { type: 'target', position: Position.Left, id: f.id }),
+            React.createElement('span', null, f.name + (f.required ? '*' : '')),
+            React.createElement('span', { className: 'range' }, f.range || 'string'),
+            React.createElement(Handle, { type: 'source', position: Position.Right, id: f.id }),
+          );
+        }),
+        React.createElement(Handle, { type: 'source', position: Position.Bottom, id: classHandle }),
+      );
+    }
+
+    const nodeTypes = {
+      custom: CustomNode,
+      input: CustomNode,
+      default: CustomNode,
+      output: CustomNode,
+      schemaClass: CustomNode,
+    };
+
+    const DEFAULT_KINDS = { class: true, enum: true, shape: true, fleetRoot: true, other: true };
+
+    function FlowCanvas({ displayNodes, displayEdges, onNodeClick }) {
+      const rf = useReactFlow();
+      const fitView = rf && rf.fitView ? rf.fitView.bind(rf) : function () {};
+      const setCenter = rf && rf.setCenter ? rf.setCenter.bind(rf) : function () {};
+      const getNode = rf && rf.getNode ? rf.getNode.bind(rf) : function () { return null; };
+
+      // expose fit helpers via custom event
+      useEffect(() => {
+        function onFocus(ev) {
+          const id = ev.detail && ev.detail.id;
+          if (!id) return;
+          const n = getNode(id) || displayNodes.find((x) => x.id === id);
+          if (!n || !n.position) return;
+          const w = n.width || 160;
+          const h = n.height || 60;
+          const x = n.position.x + w / 2;
+          const y = n.position.y + h / 2;
+          try {
+            setCenter(x, y, { zoom: 1.15, duration: 400 });
+            fitView({ nodes: [{ id: n.id }], padding: 0.45, duration: 400 });
+          } catch (e) {
+            try { fitView({ padding: 0.2, duration: 300 }); } catch (_) { /* */ }
+          }
+        }
+        function onFitAll() {
+          try { fitView({ padding: 0.15, duration: 300 }); } catch (_) { /* */ }
+        }
+        window.addEventListener('ontology-focus-node', onFocus);
+        window.addEventListener('ontology-fit-all', onFitAll);
+        return () => {
+          window.removeEventListener('ontology-focus-node', onFocus);
+          window.removeEventListener('ontology-fit-all', onFitAll);
+        };
+      }, [fitView, setCenter, getNode, displayNodes]);
+
+      return React.createElement(
+        ReactFlow,
+        {
+          nodes: displayNodes,
+          edges: displayEdges,
+          nodeTypes,
+          fitView: true,
+          nodesDraggable: true,
+          elementsSelectable: true,
+          onNodeClick: function (_e, n) { if (onNodeClick) onNodeClick(n); },
+          proOptions: { hideAttribution: true },
+          defaultEdgeOptions: { style: { stroke: '#475569' }, labelStyle: { fill: '#94a3b8', fontSize: 10 } },
+        },
+        React.createElement(Background, { color: '#1f2937', gap: 18 }),
+        React.createElement(Controls),
+        React.createElement(MiniMap, { nodeColor: '#334155', maskColor: 'rgba(0,0,0,.6)' }),
+      );
+    }
+
+    const OPS = window.OntologyPanelState || {};
+
+    function App() {
+      const [state, setState] = useState(null);
+      const [err, setErr] = useState(null);
+      const [allNodes, setAllNodes] = useState([]);
+      const [allEdges, setAllEdges] = useState([]);
+      const [search, setSearch] = useState('');
+      const [searchDebounced, setSearchDebounced] = useState('');
+      const [kinds, setKinds] = useState(DEFAULT_KINDS);
+      const [onlyFields, setOnlyFields] = useState(false);
+      const [onlyUsed, setOnlyUsed] = useState(false);
+      const [onlyFailMixed, setOnlyFailMixed] = useState(false);
+      const [dimMode, setDimMode] = useState(false);
+      const [classesUsed, setClassesUsed] = useState([]);
+      const [usageHtml, setUsageHtml] = useState('');
+      const [validationIoHtml, setValidationIoHtml] = useState('');
+      const [validationIoMeta, setValidationIoMeta] = useState('');
+      const [overlay, setOverlay] = useState(null);
+      const [overlayMeta, setOverlayMeta] = useState('');
+      const [midspiralStatus, setMidspiralStatus] = useState(null);
+      const [midspiralRuns, setMidspiralRuns] = useState([]);
+      const [midspiralNote, setMidspiralNote] = useState('');
+      const [midspiralBusy, setMidspiralBusy] = useState(false);
+      const [reasonText, setReasonText] = useState('—');
+      const [selectedId, setSelectedId] = useState(null);
+      const [panelTab, setPanelTab] = useState('search');
+      // Prepaid budget ledger (server) + client tick for countdown
+      const [budgetLedger, setBudgetLedger] = useState(null);
+      const [budgetSnap, setBudgetSnap] = useState(null);
+      const [budgetNow, setBudgetNow] = useState(function () {
+        return Date.now();
+      });
+      const [nodeTags, setNodeTags] = useState(function () {
+        return OPS.loadTagsFromStorage
+          ? OPS.loadTagsFromStorage(typeof localStorage !== 'undefined' ? localStorage : null)
+          : {};
+      });
+      const [tagDraft, setTagDraft] = useState('');
+      const [guardrailsActive, setGuardrailsActive] = useState(function () {
+        var stored =
+          OPS.loadGuardrailsActiveFromStorage && typeof localStorage !== 'undefined'
+            ? OPS.loadGuardrailsActiveFromStorage(localStorage)
+            : null;
+        if (stored && stored.length) return stored;
+        return OPS.defaultGuardrailsCatalog
+          ? OPS.defaultGuardrailsCatalog({ healthOk: null })
+          : [];
+      });
+      const [guardrailsSelected, setGuardrailsSelected] = useState(function () {
+        if (OPS.loadGuardrailsSelectedFromStorage && typeof localStorage !== 'undefined') {
+          return OPS.loadGuardrailsSelectedFromStorage(localStorage);
+        }
+        return null;
+      });
+      const [guardrailsHealthNote, setGuardrailsHealthNote] = useState('');
+      const [grAddId, setGrAddId] = useState('');
+      const [grAddPort, setGrAddPort] = useState('');
+      const [grAddNote, setGrAddNote] = useState('');
+      const debounceRef = useRef(null);
+
+      useEffect(function () {
+        if (OPS.saveTagsToStorage && typeof localStorage !== 'undefined') {
+          OPS.saveTagsToStorage(localStorage, nodeTags);
+        }
+      }, [nodeTags]);
+
+      useEffect(function () {
+        if (OPS.saveGuardrailsActiveToStorage && typeof localStorage !== 'undefined') {
+          OPS.saveGuardrailsActiveToStorage(localStorage, guardrailsActive);
+        }
+      }, [guardrailsActive]);
+
+      useEffect(function () {
+        if (OPS.saveGuardrailsSelectedToStorage && typeof localStorage !== 'undefined') {
+          OPS.saveGuardrailsSelectedToStorage(localStorage, guardrailsSelected);
+        }
+      }, [guardrailsSelected]);
+
+      useEffect(() => {
+        if (debounceRef.current) clearTimeout(debounceRef.current);
+        debounceRef.current = setTimeout(() => setSearchDebounced(search.trim().toLowerCase()), 150);
+        return () => clearTimeout(debounceRef.current);
+      }, [search]);
+
+      const load = useCallback(async () => {
+        setErr(null);
+        try {
+          const r = await fetch('/api/ontology/state', { cache: 'no-store' });
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          const j = await r.json();
+          setState(j);
+          const rf = j.reactFlow || {};
+          const ns = (rf.nodes || []).map((n) => ({
+            ...n,
+            type:
+              n.type === 'schemaClass' || (n.data && n.data.kind === 'class')
+                ? 'schemaClass'
+                : n.type === 'input' || n.type === 'output'
+                  ? n.type
+                  : 'default',
+            data: { ...(n.data || {}), label: (n.data && n.data.label) || n.id },
+          }));
+          // Surreal validation overlay (colors + metadata)
+          let ov = null;
+          try {
+            const o = await fetch('/api/ontology/overlay', { cache: 'no-store' }).then(function (r) {
+              return r.ok ? r.json() : null;
+            });
+            ov = o;
+            setOverlay(o);
+            setOverlayMeta(
+              (o && o.source ? o.source : '?') +
+                (o && o.generatedAt ? ' · ' + String(o.generatedAt).slice(0, 19) : '') +
+                (o && o.summary
+                  ? ' · pass=' +
+                    (o.summary.pass || 0) +
+                    ' fail=' +
+                    (o.summary.fail || 0) +
+                    ' mixed=' +
+                    (o.summary.mixed || 0)
+                  : ''),
+            );
+          } catch {
+            setOverlay(null);
+            setOverlayMeta('overlay unavailable');
+          }
+          const nodeMap = (ov && ov.nodes) || {};
+          const edgeMap = (ov && ov.edges) || {};
+          setAllNodes(
+            ns.map(function (n) {
+              const ent = nodeMap[n.id];
+              if (OPS.mergeNodeOverlay) return OPS.mergeNodeOverlay(n, ent);
+              if (!ent || ent.status === 'unknown') return n;
+              return Object.assign({}, n, {
+                style: Object.assign({}, n.style || {}, { borderColor: ent.color }),
+                data: Object.assign({}, n.data || {}, {
+                  overlay: ent,
+                  overlayStatus: ent.status,
+                  overlayColor: ent.color,
+                }),
+              });
+            }),
+          );
+          setAllEdges(
+            (rf.edges || []).map(function (e) {
+              const base = Object.assign({}, e, {
+                animated: Boolean(e.animated),
+                style: e.animated
+                  ? { stroke: '#6366f1', strokeWidth: 2 }
+                  : e.sourceHandle
+                    ? { stroke: '#38bdf8', strokeWidth: 1.5 }
+                    : { stroke: '#475569' },
+              });
+              const eid = e.id || e.source + '->' + e.target;
+              const ent = edgeMap[eid] || edgeMap[e.id];
+              if (OPS.mergeEdgeOverlay) return OPS.mergeEdgeOverlay(base, ent);
+              return base;
+            }),
+          );
+        } catch (e) {
+          setErr(String(e.message || e));
+        }
+        // usage + reasoning
+        try {
+          const u = await fetch('/api/linkml/usage', { cache: 'no-store' }).then((r) => r.ok ? r.json() : { entries: [] });
+          const entries = (u && u.entries) || [];
+          setUsageHtml(
+            entries.length
+              ? entries.slice().reverse().slice(0, 12).map(function (e) {
+                  return '<li><strong>' + (e.at || '').slice(0, 19) + '</strong> ' +
+                    (e.tool || '') + ' pack=' + (e.pack || '') +
+                    ' ok=' + e.ok +
+                    '<br/><span style="color:#64748b">classes: ' +
+                    ((e.classesUsed || []).slice(0, 6).join(', ') || '—') +
+                    '</span></li>';
+                }).join('')
+              : '<li style="color:#64748b">' + ((u && u.note) || 'no usage yet') + '</li>',
+          );
+        } catch {
+          setUsageHtml('<li style="color:#64748b">usage API unavailable</li>');
+        }
+        try {
+          const j = await fetch('/api/linkml/reasoning', { cache: 'no-store' }).then((r) => r.ok ? r.json() : {});
+          if (j && j.entry && j.entry.narrative) setReasonText(j.entry.narrative);
+          else if (j && j.entry) {
+            setReasonText(JSON.stringify({
+              pack: j.entry.pack,
+              classesUsed: j.entry.classesUsed,
+              resolversUsed: j.entry.resolversUsed,
+              mutationsReferenced: j.entry.mutationsReferenced,
+            }, null, 2));
+          } else setReasonText((j && j.note) || '—');
+          if (j && j.entry && Array.isArray(j.entry.classesUsed)) {
+            setClassesUsed(j.entry.classesUsed);
+          }
+        } catch {
+          setReasonText('—');
+        }
+        // Host Surreal validation_call I/O (SHACL/Lean/GraphQL/Guardrails)
+        try {
+          const v = await fetch('/api/validation/calls', { cache: 'no-store' }).then((r) =>
+            r.ok ? r.json() : { entries: [] },
+          );
+          const entries = (v && v.entries) || [];
+          setValidationIoMeta(
+            (v.source || '?') +
+              ' · ' +
+              (v.backend || '') +
+              ' · ' +
+              entries.length +
+              ' calls',
+          );
+          setValidationIoHtml(
+            entries.length
+              ? entries
+                  .slice(0, 15)
+                  .map(function (e) {
+                    const layers = (e.layers || []).join(',') || '—';
+                    const classes = ((e.linkml_reasoning && e.linkml_reasoning.classesUsed) || [])
+                      .slice(0, 5)
+                      .join(', ');
+                    return (
+                      '<li><strong>' +
+                      (e.at || '').toString().slice(0, 19) +
+                      '</strong> ' +
+                      (e.tool || '') +
+                      ' <span style="color:' +
+                      (e.ok ? '#10b981' : '#f87171') +
+                      '">ok=' +
+                      e.ok +
+                      '</span>' +
+                      '<br/><span style="color:#64748b">pack=' +
+                      (e.pack || '') +
+                      ' layers=' +
+                      layers +
+                      (classes ? ' · ' + classes : '') +
+                      '</span>' +
+                      (e.call_id
+                        ? '<br/><span style="color:#475569;font-size:9px">' + e.call_id + '</span>'
+                        : '') +
+                      '</li>'
+                    );
+                  })
+                  .join('')
+              : '<li style="color:#64748b">' +
+                  ((v && v.note) || 'no validation_call rows yet') +
+                  '</li>',
+          );
+        } catch {
+          setValidationIoHtml(
+            '<li style="color:#64748b">validation I/O API unavailable</li>',
+          );
+          setValidationIoMeta('error');
+        }
+        // Multi Guardrails registry + per-id health (one down does not wipe set)
+        try {
+          const reg = await fetch('/api/guardrails/servers', { cache: 'no-store' }).then(function (
+            r,
+          ) {
+            return r.ok ? r.json() : null;
+          });
+          if (reg && Array.isArray(reg.servers) && reg.servers.length) {
+            setGuardrailsActive(function (prev) {
+              var byId = {};
+              (prev || []).forEach(function (s) {
+                byId[s.id] = s;
+              });
+              // merge registry into active; keep user-removed by not re-adding if prev empty intentionally
+              var next = (prev && prev.length ? prev.slice() : []).slice();
+              reg.servers.forEach(function (s) {
+                if (!s || !s.id) return;
+                if (byId[s.id]) {
+                  next = next.map(function (x) {
+                    return x.id === s.id ? Object.assign({}, x, s) : x;
+                  });
+                } else if (!prev || !prev.length) {
+                  next.push(s);
+                }
+              });
+              if (!prev || !prev.length) next = reg.servers.slice();
+              return next;
+            });
+          }
+          const multi = await fetch('/api/guardrails/health-all', { cache: 'no-store' }).then(
+            function (r) {
+              return r.ok ? r.json() : null;
+            },
+          );
+          if (multi && Array.isArray(multi.servers)) {
+            setGuardrailsActive(function (prev) {
+              var statusById = {};
+              multi.servers.forEach(function (s) {
+                if (s && s.id) statusById[s.id] = s;
+              });
+              return (prev || []).map(function (s) {
+                var u = statusById[s.id];
+                if (!u) return s;
+                return Object.assign({}, s, {
+                  status: u.status || s.status,
+                  note: u.note || s.note,
+                  port: u.port != null ? u.port : s.port,
+                });
+              });
+            });
+            setGuardrailsHealthNote(
+              'N=' +
+                (multi.count || multi.servers.length) +
+                ' · up=' +
+                ((multi.reachable && multi.reachable.length) || 0) +
+                ' · down=' +
+                ((multi.unreachable && multi.unreachable.length) || 0) +
+                ' (multi-server; one fail keeps others)',
+            );
+          } else {
+            const gh = await fetch('/api/guardrails/health', { cache: 'no-store' }).then(function (
+              r,
+            ) {
+              return r.ok ? r.json() : { ok: false };
+            });
+            setGuardrailsHealthNote(
+              gh && gh.ok
+                ? 'formal :' + (gh.port || 7003) + ' up'
+                : 'formal health ' + (gh && gh.status),
+            );
+          }
+        } catch (e) {
+          setGuardrailsHealthNote('guardrails multi-health probe failed');
+        }
+        // Midspiral stack status (ontology viewer only)
+        try {
+          const ms = await fetch('/api/midspiral/status', { cache: 'no-store' }).then(function (r) {
+            return r.ok ? r.json() : null;
+          });
+          setMidspiralStatus(ms);
+          setMidspiralNote(
+            (ms && ms.note) ||
+              (ms && ms.readyCount != null
+                ? ms.readyCount + '/' + (ms.total || 6) + ' tools ready'
+                : ''),
+          );
+          const runs = await fetch('/api/midspiral/runs?limit=20', { cache: 'no-store' }).then(
+            function (r) {
+              return r.ok ? r.json() : { entries: [] };
+            },
+          );
+          setMidspiralRuns((runs && runs.entries) || []);
+        } catch {
+          setMidspiralNote('midspiral status unavailable');
+        }
+        // Prepaid sandbox credits (countdown against runtime)
+        try {
+          const cr = await fetch('/api/usage/credits', { cache: 'no-store' }).then(function (r) {
+            return r.ok ? r.json() : null;
+          });
+          if (cr && cr.startedAt) {
+            setBudgetLedger({
+              prepaidUsd: cr.creditsPrepaid != null ? cr.creditsPrepaid : cr.prepaidUsd,
+              rateUsdPerSec: cr.rateUsdPerSec,
+              startedAt: cr.startedAt,
+              autoStopMinutes: cr.autoStopMinutes,
+              sandboxId: cr.sandboxId,
+              provider: cr.provider,
+              mcpCallCount: cr.mcpCallCount || 0,
+              mcpRateUsdPerCall: cr.mcpRateUsdPerCall,
+              currency: 'USD',
+              source: cr.source || 'session',
+            });
+            setBudgetSnap(cr);
+          }
+        } catch {
+          /* footer shows placeholders */
+        }
+      }, []);
+
+      useEffect(() => { load(); }, [load]);
+
+      // 1s tick — prepaid remaining counts down with sandbox runtime
+      useEffect(function () {
+        const id = setInterval(function () {
+          setBudgetNow(Date.now());
+        }, 1000);
+        return function () {
+          clearInterval(id);
+        };
+      }, []);
+
+      // Soft re-fetch credits ledger every 30s
+      useEffect(function () {
+        const id = setInterval(function () {
+          fetch('/api/usage/credits', { cache: 'no-store' })
+            .then(function (r) {
+              return r.ok ? r.json() : null;
+            })
+            .then(function (cr) {
+              if (!cr || !cr.startedAt) return;
+              setBudgetLedger({
+                prepaidUsd: cr.creditsPrepaid != null ? cr.creditsPrepaid : cr.prepaidUsd,
+                rateUsdPerSec: cr.rateUsdPerSec,
+                startedAt: cr.startedAt,
+                autoStopMinutes: cr.autoStopMinutes,
+                sandboxId: cr.sandboxId,
+                provider: cr.provider,
+                mcpCallCount: cr.mcpCallCount || 0,
+                mcpRateUsdPerCall: cr.mcpRateUsdPerCall,
+                currency: 'USD',
+                source: cr.source || 'session',
+              });
+            })
+            .catch(function () {});
+        }, 30000);
+        return function () {
+          clearInterval(id);
+        };
+      }, []);
+
+      const liveBudget = useMemo(function () {
+        function fmtDur(sec) {
+          const s = Math.max(0, Math.floor(sec));
+          const h = Math.floor(s / 3600);
+          const m = Math.floor((s % 3600) / 60);
+          const sec2 = s % 60;
+          return (
+            String(h).padStart(2, '0') +
+            ':' +
+            String(m).padStart(2, '0') +
+            ':' +
+            String(sec2).padStart(2, '0')
+          );
+        }
+        const led = budgetLedger;
+        if (!led || !led.startedAt) {
+          return budgetSnap;
+        }
+        const startedMs = Date.parse(led.startedAt);
+        const elapsed = Number.isFinite(startedMs)
+          ? Math.max(0, (budgetNow - startedMs) / 1000)
+          : 0;
+        const rate = led.rateUsdPerSec >= 0 ? led.rateUsdPerSec : 0.0004;
+        const prepaid = led.prepaidUsd > 0 ? led.prepaidUsd : 10;
+        const mcpN = led.mcpCallCount || 0;
+        const mcpRate = led.mcpRateUsdPerCall != null ? led.mcpRateUsdPerCall : 0.0015;
+        const burn = elapsed * rate + mcpN * mcpRate;
+        const remaining = Math.max(0, prepaid - burn);
+        const remainingPct = Math.max(0, Math.min(100, (remaining / prepaid) * 100));
+        const exhausted = remaining <= 0;
+        const warn = !exhausted && remainingPct < 20;
+        let autoLeft = null;
+        if (led.autoStopMinutes) {
+          autoLeft = Math.max(0, led.autoStopMinutes * 60 - elapsed);
+        }
+        return {
+          elapsedSec: elapsed,
+          burnUsd: burn,
+          remainingUsd: remaining,
+          remainingPct: remainingPct,
+          prepaidUsd: prepaid,
+          rateUsdPerSec: rate,
+          exhausted: exhausted,
+          warn: warn,
+          fmtRuntime: fmtDur(elapsed),
+          fmtBurn: '$' + burn.toFixed(4),
+          fmtRemaining: '$' + remaining.toFixed(2),
+          fmtPrepaid: '$' + prepaid.toFixed(2),
+          autoStopMinutes: led.autoStopMinutes,
+          autoStopRemainingSec: autoLeft,
+          sandboxId: led.sandboxId,
+          provider: led.provider,
+          creditsRemaining: remaining,
+          creditsPrepaid: prepaid,
+          prepaid: true,
+        };
+      }, [budgetLedger, budgetNow, budgetSnap]);
+
+      const usedSet = useMemo(() => {
+        const s = new Set((classesUsed || []).map((c) => String(c).toLowerCase()));
+        return s;
+      }, [classesUsed]);
+
+      const matchInfo = useMemo(() => {
+        const q = searchDebounced;
+        const matching = new Set();
+        for (const n of allNodes) {
+          const kind = nodeKind(n);
+          if (!kinds[kind] && !(kind === 'other' && kinds.other)) continue;
+          const fields = (n.data && n.data.fields) || [];
+          if (onlyFields && !(Array.isArray(fields) && fields.length > 0)) continue;
+          const label = ((n.data && n.data.label) || n.id || '').toLowerCase();
+          if (onlyUsed && usedSet.size) {
+            const hitUsed =
+              usedSet.has(label) ||
+              usedSet.has(String(n.id).toLowerCase()) ||
+              [...usedSet].some((u) => label.includes(u) || String(n.id).toLowerCase().includes(u));
+            if (!hitUsed) continue;
+          }
+          if (onlyFailMixed) {
+            const st =
+              (n.data && n.data.overlayStatus) ||
+              (n.data && n.data.overlay && n.data.overlay.status) ||
+              'unknown';
+            if (st !== 'fail' && st !== 'mixed') continue;
+          }
+          if (q && !nodeSearchText(n).includes(q)) continue;
+          matching.add(n.id);
+        }
+        return matching;
+      }, [allNodes, kinds, onlyFields, onlyUsed, onlyFailMixed, usedSet, searchDebounced]);
+
+      const displayNodes = useMemo(() => {
+        return allNodes
+          .map((n) => {
+            const match = matchInfo.has(n.id);
+            if (!dimMode && !match) return null;
+            const tags =
+              OPS.getNodeTags && nodeTags ? OPS.getNodeTags(nodeTags, n.id) : [];
+            return {
+              ...n,
+              data: {
+                ...(n.data || {}),
+                _dim: dimMode && !match,
+                _hit: selectedId === n.id || (match && searchDebounced && !dimMode),
+                tags: tags,
+              },
+              style: {
+                ...(n.style || {}),
+                opacity: dimMode && !match ? 0.22 : 1,
+                cursor: 'pointer',
+              },
+              className: [
+                n.className || '',
+                dimMode && !match ? 'dim' : '',
+                selectedId === n.id ? 'selected-hit' : '',
+              ].filter(Boolean).join(' ') || undefined,
+            };
+          })
+          .filter(Boolean);
+      }, [allNodes, matchInfo, dimMode, selectedId, searchDebounced, nodeTags]);
+
+      const displayEdges = useMemo(() => {
+        const visible = new Set(displayNodes.map((n) => n.id));
+        return allEdges.filter((e) => visible.has(e.source) && visible.has(e.target));
+      }, [allEdges, displayNodes]);
+
+      const resultNodes = useMemo(() => {
+        return allNodes.filter((n) => matchInfo.has(n.id));
+      }, [allNodes, matchInfo]);
+
+      const toggleKind = (k) => setKinds((prev) => ({ ...prev, [k]: !prev[k] }));
+
+      const focusNode = (id) => {
+        const next = OPS.selectNode ? OPS.selectNode(selectedId, id) : id;
+        setSelectedId(next);
+        setPanelTab('node');
+        if (next) {
+          window.dispatchEvent(new CustomEvent('ontology-focus-node', { detail: { id: next } }));
+        }
+      };
+
+      const onGraphNodeClick = (n) => {
+        if (!n || !n.id) return;
+        focusNode(n.id);
+      };
+
+      const addTagOnSelected = () => {
+        if (!selectedId || !OPS.addNodeTag) return;
+        setNodeTags(function (prev) {
+          return OPS.addNodeTag(prev, selectedId, tagDraft);
+        });
+        setTagDraft('');
+      };
+
+      const removeTagOnSelected = (tag) => {
+        if (!selectedId || !OPS.removeNodeTag) return;
+        setNodeTags(function (prev) {
+          return OPS.removeNodeTag(prev, selectedId, tag);
+        });
+      };
+
+      const selectGuardrails = (id) => {
+        const next = OPS.selectGuardrailsServer
+          ? OPS.selectGuardrailsServer(guardrailsSelected, id)
+          : id;
+        setGuardrailsSelected(next);
+      };
+
+      const removeGuardrails = (id) => {
+        if (!OPS.removeActiveGuardrailsServer) return;
+        setGuardrailsActive(function (prev) {
+          return OPS.removeActiveGuardrailsServer(prev, id);
+        });
+        if (guardrailsSelected === id) setGuardrailsSelected(null);
+      };
+
+      const restoreGuardrailsDefaults = () => {
+        const cat = OPS.defaultGuardrailsCatalog
+          ? OPS.defaultGuardrailsCatalog({ healthOk: null })
+          : [];
+        setGuardrailsActive(cat);
+        setGuardrailsSelected(null);
+      };
+
+      const addGuardrailsServer = async () => {
+        const id = (grAddId || '').trim();
+        if (!id) {
+          setGuardrailsHealthNote('id required to register Guardrails AI server');
+          return;
+        }
+        const portNum = grAddPort ? Number(grAddPort) : undefined;
+        const server = OPS.makeGuardrailsServer
+          ? OPS.makeGuardrailsServer({
+              id: id,
+              name: id,
+              kind: 'guardrails_ai',
+              port: Number.isFinite(portNum) ? portNum : undefined,
+              status: 'unknown',
+              note: grAddNote || 'operator-registered',
+            })
+          : {
+              id: id,
+              name: id,
+              kind: 'guardrails_ai',
+              port: Number.isFinite(portNum) ? portNum : undefined,
+              status: 'unknown',
+              inSandbox: Boolean(portNum),
+              note: grAddNote || 'operator-registered',
+            };
+        setGuardrailsActive(function (prev) {
+          if (OPS.registerActiveGuardrailsServer) {
+            return OPS.registerActiveGuardrailsServer(prev, server);
+          }
+          return OPS.addActiveGuardrailsServer
+            ? OPS.addActiveGuardrailsServer(prev, server)
+            : (prev || []).concat([server]);
+        });
+        try {
+          await fetch('/api/guardrails/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(server),
+          });
+        } catch (e) {
+          /* local set still updated */
+        }
+        setGrAddId('');
+        setGrAddPort('');
+        setGrAddNote('');
+        setGuardrailsHealthNote('registered ' + id + ' (N servers allowed)');
+      };
+
+      const probeAllGuardrails = async () => {
+        try {
+          const multi = await fetch('/api/guardrails/health-all', { cache: 'no-store' }).then(
+            function (r) {
+              return r.ok ? r.json() : null;
+            },
+          );
+          if (multi && multi.servers) {
+            setGuardrailsActive(function (prev) {
+              var byId = {};
+              multi.servers.forEach(function (s) {
+                if (s && s.id) byId[s.id] = s;
+              });
+              return (prev || []).map(function (s) {
+                var u = byId[s.id];
+                return u
+                  ? Object.assign({}, s, { status: u.status, note: u.note || s.note })
+                  : s;
+              });
+            });
+            setGuardrailsHealthNote(
+              'probed N=' +
+                multi.count +
+                ' up=' +
+                (multi.reachable || []).length +
+                ' down=' +
+                (multi.unreachable || []).length,
+            );
+          }
+        } catch (e) {
+          setGuardrailsHealthNote('probe-all failed');
+        }
+      };
+
+      const clearFilters = () => {
+        setSearch('');
+        setKinds({ ...DEFAULT_KINDS });
+        setOnlyFields(false);
+        setOnlyUsed(false);
+        setOnlyFailMixed(false);
+        setDimMode(false);
+      };
+
+      const runMidspiral = async (tool) => {
+        setMidspiralBusy(true);
+        setMidspiralNote('running ' + tool + '…');
+        try {
+          const label =
+            (selectedNode && selectedNode.data && selectedNode.data.label) ||
+            selectedId ||
+            pack ||
+            'ontology';
+          const claim =
+            'Ontology class ' +
+            label +
+            ' satisfies formal validation constraints for pack ' +
+            pack;
+          const body = {
+            tool: tool,
+            args: {
+              claim: claim,
+              requirement: claim,
+              moduleName: String(label).replace(/[^a-zA-Z0-9]/g, '') || 'ValidClaim',
+              sourceText:
+                selectedNode && selectedNode.data
+                  ? '//@ requires true\n// class ' + label + '\n'
+                  : undefined,
+            },
+          };
+          const r = await fetch('/api/midspiral/run', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          }).then(function (res) {
+            return res.json();
+          });
+          if (r && r.ok === false) {
+            setMidspiralNote(r.error || r.hint || 'run failed');
+          } else {
+            setMidspiralNote(
+              tool +
+                ' · ' +
+                ((r.run && r.run.source) || 'ok') +
+                (r.run && r.run.ok === false ? ' (failed)' : ' (ok)'),
+            );
+          }
+          const runs = await fetch('/api/midspiral/runs?limit=20', { cache: 'no-store' }).then(
+            function (res) {
+              return res.ok ? res.json() : { entries: [] };
+            },
+          );
+          setMidspiralRuns((runs && runs.entries) || []);
+          const ms = await fetch('/api/midspiral/status', { cache: 'no-store' }).then(function (
+            res,
+          ) {
+            return res.ok ? res.json() : null;
+          });
+          if (ms) setMidspiralStatus(ms);
+        } catch (e) {
+          setMidspiralNote(String(e.message || e));
+        }
+        setMidspiralBusy(false);
+      };
+
+      const selectedNode = allNodes.find(function (n) {
+        return n.id === selectedId;
+      });
+      const selectedTags =
+        selectedId && OPS.getNodeTags ? OPS.getNodeTags(nodeTags, selectedId) : [];
+
+      if (err) {
+        return React.createElement('div', { className: 'err' }, 'Failed to load ontology state: ' + err);
+      }
+
+      const s = (state && state.summary) || {};
+      const f = (state && state.fleet) || {};
+      const pack = (state && state.pack) || 'pack';
+      const meta = state
+        ? 'Generated ' + (state.generatedAt || '') + ' · ' + (state.meta && state.meta.sourceRoot ? 'from .px pack' : '')
+        : 'Loading state…';
+
+      return React.createElement(
+        React.Fragment,
+        null,
+        React.createElement(
+          'header',
+          null,
+          React.createElement('div', null,
+            React.createElement('h1', null, 'Ontology sandbox viewer'),
+            React.createElement('div', { className: 'meta' }, meta),
+          ),
+          React.createElement('div', { style: { display: 'flex', gap: '.5rem', alignItems: 'center' } },
+            React.createElement('span', { className: 'badge' }, 'React Flow'),
+            React.createElement('span', { className: 'badge' }, pack),
+            React.createElement('span', { className: 'badge' }, resultNodes.length + ' / ' + allNodes.length + ' nodes'),
+            React.createElement('button', { className: 'primary', type: 'button', onClick: load }, 'Refresh'),
+          ),
+        ),
+        React.createElement(
+          'div',
+          { id: 'app' },
+          React.createElement(
+            'div',
+            { id: 'flow' },
+            state
+              ? React.createElement(
+                  ReactFlowProvider,
+                  null,
+                  React.createElement(FlowCanvas, {
+                    displayNodes,
+                    displayEdges,
+                    onNodeClick: onGraphNodeClick,
+                  }),
+                )
+              : React.createElement('div', { className: 'err' }, 'Loading…'),
+          ),
+          React.createElement(
+            'aside',
+            { className: 'side', 'data-panel': 'right' },
+            // Tab bar — Search / Logs / Node are discrete
+            React.createElement(
+              'div',
+              { className: 'panel-tabs', role: 'tablist', 'aria-label': 'Right panel tabs' },
+              (OPS.PANEL_TABS || [
+                { id: 'search', label: 'Search' },
+                { id: 'summary', label: 'Summary' },
+                { id: 'logs', label: 'Logs' },
+                { id: 'guardrails', label: 'Guardrails' },
+                { id: 'node', label: 'Node' },
+              ]).map(function (t) {
+                return React.createElement(
+                  'button',
+                  {
+                    key: t.id,
+                    type: 'button',
+                    role: 'tab',
+                    'data-tab': t.id,
+                    'aria-selected': panelTab === t.id,
+                    className: panelTab === t.id ? 'active' : '',
+                    onClick: function () {
+                      setPanelTab(t.id);
+                    },
+                  },
+                  t.label,
+                );
+              }),
+            ),
+            // —— Search tab body only ——
+            panelTab === 'search'
+              ? React.createElement(
+                  'div',
+                  { 'data-tab-panel': 'search', role: 'tabpanel' },
+                  React.createElement('h2', null, 'Search'),
+                  React.createElement(
+                    'div',
+                    { className: 'search-wrap' },
+                    React.createElement('input', {
+                      type: 'search',
+                      placeholder: 'Class, field, id, detail…',
+                      value: search,
+                      onChange: function (e) {
+                        setSearch(e.target.value);
+                      },
+                      'aria-label': 'Search graph',
+                    }),
+                    search
+                      ? React.createElement(
+                          'button',
+                          {
+                            type: 'button',
+                            className: 'clear',
+                            onClick: function () {
+                              setSearch('');
+                            },
+                            title: 'Clear',
+                          },
+                          '×',
+                        )
+                      : null,
+                  ),
+                  React.createElement('h2', null, 'Filters'),
+                  React.createElement(
+                    'div',
+                    { className: 'filter-grid' },
+                    React.createElement(
+                      'label',
+                      null,
+                      React.createElement('input', {
+                        type: 'checkbox',
+                        checked: !!kinds.class,
+                        onChange: function () {
+                          toggleKind('class');
+                        },
+                      }),
+                      'Classes',
+                    ),
+                    React.createElement(
+                      'label',
+                      null,
+                      React.createElement('input', {
+                        type: 'checkbox',
+                        checked: !!kinds.enum,
+                        onChange: function () {
+                          toggleKind('enum');
+                        },
+                      }),
+                      'Enums',
+                    ),
+                    React.createElement(
+                      'label',
+                      null,
+                      React.createElement('input', {
+                        type: 'checkbox',
+                        checked: !!kinds.shape,
+                        onChange: function () {
+                          toggleKind('shape');
+                        },
+                      }),
+                      'Shapes',
+                    ),
+                    React.createElement(
+                      'label',
+                      null,
+                      React.createElement('input', {
+                        type: 'checkbox',
+                        checked: !!kinds.fleetRoot,
+                        onChange: function () {
+                          toggleKind('fleetRoot');
+                        },
+                      }),
+                      'Fleet root',
+                    ),
+                    React.createElement(
+                      'label',
+                      null,
+                      React.createElement('input', {
+                        type: 'checkbox',
+                        checked: !!kinds.other,
+                        onChange: function () {
+                          toggleKind('other');
+                        },
+                      }),
+                      'Other',
+                    ),
+                  ),
+                  React.createElement(
+                    'div',
+                    { className: 'filter-row' },
+                    React.createElement(
+                      'label',
+                      null,
+                      React.createElement('input', {
+                        type: 'checkbox',
+                        checked: onlyFields,
+                        onChange: function (e) {
+                          setOnlyFields(e.target.checked);
+                        },
+                      }),
+                      'Only nodes with fields',
+                    ),
+                  ),
+                  React.createElement(
+                    'div',
+                    { className: 'filter-row' },
+                    React.createElement(
+                      'label',
+                      null,
+                      React.createElement('input', {
+                        type: 'checkbox',
+                        checked: onlyUsed,
+                        onChange: function (e) {
+                          setOnlyUsed(e.target.checked);
+                        },
+                        disabled: !classesUsed.length,
+                      }),
+                      'Only used in last LinkML validation',
+                    ),
+                  ),
+                  React.createElement(
+                    'div',
+                    { className: 'filter-row' },
+                    React.createElement(
+                      'label',
+                      null,
+                      React.createElement('input', {
+                        type: 'checkbox',
+                        checked: onlyFailMixed,
+                        onChange: function (e) {
+                          setOnlyFailMixed(e.target.checked);
+                        },
+                      }),
+                      'Only fail / mixed (Surreal overlay)',
+                    ),
+                  ),
+                  React.createElement(
+                    'div',
+                    { className: 'filter-row' },
+                    React.createElement(
+                      'label',
+                      null,
+                      React.createElement('input', {
+                        type: 'checkbox',
+                        checked: dimMode,
+                        onChange: function (e) {
+                          setDimMode(e.target.checked);
+                        },
+                      }),
+                      'Dim non-matches (vs hide)',
+                    ),
+                  ),
+                  React.createElement('h2', null, 'Surreal overlay'),
+                  React.createElement(
+                    'div',
+                    { className: 'count-pill' },
+                    overlayMeta || 'no overlay yet',
+                  ),
+                  React.createElement(
+                    'div',
+                    { className: 'overlay-legend', 'data-overlay-legend': 'true' },
+                    Object.keys(OPS.OVERLAY_STATUS_COLORS || {
+                      pass: { label: 'Pass', color: '#10b981' },
+                      fail: { label: 'Fail', color: '#f87171' },
+                      mixed: { label: 'Mixed', color: '#f59e0b' },
+                      stale: { label: 'Stale', color: '#64748b' },
+                      unknown: { label: 'Unknown', color: '#334155' },
+                    }).map(function (k) {
+                      const c = (OPS.OVERLAY_STATUS_COLORS || {})[k] || {
+                        label: k,
+                        color: '#334155',
+                      };
+                      return React.createElement(
+                        'span',
+                        { key: k, className: 'overlay-swatch' },
+                        React.createElement('i', { style: { background: c.color } }),
+                        c.label || k,
+                      );
+                    }),
+                  ),
+                  React.createElement(
+                    'p',
+                    { style: { color: 'var(--muted)', fontSize: '0.7rem', margin: '0 0 0.5rem' } },
+                    'Node/edge colors from host Surreal validation_call rollup (SHACL/Lean/GraphQL/Guardrails).',
+                  ),
+                  React.createElement(
+                    'div',
+                    { className: 'filter-actions' },
+                    React.createElement(
+                      'button',
+                      {
+                        type: 'button',
+                        className: 'primary',
+                        onClick: function () {
+                          window.dispatchEvent(new Event('ontology-fit-all'));
+                        },
+                      },
+                      'Fit all',
+                    ),
+                    React.createElement(
+                      'button',
+                      {
+                        type: 'button',
+                        onClick: function () {
+                          if (resultNodes[0]) focusNode(resultNodes[0].id);
+                        },
+                      },
+                      'Fit selection',
+                    ),
+                    React.createElement(
+                      'button',
+                      { type: 'button', onClick: clearFilters },
+                      'Clear filters',
+                    ),
+                  ),
+                  React.createElement('h2', null, 'Results'),
+                  React.createElement(
+                    'div',
+                    { className: 'count-pill' },
+                    resultNodes.length +
+                      ' matching · ' +
+                      displayEdges.length +
+                      ' edges shown',
+                  ),
+                  React.createElement(
+                    'ul',
+                    { className: 'list' },
+                    resultNodes.length
+                      ? resultNodes.slice(0, 80).map(function (n) {
+                          const kind = nodeKind(n);
+                          const label = (n.data && n.data.label) || n.id;
+                          const fields = (n.data && n.data.fields) || [];
+                          const tags =
+                            OPS.getNodeTags && nodeTags
+                              ? OPS.getNodeTags(nodeTags, n.id)
+                              : [];
+                          return React.createElement(
+                            'li',
+                            {
+                              key: n.id,
+                              className: 'hit' + (selectedId === n.id ? ' active' : ''),
+                              onClick: function () {
+                                focusNode(n.id);
+                              },
+                            },
+                            React.createElement('div', null, label),
+                            React.createElement(
+                              'div',
+                              { className: 'sub' },
+                              kind +
+                                (fields.length ? ' · ' + fields.length + ' fields' : '') +
+                                (tags.length ? ' · tags: ' + tags.join(', ') : '') +
+                                ' · ' +
+                                n.id,
+                            ),
+                          );
+                        })
+                      : React.createElement(
+                          'li',
+                          { style: { color: 'var(--muted)' } },
+                          'No matches',
+                        ),
+                  ),
+                )
+              : null,
+            // —— Summary tab only ——
+            panelTab === 'summary'
+              ? React.createElement(
+                  'div',
+                  { 'data-tab-panel': 'summary', role: 'tabpanel' },
+                  React.createElement('h2', null, 'Pack summary'),
+                  React.createElement(
+                    'dl',
+                    null,
+                    React.createElement('dt', null, 'pack'),
+                    React.createElement('dd', null, pack),
+                    React.createElement('dt', null, 'Classes'),
+                    React.createElement('dd', null, s.classes || 0),
+                    React.createElement('dt', null, 'Slots'),
+                    React.createElement('dd', null, s.slots || 0),
+                    React.createElement('dt', null, 'Verifiers'),
+                    React.createElement('dd', null, s.verifiers || 0),
+                    React.createElement('dt', null, 'Shapes'),
+                    React.createElement('dd', null, s.shapes || 0),
+                    React.createElement('dt', null, 'Enums'),
+                    React.createElement('dd', null, s.enums || 0),
+                  ),
+                  React.createElement('h2', null, 'Fleet'),
+                  React.createElement(
+                    'dl',
+                    null,
+                    React.createElement('dt', null, 'fleet_id'),
+                    React.createElement('dd', null, f.fleet_id || '—'),
+                    React.createElement('dt', null, 'revision'),
+                    React.createElement('dd', null, f.revision || '—'),
+                    React.createElement('dt', null, 'environment'),
+                    React.createElement('dd', null, f.environment || '—'),
+                    React.createElement('dt', null, 'compliance_tier'),
+                    React.createElement('dd', null, f.compliance_tier || '—'),
+                  ),
+                  React.createElement('h2', null, 'SHACL shapes'),
+                  React.createElement('ul', {
+                    className: 'list',
+                    dangerouslySetInnerHTML: {
+                      __html:
+                        ((state && state.shapes) || [])
+                          .map(function (x) {
+                            return (
+                              '<li>' +
+                              x.name +
+                              ' <span style="color:#64748b">(' +
+                              x.bytes +
+                              ' B)</span></li>'
+                            );
+                          })
+                          .join('') || '<li style="color:#64748b">none</li>',
+                    },
+                  }),
+                  React.createElement('h2', null, 'Surreal overlay counts'),
+                  React.createElement(
+                    'dl',
+                    null,
+                    React.createElement('dt', null, 'source'),
+                    React.createElement('dd', null, (overlay && overlay.source) || '—'),
+                    React.createElement('dt', null, 'pass / fail / mixed / stale'),
+                    React.createElement(
+                      'dd',
+                      null,
+                      overlay && overlay.summary
+                        ? (overlay.summary.pass || 0) +
+                            ' / ' +
+                            (overlay.summary.fail || 0) +
+                            ' / ' +
+                            (overlay.summary.mixed || 0) +
+                            ' / ' +
+                            (overlay.summary.stale || 0)
+                        : '—',
+                    ),
+                    React.createElement('dt', null, 'validation calls'),
+                    React.createElement(
+                      'dd',
+                      null,
+                      (overlay && overlay.summary && overlay.summary.callCount) || 0,
+                    ),
+                  ),
+                  React.createElement(
+                    'p',
+                    { style: { color: 'var(--muted)', fontSize: '0.75rem' } },
+                    'Summary is pack/fleet inventory + Surreal overlay rollup. Midspiral tab is ontology-only (not AUI/fleet).',
+                  ),
+                )
+              : null,
+            // —— Logs tab body only ——
+            panelTab === 'logs'
+              ? React.createElement(
+                  'div',
+                  { 'data-tab-panel': 'logs', role: 'tabpanel' },
+                  React.createElement('h2', null, 'LinkML usage log'),
+                  React.createElement('ul', {
+                    className: 'list',
+                    dangerouslySetInnerHTML: {
+                      __html: usageHtml || '<li style="color:#64748b">…</li>',
+                    },
+                  }),
+                  React.createElement('h2', null, 'Validation I/O (Surreal)'),
+                  React.createElement(
+                    'div',
+                    { className: 'count-pill' },
+                    validationIoMeta || 'loading…',
+                  ),
+                  React.createElement('ul', {
+                    className: 'list',
+                    dangerouslySetInnerHTML: {
+                      __html: validationIoHtml || '<li style="color:#64748b">…</li>',
+                    },
+                  }),
+                  React.createElement('h2', null, 'Last reasoning'),
+                  React.createElement('pre', { className: 'reason' }, reasonText),
+                  React.createElement('h2', null, 'Notes'),
+                  React.createElement('ul', {
+                    className: 'list',
+                    dangerouslySetInnerHTML: {
+                      __html:
+                        ((state && state.meta && state.meta.notes) || [])
+                          .map(function (n) {
+                            return '<li>' + n + '</li>';
+                          })
+                          .join('') || '<li style="color:#64748b">—</li>',
+                    },
+                  }),
+                )
+              : null,
+            // —— Guardrails tab: active servers, select, remove ——
+            panelTab === 'guardrails'
+              ? React.createElement(
+                  'div',
+                  { 'data-tab-panel': 'guardrails', role: 'tabpanel' },
+                  React.createElement('h2', null, 'Active Guardrails servers'),
+                  React.createElement(
+                    'div',
+                    { className: 'count-pill', 'data-guardrails-count': String(guardrailsActive.length) },
+                    (guardrailsActive.length || 0) +
+                      ' servers · ' +
+                      (guardrailsHealthNote || 'probing multi-health…'),
+                  ),
+                  React.createElement(
+                    'p',
+                    { style: { color: 'var(--muted)', fontSize: '0.72rem', margin: '0 0 0.5rem' } },
+                    'Register as many Guardrails AI servers as you want (distinct id/port). Remove one without dropping others. Multi-service can bind extra ports via GUARDRAILS_EXTRA_PORTS.',
+                  ),
+                  React.createElement('h2', null, 'Add Guardrails AI server'),
+                  React.createElement(
+                    'div',
+                    { className: 'tag-input-row', 'data-guardrails-add': 'true' },
+                    React.createElement('input', {
+                      type: 'text',
+                      placeholder: 'id e.g. GuardrailsAI.MyRule',
+                      value: grAddId,
+                      'aria-label': 'Guardrails server id',
+                      onChange: function (e) {
+                        setGrAddId(e.target.value);
+                      },
+                    }),
+                  ),
+                  React.createElement(
+                    'div',
+                    { className: 'tag-input-row' },
+                    React.createElement('input', {
+                      type: 'text',
+                      placeholder: 'port (optional)',
+                      value: grAddPort,
+                      'aria-label': 'Guardrails port',
+                      onChange: function (e) {
+                        setGrAddPort(e.target.value);
+                      },
+                    }),
+                    React.createElement('input', {
+                      type: 'text',
+                      placeholder: 'note',
+                      value: grAddNote,
+                      onChange: function (e) {
+                        setGrAddNote(e.target.value);
+                      },
+                    }),
+                  ),
+                  React.createElement(
+                    'div',
+                    { className: 'filter-actions' },
+                    React.createElement(
+                      'button',
+                      {
+                        type: 'button',
+                        className: 'primary',
+                        onClick: function () {
+                          addGuardrailsServer();
+                        },
+                      },
+                      'Register server',
+                    ),
+                  ),
+                  React.createElement(
+                    'ul',
+                    { className: 'list', 'data-guardrails-list': 'active' },
+                    guardrailsActive.length
+                      ? guardrailsActive.map(function (s) {
+                          var selected = guardrailsSelected === s.id;
+                          return React.createElement(
+                            'li',
+                            {
+                              key: s.id,
+                              className: 'hit' + (selected ? ' active' : ''),
+                              onClick: function () {
+                                selectGuardrails(s.id);
+                              },
+                              'data-guardrails-id': s.id,
+                            },
+                            React.createElement('div', null, s.name),
+                            React.createElement(
+                              'div',
+                              { className: 'sub' },
+                              s.kind +
+                                (s.port ? ' · :' + s.port : '') +
+                                (s.inSandbox ? ' · in-sandbox' : ' · label') +
+                                ' · ' +
+                                s.status,
+                            ),
+                            s.note
+                              ? React.createElement(
+                                  'div',
+                                  {
+                                    className: 'sub',
+                                    style: { marginTop: 2 },
+                                  },
+                                  s.note,
+                                )
+                              : null,
+                            React.createElement(
+                              'div',
+                              { className: 'filter-actions', style: { marginTop: 6 } },
+                              React.createElement(
+                                'button',
+                                {
+                                  type: 'button',
+                                  className: selected ? 'primary' : '',
+                                  onClick: function (e) {
+                                    e.stopPropagation();
+                                    selectGuardrails(s.id);
+                                  },
+                                },
+                                selected ? 'Selected' : 'Select',
+                              ),
+                              React.createElement(
+                                'button',
+                                {
+                                  type: 'button',
+                                  onClick: function (e) {
+                                    e.stopPropagation();
+                                    removeGuardrails(s.id);
+                                  },
+                                },
+                                'Remove',
+                              ),
+                            ),
+                          );
+                        })
+                      : React.createElement(
+                          'li',
+                          { style: { color: 'var(--muted)' } },
+                          'No active Guardrails servers — restore defaults',
+                        ),
+                  ),
+                  React.createElement(
+                    'div',
+                    { className: 'filter-actions' },
+                    React.createElement(
+                      'button',
+                      {
+                        type: 'button',
+                        className: 'primary',
+                        onClick: restoreGuardrailsDefaults,
+                      },
+                      'Restore defaults',
+                    ),
+                    React.createElement(
+                      'button',
+                      {
+                        type: 'button',
+                        onClick: function () {
+                          probeAllGuardrails();
+                        },
+                      },
+                      'Probe all servers',
+                    ),
+                  ),
+                  guardrailsSelected
+                    ? React.createElement(
+                        'p',
+                        { style: { fontSize: '0.75rem', marginTop: '0.5rem' } },
+                        'Selected: ',
+                        React.createElement('strong', null, guardrailsSelected),
+                      )
+                    : null,
+                )
+              : null,
+            // —— Midspiral stack (ontology viewer only) ——
+            panelTab === 'midspiral'
+              ? React.createElement(
+                  'div',
+                  { 'data-tab-panel': 'midspiral', role: 'tabpanel' },
+                  React.createElement('h2', null, 'Midspiral stack'),
+                  React.createElement(
+                    'div',
+                    { className: 'count-pill' },
+                    midspiralNote || 'loading…',
+                  ),
+                  React.createElement(
+                    'p',
+                    {
+                      style: {
+                        color: 'var(--muted)',
+                        fontSize: '0.72rem',
+                        margin: '0 0 0.5rem',
+                      },
+                    },
+                    'lemmafit · LemmaScript · lemmacore · claimcheck · dafny-replay · dafny2js — wired only into this ontology viewer (not assistant-ui or fleet-ui).',
+                  ),
+                  React.createElement(
+                    'ul',
+                    { className: 'list', 'data-midspiral-list': 'tools' },
+                    (
+                      (midspiralStatus && midspiralStatus.tools) ||
+                      (OPS.MIDSPIRAL_TOOL_ORDER || []).map(function (id) {
+                        return { id: id, name: id, ready: false, note: '—' };
+                      })
+                    ).map(function (t) {
+                      return React.createElement(
+                        'li',
+                        { key: t.id, 'data-midspiral-tool': t.id },
+                        React.createElement(
+                          'div',
+                          null,
+                          React.createElement('span', {
+                            className: 'ms-dot ' + (t.ready ? 'ready' : 'missing'),
+                          }),
+                          t.name || t.id,
+                          t.version
+                            ? React.createElement(
+                                'span',
+                                { className: 'sub', style: { marginLeft: 6 } },
+                                String(t.version).slice(0, 40),
+                              )
+                            : null,
+                        ),
+                        React.createElement(
+                          'div',
+                          { className: 'sub' },
+                          (t.ready ? 'ready' : 'missing') +
+                            (t.note ? ' · ' + t.note : '') +
+                            (t.installHint && !t.ready ? ' · ' + t.installHint : ''),
+                        ),
+                      );
+                    }),
+                  ),
+                  React.createElement('h2', null, 'Actions'),
+                  React.createElement(
+                    'div',
+                    { className: 'filter-actions' },
+                    React.createElement(
+                      'button',
+                      {
+                        type: 'button',
+                        className: 'primary',
+                        disabled: midspiralBusy,
+                        onClick: function () {
+                          runMidspiral('claimcheck');
+                        },
+                      },
+                      'Claimcheck node',
+                    ),
+                    React.createElement(
+                      'button',
+                      {
+                        type: 'button',
+                        disabled: midspiralBusy,
+                        onClick: function () {
+                          runMidspiral('lemmafit');
+                        },
+                      },
+                      'Lemmafit claim',
+                    ),
+                    React.createElement(
+                      'button',
+                      {
+                        type: 'button',
+                        disabled: midspiralBusy,
+                        onClick: function () {
+                          runMidspiral('lemmascript');
+                        },
+                      },
+                      'LemmaScript extract',
+                    ),
+                    React.createElement(
+                      'button',
+                      {
+                        type: 'button',
+                        onClick: function () {
+                          load();
+                        },
+                      },
+                      'Refresh status',
+                    ),
+                  ),
+                  React.createElement('h2', null, 'Recent runs'),
+                  React.createElement(
+                    'ul',
+                    { className: 'list' },
+                    midspiralRuns.length
+                      ? midspiralRuns.slice(0, 12).map(function (r) {
+                          return React.createElement(
+                            'li',
+                            { key: r.run_id || r.at },
+                            React.createElement(
+                              'div',
+                              null,
+                              (r.tool || '?') +
+                                ' · ' +
+                                (r.source || '') +
+                                ' · ok=' +
+                                r.ok,
+                            ),
+                            React.createElement(
+                              'div',
+                              { className: 'sub' },
+                              (r.at || '').toString().slice(0, 19) +
+                                (r.error ? ' · ' + r.error : ''),
+                            ),
+                          );
+                        })
+                      : React.createElement(
+                          'li',
+                          { style: { color: 'var(--muted)' } },
+                          'No runs yet — enable MIDSPIRAL_ALLOW_EXEC=1 on host for CLI runs',
+                        ),
+                  ),
+                )
+              : null,
+            // —— Node tab: selection detail + tags ——
+            panelTab === 'node'
+              ? React.createElement(
+                  'div',
+                  { 'data-tab-panel': 'node', role: 'tabpanel' },
+                  React.createElement('h2', null, 'Selected node'),
+                  selectedNode
+                    ? React.createElement(
+                        React.Fragment,
+                        null,
+                        React.createElement(
+                          'dl',
+                          null,
+                          React.createElement('dt', null, 'id'),
+                          React.createElement('dd', null, selectedNode.id),
+                          React.createElement('dt', null, 'label'),
+                          React.createElement(
+                            'dd',
+                            null,
+                            (selectedNode.data && selectedNode.data.label) || '—',
+                          ),
+                          React.createElement('dt', null, 'kind'),
+                          React.createElement('dd', null, nodeKind(selectedNode)),
+                          React.createElement('dt', null, 'overlay status'),
+                          React.createElement(
+                            'dd',
+                            {
+                              style: {
+                                color:
+                                  (selectedNode.data && selectedNode.data.overlayColor) ||
+                                  undefined,
+                              },
+                            },
+                            (selectedNode.data && selectedNode.data.overlayStatus) ||
+                              (selectedNode.data &&
+                                selectedNode.data.overlay &&
+                                selectedNode.data.overlay.status) ||
+                              'unknown',
+                          ),
+                          React.createElement('dt', null, 'last validation'),
+                          React.createElement(
+                            'dd',
+                            null,
+                            (selectedNode.data &&
+                              selectedNode.data.overlay &&
+                              selectedNode.data.overlay.lastAt) ||
+                              '—',
+                          ),
+                          React.createElement('dt', null, 'layers'),
+                          React.createElement(
+                            'dd',
+                            null,
+                            (
+                              (selectedNode.data &&
+                                selectedNode.data.overlay &&
+                                selectedNode.data.overlay.layers) ||
+                              []
+                            ).join(', ') || '—',
+                          ),
+                          React.createElement('dt', null, 'pass / fail counts'),
+                          React.createElement(
+                            'dd',
+                            null,
+                            selectedNode.data && selectedNode.data.overlay
+                              ? (selectedNode.data.overlay.passCount || 0) +
+                                  ' / ' +
+                                  (selectedNode.data.overlay.failCount || 0)
+                              : '—',
+                          ),
+                        ),
+                        selectedNode.data && selectedNode.data.overlay
+                          ? React.createElement(
+                              'pre',
+                              { className: 'reason' },
+                              JSON.stringify(
+                                {
+                                  callIds: selectedNode.data.overlay.callIds,
+                                  tools: selectedNode.data.overlay.tools,
+                                  note: selectedNode.data.overlay.note,
+                                },
+                                null,
+                                2,
+                              ),
+                            )
+                          : null,
+                        React.createElement('h2', null, 'Tags'),
+                        React.createElement(
+                          'div',
+                          { className: 'tag-list', 'data-node-tags': selectedId },
+                          selectedTags.length
+                            ? selectedTags.map(function (t) {
+                                return React.createElement(
+                                  'span',
+                                  { key: t, className: 'tag-chip' },
+                                  t,
+                                  React.createElement(
+                                    'button',
+                                    {
+                                      type: 'button',
+                                      'aria-label': 'Remove tag ' + t,
+                                      onClick: function () {
+                                        removeTagOnSelected(t);
+                                      },
+                                    },
+                                    '×',
+                                  ),
+                                );
+                              })
+                            : React.createElement(
+                                'span',
+                                { style: { color: 'var(--muted)', fontSize: '0.75rem' } },
+                                'No tags yet',
+                              ),
+                        ),
+                        React.createElement(
+                          'div',
+                          { className: 'tag-input-row' },
+                          React.createElement('input', {
+                            type: 'text',
+                            placeholder: 'Add tag…',
+                            value: tagDraft,
+                            'aria-label': 'New tag for selected node',
+                            onChange: function (e) {
+                              setTagDraft(e.target.value);
+                            },
+                            onKeyDown: function (e) {
+                              if (e.key === 'Enter') addTagOnSelected();
+                            },
+                          }),
+                          React.createElement(
+                            'button',
+                            {
+                              type: 'button',
+                              className: 'primary',
+                              onClick: addTagOnSelected,
+                            },
+                            'Add',
+                          ),
+                        ),
+                        React.createElement(
+                          'div',
+                          { className: 'filter-actions' },
+                          React.createElement(
+                            'button',
+                            {
+                              type: 'button',
+                              onClick: function () {
+                                if (selectedId) {
+                                  window.dispatchEvent(
+                                    new CustomEvent('ontology-focus-node', {
+                                      detail: { id: selectedId },
+                                    }),
+                                  );
+                                }
+                              },
+                            },
+                            'Focus on graph',
+                          ),
+                          React.createElement(
+                            'button',
+                            {
+                              type: 'button',
+                              onClick: function () {
+                                setSelectedId(null);
+                              },
+                            },
+                            'Clear selection',
+                          ),
+                        ),
+                      )
+                    : React.createElement(
+                        'p',
+                        { style: { color: 'var(--muted)', fontSize: '0.8rem' } },
+                        'Click a React Flow node (or a Search result) to select it, then add tags.',
+                      ),
+                )
+              : null,
+          ),
+        ),
+        // —— Bottom breadcrumbs / prepaid credit countdown (AUI-style status bar) ——
+        React.createElement(
+          'footer',
+          {
+            className: 'bottom-status',
+            role: 'contentinfo',
+            'data-bottom-status': 'ontology-budget',
+            'aria-label': 'Prepaid sandbox credits and runtime',
+          },
+          // Left: breadcrumbs
+          React.createElement(
+            'div',
+            { className: 'bs-group' },
+            React.createElement(
+              'span',
+              { className: 'bs-item crumb' },
+              React.createElement('strong', null, 'Ontology'),
+            ),
+            React.createElement(
+              'span',
+              { className: 'bs-item crumb', title: 'LinkML pack' },
+              React.createElement('strong', null, pack || 'pack'),
+            ),
+            selectedNode
+              ? React.createElement(
+                  'span',
+                  {
+                    className: 'bs-item crumb',
+                    title: selectedNode.id,
+                  },
+                  React.createElement(
+                    'strong',
+                    null,
+                    (selectedNode.data && selectedNode.data.label) || selectedNode.id,
+                  ),
+                )
+              : React.createElement(
+                  'span',
+                  { className: 'bs-item crumb' },
+                  React.createElement('strong', null, 'viewer'),
+                ),
+            React.createElement('div', { className: 'bs-sep' }),
+            React.createElement(
+              'span',
+              {
+                className: 'bs-item',
+                title: overlayMeta || 'Surreal overlay',
+              },
+              'overlay ',
+              React.createElement(
+                'strong',
+                { className: liveBudget && liveBudget.warn ? 'warn' : '' },
+                (overlay && overlay.source) || '—',
+              ),
+            ),
+          ),
+          // Center: runtime burn
+          React.createElement(
+            'div',
+            { className: 'bs-group', 'data-budget-runtime': 'true' },
+            React.createElement(
+              'span',
+              {
+                className: 'bs-item',
+                title: 'Sandbox runtime since prepaid session start',
+              },
+              '⏱ ',
+              React.createElement(
+                'span',
+                { className: 'accent' },
+                (liveBudget && liveBudget.fmtRuntime) || '00:00:00',
+              ),
+            ),
+            React.createElement('div', { className: 'bs-sep' }),
+            React.createElement(
+              'span',
+              {
+                className: 'bs-item',
+                title:
+                  'Burn at $' +
+                  ((liveBudget && liveBudget.rateUsdPerSec) || 0.0004) +
+                  '/s (sandbox compute)',
+              },
+              'burn ',
+              React.createElement(
+                'span',
+                { className: 'money' },
+                (liveBudget && liveBudget.fmtBurn) || '$0.0000',
+              ),
+            ),
+            React.createElement('div', { className: 'bs-sep' }),
+            React.createElement(
+              'span',
+              {
+                className: 'bs-item',
+                title: liveBudget && liveBudget.sandboxId
+                  ? 'sandbox ' + liveBudget.sandboxId
+                  : 'provider ' + ((liveBudget && liveBudget.provider) || 'local'),
+              },
+              (liveBudget && liveBudget.provider) || 'local',
+              liveBudget && liveBudget.autoStopMinutes
+                ? React.createElement(
+                    'span',
+                    null,
+                    ' · stop ',
+                    liveBudget.autoStopRemainingSec != null
+                      ? Math.ceil(liveBudget.autoStopRemainingSec / 60) + 'm'
+                      : liveBudget.autoStopMinutes + 'm',
+                  )
+                : null,
+            ),
+          ),
+          // Right: prepaid remaining countdown bar
+          React.createElement(
+            'div',
+            { className: 'bs-group', 'data-budget-credits': 'true' },
+            React.createElement(
+              'span',
+              {
+                className: 'bs-item',
+                title: 'Prepaid credits remaining (counts down with runtime)',
+              },
+              React.createElement(
+                'div',
+                {
+                  className:
+                    'credit-bar' +
+                    (liveBudget && liveBudget.exhausted
+                      ? ' err'
+                      : liveBudget && liveBudget.warn
+                        ? ' warn'
+                        : ''),
+                  'aria-valuenow': liveBudget ? Math.round(liveBudget.remainingPct) : 100,
+                  'aria-valuemin': 0,
+                  'aria-valuemax': 100,
+                  role: 'progressbar',
+                },
+                React.createElement('i', {
+                  style: {
+                    width: (liveBudget ? liveBudget.remainingPct : 100) + '%',
+                  },
+                }),
+              ),
+              React.createElement(
+                'span',
+                {
+                  className:
+                    'money' +
+                    (liveBudget && liveBudget.exhausted
+                      ? ' err'
+                      : liveBudget && liveBudget.warn
+                        ? ' warn'
+                        : ''),
+                  'data-credits-remaining': 'true',
+                },
+                (liveBudget && liveBudget.fmtRemaining) || '—',
+              ),
+              React.createElement(
+                'span',
+                null,
+                ' / ',
+                (liveBudget && liveBudget.fmtPrepaid) || '$10.00',
+                ' prepaid',
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(React.createElement(App));
+  </script>
+</body>
+</html>

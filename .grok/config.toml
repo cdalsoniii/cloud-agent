@@ -1,0 +1,32 @@
+# Project MCP for cloud-agent — uses PX_GROK_BUNDLE native binaries (no Docker).
+# Set: export PX_GROK_BUNDLE="$PWD/.grok-bundle"
+
+# Product-owned verification + Daytona tools (SHACL :7004, LinkML pack upload, fleet_run).
+# Agents never need DAYTONA_API_KEY; server process loads keys from .env via dotenv.
+[mcp_servers.cloud-agent-mastra]
+command = "bash"
+args = [
+  "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments/01-platform/cloud-agent/scripts/run-mastra-mcp.sh",
+]
+env = { MCP_TRANSPORT = "stdio", SANDBOX_PROVIDER = "daytona", GPU_INFERENCE_STACK_DIR = "/Users/clifforddalsoniii/Documents/Personal/employment/partners/experiments/01-platform/gpu-inference-stack" }
+enabled = true
+startup_timeout_sec = 45
+tool_timeout_sec = 6000
+tool_timeouts = { px_sandbox_create = 180, px_upload_linkml = 180, px_shacl_validate = 90, fleet_run = 300, mastra-orchestrate = 3600, sdlc-batch = 3600 }
+
+[mcp_servers.surrealdb]
+command = "${PX_GROK_BUNDLE}/bin/surrealmcp"
+args = ["start"]
+env = { SURREALDB_URL = "ws://127.0.0.1:8000/rpc", SURREALDB_NS = "test", SURREALDB_DB = "test", SURREALDB_USER = "root", SURREALDB_PASS = "root" }
+enabled = true
+startup_timeout_sec = 30
+tool_timeout_sec = 6000
+
+# Lean live bridge MCP (requires trusted lean-live plugin or direct node path)
+[mcp_servers.lean_live]
+command = "node"
+args = [".grok/plugins/lean-live/scripts/lean-live-mcp.mjs"]
+env = { LEAN_LIVE_PORT = "9474" }
+enabled = true
+startup_timeout_sec = 15
+tool_timeout_sec = 120

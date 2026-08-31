@@ -1,4 +1,4 @@
-import { Agent } from '@mastra/core';
+import { Agent } from '../mastra-shim.js';
 import { daytonaOrchestrationWorkflow } from '../workflows/daytona-workflow.js';
 import {
   envValidationTool,

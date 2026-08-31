@@ -24,13 +24,16 @@ let cachedClient: Daytona | null = null;
 export function getDaytonaClient(): Daytona {
   if (cachedClient) return cachedClient;
   const apiKey = process.env.DAYTONA_API_KEY;
-  if (!apiKey) {
-    throw new Error('DAYTONA_API_KEY is required');
+  const jwtToken = process.env.DAYTONA_JWT_TOKEN;
+  if (!apiKey && !jwtToken) {
+    throw new Error('DAYTONA_API_KEY (or DAYTONA_JWT_TOKEN) is required');
   }
   cachedClient = new Daytona({
-    apiKey,
+    ...(apiKey ? { apiKey } : {}),
+    ...(jwtToken ? { jwtToken } : {}),
+    organizationId: process.env.DAYTONA_ORGANIZATION_ID,
     apiUrl: process.env.DAYTONA_API_URL || 'https://app.daytona.io/api',
-    target: process.env.DAYTONA_TARGET,
+    target: process.env.DAYTONA_TARGET || 'us',
   });
   return cachedClient;
 }
@@ -75,16 +78,26 @@ export async function getActiveSandbox(): Promise<{ sandbox: Sandbox; state: San
 }
 
 export function defaultSandboxEnvs(): Record<string, string> {
-  const baseUrl =
-    process.env.BASETEN_PROXY_BASE_URL ||
-    process.env.OPENAI_BASE_URL ||
-    'https://inference.baseten.co/v1';
+  const openrouterKey = process.env.OPENROUTER_API_KEY || '';
+  const baseUrl = openrouterKey
+    ? process.env.OPENROUTER_BASE_URL || 'https://openrouter.ai/api/v1'
+    : process.env.BASETEN_PROXY_BASE_URL ||
+      process.env.OPENAI_BASE_URL ||
+      'https://inference.baseten.co/v1';
+  const apiKey = openrouterKey
+    ? openrouterKey
+    : process.env.OPENAI_API_KEY || process.env.PROXY_API_KEY || 'sk-proxy';
   const envs: Record<string, string> = {
     OPENAI_BASE_URL: baseUrl,
-    OPENAI_API_KEY: process.env.OPENAI_API_KEY || process.env.PROXY_API_KEY || 'sk-proxy',
+    OPENAI_API_KEY: apiKey,
     HARNESS_SANDBOX: '1',
     DAYTONA_SDK_READY: '1',
   };
+  if (openrouterKey) {
+    envs.OPENROUTER_API_KEY = openrouterKey;
+    envs.OPENROUTER_BASE_URL = baseUrl;
+    envs.OPENROUTER_ZDR_DEFAULT = process.env.OPENROUTER_ZDR_DEFAULT || '1';
+  }
   const repoUrl = process.env.GIT_REPO_URL || '';
   if (repoUrl) {
     envs.GIT_REPO_URL = repoUrl;

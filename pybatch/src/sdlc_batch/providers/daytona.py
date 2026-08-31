@@ -95,7 +95,11 @@ class DaytonaProvider(SandboxProvider):
             language="python",
             snapshot=self.snapshot,
             env=merged_envs,
-            auto_stop_interval=0,
+            # minutes; max 5 for development cost control (DAYTONA_AUTO_STOP_MINUTES)
+            auto_stop_interval=min(
+                5,
+                max(1, int(os.environ.get("DAYTONA_AUTO_STOP_MINUTES", "5") or "5")),
+            ),
             auto_pause=auto_pause,
             public=False,
         )

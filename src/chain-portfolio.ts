@@ -1,7 +1,9 @@
-// src/chain-portfolio.ts — Baseten chain portfolio manager
+// src/chain-portfolio.ts — Baseten chain portfolio manager + OpenRouter ZDR routing
 import fetch from 'node-fetch';
 import * as crypto from 'node:crypto';
 import { logChainExecution } from './event-logger.js';
+import { routeOpenRouterForSpecialty } from './llm/route-request.js';
+import { getDefaultConfig } from './types.js';
 import type { ChainExecutionLog } from './sdlc-types.js';
 
 const BASETEN_URL = `https://model-${process.env.BASETEN_CHAIN_PORTFOLIO_ID || 'qelg6953'}.api.baseten.co/environments/production/sync`;
@@ -20,6 +22,16 @@ export async function callChain(
 ): Promise<{ success: boolean; output: Record<string, unknown>; latency_ms: number; tokens: number; cost: number }> {
   const execId = crypto.randomUUID();
   const start = Date.now();
+
+  if (!API_KEY || opts?.dry_run) {
+    return {
+      success: false,
+      output: { error: opts?.dry_run ? 'dry_run' : 'missing_BASETEN_API_KEY', specialty },
+      latency_ms: 0,
+      tokens: 0,
+      cost: 0,
+    };
+  }
 
   const payload = {
     messages: [{ role: 'user' as const, content: JSON.stringify(input) }],
@@ -74,21 +86,94 @@ export async function callChain(
   }
 }
 
+async function callOpenRouterChain(
+  specialty: string,
+  input: Record<string, unknown>,
+  opts?: { timeout_sec?: number; correlation_id?: string; dry_run?: boolean },
+): Promise<{ success: boolean; output: Record<string, unknown>; latency_ms: number; tokens: number; cost: number } | null> {
+  const config = getDefaultConfig();
+  if (!config.openrouterApiKey || !config.llmFallbackOrder.includes('openrouter')) {
+    return null;
+  }
+
+  try {
+    const result = await routeOpenRouterForSpecialty(specialty, input, {
+      timeout_sec: opts?.timeout_sec,
+      correlation_id: opts?.correlation_id,
+      dry_run: opts?.dry_run,
+    });
+
+    let output: Record<string, unknown> = {};
+    try {
+      output = JSON.parse(result.content) as Record<string, unknown>;
+    } catch {
+      output = { text: result.content, model: result.modelUsed };
+    }
+
+    return {
+      success: true,
+      output,
+      latency_ms: result.latencyMs,
+      tokens: result.usage.total_tokens,
+      cost: result.cost,
+    };
+  } catch {
+    return null;
+  }
+}
+
 export async function smartCallChain(
   specialty: string,
   input: Record<string, unknown>,
-  opts?: { timeout_sec?: number; fallback_fn?: (i: Record<string, unknown>) => Promise<Record<string, unknown>>; correlation_id?: string }
+  opts?: {
+    timeout_sec?: number;
+    fallback_fn?: (i: Record<string, unknown>) => Promise<Record<string, unknown>>;
+    correlation_id?: string;
+    dry_run?: boolean;
+  },
 ): Promise<{ success: boolean; output: Record<string, unknown>; provider: string; latency_ms: number; tokens: number; cost: number }> {
-  const result = await callChain(specialty, input, { timeout_sec: opts?.timeout_sec, correlation_id: opts?.correlation_id });
-  if (result.success) return { ...result, provider: 'baseten' };
+  const config = getDefaultConfig();
+  const order = config.llmFallbackOrder;
 
-  if (opts?.fallback_fn) {
-    const start = Date.now();
-    const local = await opts.fallback_fn(input);
-    return { success: true, output: local, provider: 'local', latency_ms: Date.now() - start, tokens: 0, cost: 0 };
+  for (const provider of order) {
+    if (provider === 'openrouter') {
+      const orResult = await callOpenRouterChain(specialty, input, opts);
+      if (orResult?.success) {
+        return { ...orResult, provider: 'openrouter' };
+      }
+      continue;
+    }
+
+    if (provider === 'baseten') {
+      const result = await callChain(specialty, input, {
+        timeout_sec: opts?.timeout_sec,
+        correlation_id: opts?.correlation_id,
+        dry_run: opts?.dry_run,
+      });
+      if (result.success) return { ...result, provider: 'baseten' };
+      continue;
+    }
+
+    if (provider === 'local' && opts?.fallback_fn) {
+      const start = Date.now();
+      const local = await opts.fallback_fn(input);
+      return {
+        success: true,
+        output: local,
+        provider: 'local',
+        latency_ms: Date.now() - start,
+        tokens: 0,
+        cost: 0,
+      };
+    }
   }
 
-  return { ...result, provider: 'baseten' };
+  const fallback = await callChain(specialty, input, {
+    timeout_sec: opts?.timeout_sec,
+    correlation_id: opts?.correlation_id,
+    dry_run: opts?.dry_run,
+  });
+  return { ...fallback, provider: 'baseten' };
 }
 
 export async function researchTask(task: string, correlationId: string): Promise<{ research: Record<string, unknown> }> {

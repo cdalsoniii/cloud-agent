@@ -1,4 +1,4 @@
-import { Mastra } from '@mastra/core';
+import { Mastra } from './mastra-shim.js';
 import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import path from 'path';
@@ -63,7 +63,7 @@ async function main() {
 
   try {
     // Run the workflow
-    const { runId, start } = mastra.workflows.daytonaOrchestration.createRun();
+    const { start } = mastra.workflows.daytonaOrchestration.createRun();
 
     const result = await start({
       triggerData: {

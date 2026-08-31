@@ -1,0 +1,49 @@
+[
+  {
+    "job_id": "formal-self-001-lifecycle-edges",
+    "ok": true,
+    "iterations": 1,
+    "diff": "",
+    "test_output": "__TEST_EXIT__:0",
+    "session_id": "ses_07d018168ffekUUji3y88gYnGs",
+    "error": null,
+    "validation": [
+      {
+        "passed": true,
+        "engine": "validation_cmd",
+        "rule_id": "validation_cmd",
+        "message": "exit=0",
+        "details": {
+          "stdout": "npm notice\nnpm notice New minor version of npm available! 11.12.1 -> 11.18.0\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v11.18.0\nnpm notice To update run: npm install -g npm@11.18.0\nnpm notice\n__EXIT__:0",
+          "cmd": "(command -v quint >/dev/null && quint typecheck config/verification/quint/sandbox-lifecycle-edges.qnt || npx --yes @informalsystems/quint@0.32.0 typecheck config/verification/quint/sandbox-lifecycle-edges.qnt)"
+        }
+      },
+      {
+        "passed": true,
+        "engine": "business-rule",
+        "rule_id": "edge Quint module must define NoResurrect and dest",
+        "message": "keyword coverage 66%",
+        "details": {
+          "matched": [
+            "edge",
+            "module",
+            "noresurrect",
+            "destroyfromcreated"
+          ],
+          "missing": [
+            "quint",
+            "define"
+          ]
+        }
+      }
+    ],
+    "validation_passed": true,
+    "pr_url": "https://github.com/cdalsoniii/cloud-agent/pull/6",
+    "pr_number": 6,
+    "pr_branch": "formal-self/formal-self-001-lifecycle-edges",
+    "pr_error": null,
+    "sandbox_id": "c1059baf-93b9-49c1-bf85-e58661482e1b",
+    "sandbox_url": "https://4096-cbeih49nykedaxue.daytonaproxy01.net",
+    "repo_url": "https://github.com/cdalsoniii/cloud-agent.git"
+  }
+]

@@ -33,8 +33,15 @@ cloud_agent_verification:
     smoke_formal: scripts/smoke-formal-happy-path.sh
 
 assistant_ui:
-  description: Product formal happy path (dafny2js, dafny-replay, kernels)
+  description: Product formal happy path (dafny2js, dafny-replay, kernels) + px-kernel
   root: ../../02-products/assistant-ui
+  px_kernel:
+    root: ../../02-products/assistant-ui/.px
+    linkml_verifiers: ../../02-products/assistant-ui/.px/linkml/verifiers
+    formal: ../../02-products/assistant-ui/.px/formal
+    mcp_api: /api/px-kernel
+    hosts: [claude, grok, pi, henri, mock]
+    note: Host-agnostic; Henri is optional pointer not required
   gap_analysis: ../../02-products/assistant-ui/.gap-analysis.md
   verify_apis:
     dafny2js: packages/web/src/app/api/verify/dafny2js/route.ts
@@ -89,3 +96,71 @@ osdk_deel_asana_map:
 gsd:
   root: .gsd/
   state: .gsd/STATE.md
+
+surreal_graphql_gateway:
+  description: SurrealDB v3 + Apollo/WunderGraph federation stack and schema sync
+  root: ../../02-products/surreal-graphql-gateway
+  graphql_manifest: ../../02-products/surreal-graphql-gateway/.px/graphql/manifest.yaml
+  scripts:
+    schema_sync: npm run schema:sync
+    schema_check: npm run schema:check
+    surreal_sync: npm run surreal:sync
+    surreal_mcp_apply: npm run surreal:mcp:apply
+    smoke: npm run smoke
+  surrealkit:
+    database_dir: ../../02-products/surreal-graphql-gateway/.px/database
+    docs: https://github.com/surrealdb/surrealkit
+  opencode_plugin: .opencode/plugins/surreal-schema.ts
+  opencode_tui: .opencode/plugins/px-ontology-tui.tsx
+  grok_skills:
+    schema_sync: .grok/skills/surreal-schema-sync/SKILL.md
+    ontology_edit: .grok/skills/ontology-edit/SKILL.md
+    update_ontology: .grok/skills/update-ontology/SKILL.md
+
+grok_bundle:
+  description: Native Surreal toolchain for Grok Build (no Docker MCP)
+  root_env: PX_GROK_BUNDLE
+  root_default: .grok-bundle
+  manifest: grok-dist/manifest.yaml
+  scripts:
+    fetch: scripts/grok-bundle-fetch.sh
+    install: scripts/grok-bundle-install.sh
+    surreal_stack: scripts/surreal-stack.sh
+    smoke: scripts/smoke-grok-surreal.sh
+  grok_config: .grok/config.toml
+  grok_skill: .grok/skills/surreal-schema-sync/SKILL.md
+
+lean_bundle:
+  description: Native Lean 4 + lake serve + live bridge for Grok Build
+  root_env: PX_GROK_BUNDLE
+  workspace_env: LEAN_WORKSPACE
+  workspace_default: config/verification/lean
+  workspace_formal: "${PX_VALIDATE_ROOT}/formal"
+  runtime_dir: .px/lean-live
+  bridge_port_env: LEAN_LIVE_PORT
+  bridge_port_default: 9474
+  scripts:
+    lean_stack: scripts/lean-stack.sh
+    lean_bridge: scripts/lean-live-bridge.sh
+    grok_split: scripts/grok-lean-split.sh
+    smoke: scripts/smoke-grok-lean.sh
+    build_grok_fork: scripts/build-grok-lean.sh
+  grok_plugin: .grok/plugins/lean-live
+  grok_skill: .grok/plugins/lean-live/skills/lean-proof-gate/SKILL.md
+  docs: docs/grok-lean-bundle.md
+  verifier_ui: apps/mcp-verifier/app/lean-live
+  grok_fork: vendor/grok-build-lean
+
+claude_lean:
+  description: Claude Code via OpenRouter + Lean live pane (tmux split)
+  docs: docs/claude-lean-openrouter.md
+  settings: .claude/settings.json
+  openrouter_snippet: config/claude-openrouter-snippet.json
+  scripts:
+    claude_openrouter: scripts/claude-openrouter.sh
+    claude_split: scripts/claude-lean-split.sh
+    opencode_split: scripts/opencode-lean-split.sh
+  bin:
+    claude_lean: bin/claude-lean
+  opencode_tui: .opencode/plugins/px-lean-live-tui.tsx
+  opencode_snippet: config/opencode.openrouter-snippet.json

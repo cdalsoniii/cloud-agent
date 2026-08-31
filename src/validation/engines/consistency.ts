@@ -379,14 +379,14 @@ export class GraphConsistencyValidator implements Validator {
   private async checkDuplicateEdges(context: ValidationContext): Promise<ValidationResult> {
     try {
       const result = await context.surrealClient.query(
-        `SELECT source_id, target_id, relationship_type, count() as count 
+        `SELECT source_id, target_id, relationship_type, count() AS count 
          FROM ontology_edge 
          WHERE namespace = "${context.namespace}" AND database = "${context.database}"
-         GROUP BY source_id, target_id, relationship_type
-         HAVING count > 1`
+         GROUP BY source_id, target_id, relationship_type`
       );
       
-      const duplicates = result || [];
+      const allGroups = (result || []) as any[];
+      const duplicates = allGroups.filter((r: any) => (r.count ?? 0) > 1);
       
       if (duplicates.length > 0) {
         return {

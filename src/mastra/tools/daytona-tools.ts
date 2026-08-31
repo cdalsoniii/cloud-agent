@@ -65,7 +65,11 @@ export const daytonaCreateTool = createTool({
           language: 'python',
           snapshot: context.snapshot || process.env.DAYTONA_SNAPSHOT || 'daytona-large',
           envVars,
-          autoStopInterval: 0,
+          // Daytona: minutes; cap at 5 for development (see daytonaAutoStopMinutes)
+          autoStopInterval: Math.min(
+            5,
+            Math.max(1, Number(process.env.DAYTONA_AUTO_STOP_MINUTES || 5) || 5),
+          ),
           public: false,
           domainAllowList: process.env.DOMAIN_ALLOW || undefined,
         },

@@ -1,0 +1,42 @@
+{
+  "project": "cloud-agent-formal-happy-path",
+  "gsd_variant": "opengsd-spirit + gsd-2-local",
+  "refs": {
+    "opengsd": "https://www.opengsd.net/",
+    "gsd2_workflow": "/Users/clifforddalsoniii/Documents/Brightforest/projects/tools/cli/gsd-2/dist/resources/GSD-WORKFLOW.md",
+    "prd_pack": "artifacts/prd/smoke-formal-happy-path",
+    "px": ".px/",
+    "opencode_sdk_docs": "https://opencode.ai/docs/sdk/#events",
+    "opencode_milestone_runner": "scripts/opencode-sdk-milestone.ts",
+    "gsd_baseten_drive": "scripts/gsd-baseten-drive.sh"
+  },
+  "workflow": {
+    "loop": ["discuss", "plan", "execute", "verify", "ship"],
+    "always_read_first": [".gsd/STATE.md", ".px/README.md"],
+    "evidence_dir": ".gsd/evidence",
+    "no_github_issue_spam": true
+  },
+  "milestones": ["M0", "M1", "M2", "M3"],
+  "assistant_ui_relative": "../../02-products/assistant-ui",
+  "baseten": {
+    "note": "GSD CLI has no native baseten provider; use scripts/gsd-baseten-drive.sh to export OpenAI-compatible env (BASETEN_PROXY_BASE_URL or https://inference.baseten.co/v1). OpenCode sandbox agents use OPENCODE_MODEL=openai/gpt-oss-120b on Baseten Model APIs.",
+    "inference_base_default": "https://inference.baseten.co/v1",
+    "inference_model_default": "openai/gpt-oss-120b",
+    "env_keys": [
+      "BASETEN_API_KEY",
+      "BASETEN_PROXY_BASE_URL",
+      "BASETEN_MODEL_ID",
+      "BASETEN_CHAIN_PORTFOLIO_ID",
+      "OPENCODE_MODEL"
+    ],
+    "gsd_orchestrator_note": "Keep GSD headless model on an available provider (e.g. openrouter/x-ai/grok-build-0.1 via ~/.gsd/agent/settings.json). Use Baseten for OpenCode/Daytona agent inference."
+  },
+  "verification": {
+    "gates": [
+      "npm run test:prd",
+      "npm run verify:tools",
+      "npm run smoke:formal",
+      "npm run verify:all"
+    ]
+  }
+}

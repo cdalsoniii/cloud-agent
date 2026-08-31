@@ -1,8 +1,7 @@
 /**
- * SurrealDB Client using SurrealORM for proper connection management
+ * SurrealDB Client using direct HTTP API for reliable schema deployment and data loading
  */
 
-import SurrealORM from 'surrealdb-orm';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -14,87 +13,59 @@ const SURREALDB_PASS = process.env.SURREALDB_PASS || 'root';
 const SURREALDB_NS = process.env.SURREALDB_NS || 'main';
 const SURREALDB_DB = process.env.SURREALDB_DB || 'main';
 
-// Create SurrealDB client instance
-export const surreal = new SurrealORM.SurrealORM();
+/**
+ * Execute SurrealQL via HTTP REST API
+ */
+export async function surrealQuery(sql: string): Promise<any[]> {
+  const url = new URL('/sql', SURREALDB_URL);
+  const response = await fetch(url.toString(), {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'text/plain',
+      'surreal-ns': SURREALDB_NS,
+      'surreal-db': SURREALDB_DB,
+      'Authorization': 'Basic ' + Buffer.from(`${SURREALDB_USER}:${SURREALDB_PASS}`).toString('base64'),
+    },
+    body: sql,
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`HTTP ${response.status}: ${text}`);
+  }
+
+  return (await response.json()) as any[];
+}
 
 /**
- * Initialize SurrealDB connection
+ * Initialize SurrealDB connection (no-op for HTTP API, just tests connectivity)
  */
 export async function initSurrealDB(): Promise<void> {
   try {
-    console.log('🔌 Connecting to SurrealDB...');
-    
-    await surreal.connect(`${SURREALDB_URL}/rpc`, {
-      namespace: SURREALDB_NS,
-      database: SURREALDB_DB,
-      auth: {
-        username: SURREALDB_USER,
-        password: SURREALDB_PASS,
-      },
-    });
-    
-    console.log('✅ Connected to SurrealDB successfully');
-    
-    // Test the connection
-    const result = await surreal.query('INFO FOR DB');
+    console.log('Connecting to SurrealDB...');
+    const result = await surrealQuery('INFO FOR DB');
     console.log('Database info:', JSON.stringify(result, null, 2));
-    
+    console.log('Connected to SurrealDB successfully');
   } catch (error) {
-    console.error('❌ Failed to connect to SurrealDB:', error);
+    console.error('Failed to connect to SurrealDB:', error);
     throw error;
   }
 }
 
 /**
- * Close SurrealDB connection
+ * Close SurrealDB connection (no-op for HTTP API)
  */
 export async function closeSurrealDB(): Promise<void> {
-  try {
-    await surreal.close();
-    console.log('✅ SurrealDB connection closed');
-  } catch (error) {
-    console.error('❌ Failed to close SurrealDB connection:', error);
-  }
+  console.log('SurrealDB connection closed (HTTP stateless)');
 }
 
-/**
- * Execute SurrealQL query
- */
-export async function surrealQuery(sql: string): Promise<any> {
-  try {
-    const result = await surreal.query(sql);
-    return result;
-  } catch (error) {
-    console.error('❌ SurrealDB query failed:', error);
-    throw error;
-  }
-}
-
-/**
- * Define OpenCode Sessions table using SurrealORM schema
- */
-export async function defineOpenCodeSessionsSchema(): Promise<void> {
-  try {
-    console.log('📋 Defining OpenCode sessions schema...');
-    
-    // Use surqlize to generate the schema from our .surql file
-    const { generateSchema } = await import('surqlize');
-    
-    // Generate schema from our surql file
-    const schema = await generateSchema('./schemas/opencode-sessions.surql');
-    
-    // Execute the schema creation
-    for (const command of schema.commands) {
-      await surrealQuery(command);
-    }
-    
-    console.log('✅ OpenCode sessions schema defined successfully');
-    
-  } catch (error) {
-    console.error('❌ Failed to define schema:', error);
-    throw error;
-  }
-}
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const surreal: any = {
+  query: surrealQuery,
+  connect: initSurrealDB,
+  close: closeSurrealDB,
+};
 
 // Auto-initialize when imported
 if (import.meta.url === `file://${process.argv[1]}`) {

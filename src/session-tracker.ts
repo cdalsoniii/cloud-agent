@@ -71,7 +71,8 @@ export type Session = z.infer<typeof SessionSchema>;
 export type SessionEvent = z.infer<typeof SessionEventSchema>;
 
 class SessionTracker {
-  private db: Surreal | null = null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private db: any = null;
   private currentSession: Session | null = null;
 
   constructor() {
@@ -86,14 +87,14 @@ class SessionTracker {
         return;
       }
 
-      this.db = new Surreal();
-      await this.db.connect(surrealUrl, {
+      this.db = new Surreal() as any;
+      await (this.db as any).connect(surrealUrl, {
         namespace: process.env.SURREALDB_NS || 'cloud-agent',
         database: process.env.SURREALDB_DB || 'rules',
         auth: {
           username: process.env.SURREALDB_USER || 'root',
           password: process.env.SURREALDB_PASS || 'root',
-        }
+        },
       });
 
       log.info('SurrealDB connection established for session tracking');
@@ -118,9 +119,9 @@ class SessionTracker {
 
     try {
       if (this.db) {
-        // Use SurrealORM directly
-        const created = await this.db.create('coding_session', session);
-        this.currentSession = created[0] as Session;
+        // Use SurrealDB query API
+        const [created] = await this.db.query('CREATE coding_session CONTENT $session', { session }) as unknown[][];
+        this.currentSession = (created as Session[])[0] || session;
       } else {
         // Fallback to existing surrealQuery
         await surrealQuery(`CREATE coding_session CONTENT ${JSON.stringify(session)}`);
@@ -132,7 +133,9 @@ class SessionTracker {
         sessionId,
         eventType: 'session_start',
         eventTime: new Date().toISOString(),
-        details: { sessionData }
+        details: { sessionData },
+        costIncrement: 0,
+        tokenIncrement: 0,
       });
 
       log.info('Session started', { sessionId, type: session.type, title: session.title });
@@ -159,7 +162,7 @@ class SessionTracker {
       };
 
       if (this.db) {
-        await this.db.create('session_event', event);
+        await this.db.query('CREATE session_event CONTENT $event', { event });
       } else {
         await surrealQuery(`CREATE session_event CONTENT ${JSON.stringify(event)}`);
       }
@@ -212,7 +215,7 @@ class SessionTracker {
   async updateSession(sessionId: string, updates: Partial<Session>): Promise<void> {
     try {
       if (this.db) {
-        await this.db.merge(`coding_session:${sessionId}`, updates);
+        await this.db.query('UPDATE coding_session SET $updates WHERE sessionId = $sessionId', { updates, sessionId });
       } else {
         const setClauses = Object.entries(updates)
           .map(([key, value]) => {
@@ -260,7 +263,9 @@ class SessionTracker {
         sessionId: this.currentSession.sessionId,
         eventType: 'session_complete',
         eventTime: endTime,
-        details: { durationMs }
+        details: { durationMs },
+        costIncrement: 0,
+        tokenIncrement: 0,
       });
 
       log.info('Session completed', { 
@@ -298,7 +303,9 @@ class SessionTracker {
         eventType: 'session_fail',
         eventTime: endTime,
         errorMessage,
-        details: { durationMs }
+        details: { durationMs },
+        costIncrement: 0,
+        tokenIncrement: 0,
       });
 
       log.error('Session failed', { 
@@ -326,11 +333,13 @@ class SessionTracker {
   async getSession(sessionId: string): Promise<Session | null> {
     try {
       if (this.db) {
-        const result = await this.db.select<Session>(`coding_session:${sessionId}`);
-        return result[0] || null;
+        const [result] = await this.db.query('SELECT * FROM coding_session WHERE sessionId = $sessionId', { sessionId }) as unknown[][];
+        return ((result as Session[])[0]) || null;
       } else {
-        const [result] = await surrealQuery(`SELECT * FROM coding_session WHERE sessionId = '${sessionId}'`);
-        return (result.result || [])[0] as Session || null;
+        const [result] = await surrealQuery(`SELECT * FROM coding_session WHERE sessionId = '${sessionId}'`) as unknown[];
+        const r = result as Record<string, unknown>;
+        const arr = (r.result || []) as unknown[];
+        return arr[0] as Session || null;
       }
     } catch (error) {
       log.error('Failed to get session:', error instanceof Error ? error.message : String(error));
@@ -344,9 +353,8 @@ class SessionTracker {
   async getSessionEvents(sessionId: string): Promise<SessionEvent[]> {
     try {
       if (this.db) {
-        return await this.db.select<SessionEvent>('session_event')
-          .where('sessionId', sessionId)
-          .orderBy('eventTime', 'ASC');
+        const [result] = await this.db.query('SELECT * FROM session_event WHERE sessionId = $sessionId ORDER BY eventTime ASC', { sessionId }) as unknown[][];
+        return (result as SessionEvent[]) || [];
       } else {
         const [result] = await surrealQuery(
           `SELECT * FROM session_event WHERE sessionId = '${sessionId}' ORDER BY eventTime ASC`
@@ -379,13 +387,14 @@ class SessionTracker {
       const limitClause = filters.limit ? `LIMIT ${filters.limit}` : '';
 
       if (this.db) {
-        let query = this.db.select<Session>('coding_session');
-        if (filters.type) query = query.where('type', filters.type);
-        if (filters.status) query = query.where('status', filters.status);
-        if (filters.repoUrl) query = query.where('repoUrl', filters.repoUrl);
-        if (filters.limit) query = query.limit(filters.limit);
-        
-        return await query.orderBy('startTime', 'DESC');
+        const [result] = await this.db.query(
+          `SELECT * FROM coding_session
+           ${whereClause ? whereClause : ''}
+           ORDER BY startTime DESC
+           ${limitClause ? limitClause : ''}`,
+          {}
+        ) as unknown[][];
+        return (result as Session[]) || [];
       } else {
         const [result] = await surrealQuery(
           `SELECT * FROM coding_session ${whereClause} ORDER BY startTime DESC ${limitClause}`
@@ -412,36 +421,30 @@ class SessionTracker {
   }> {
     try {
       if (this.db) {
-        const [total] = await this.db.query(
-          'SELECT count() as total FROM coding_session GROUP ALL'
-        );
-        const [active] = await this.db.query(
-          'SELECT count() as active FROM coding_session WHERE status = "active" GROUP ALL'
-        );
-        const [completed] = await this.db.query(
-          'SELECT count() as completed FROM coding_session WHERE status = "completed" GROUP ALL'
-        );
-        const [failed] = await this.db.query(
-          'SELECT count() as failed FROM coding_session WHERE status = "failed" GROUP ALL'
-        );
-        const [cost] = await this.db.query(
-          'SELECT math::sum(costUsd) as totalCost FROM coding_session GROUP ALL'
-        );
-        const [tokens] = await this.db.query(
-          'SELECT math::sum(tokenCount) as totalTokens FROM coding_session GROUP ALL'
-        );
-        const [duration] = await this.db.query(
-          'SELECT math::avg(durationMs) as avgDuration FROM coding_session WHERE durationMs != null GROUP ALL'
-        );
+        const [totalResult] = await this.db.query('SELECT count() as total FROM coding_session GROUP ALL') as unknown[][];
+        const [activeResult] = await this.db.query('SELECT count() as active FROM coding_session WHERE status = "active" GROUP ALL') as unknown[][];
+        const [completedResult] = await this.db.query('SELECT count() as completed FROM coding_session WHERE status = "completed" GROUP ALL') as unknown[][];
+        const [failedResult] = await this.db.query('SELECT count() as failed FROM coding_session WHERE status = "failed" GROUP ALL') as unknown[][];
+        const [costResult] = await this.db.query('SELECT math::sum(costUsd) as totalCost FROM coding_session GROUP ALL') as unknown[][];
+        const [tokensResult] = await this.db.query('SELECT math::sum(tokenCount) as totalTokens FROM coding_session GROUP ALL') as unknown[][];
+        const [durationResult] = await this.db.query('SELECT math::avg(durationMs) as avgDuration FROM coding_session WHERE durationMs != null GROUP ALL') as unknown[][];
+
+        const totalArr = totalResult as Array<Record<string, unknown>>;
+        const activeArr = activeResult as Array<Record<string, unknown>>;
+        const completedArr = completedResult as Array<Record<string, unknown>>;
+        const failedArr = failedResult as Array<Record<string, unknown>>;
+        const costArr = costResult as Array<Record<string, unknown>>;
+        const tokensArr = tokensResult as Array<Record<string, unknown>>;
+        const durationArr = durationResult as Array<Record<string, unknown>>;
 
         return {
-          totalSessions: total[0]?.total || 0,
-          activeSessions: active[0]?.active || 0,
-          completedSessions: completed[0]?.completed || 0,
-          failedSessions: failed[0]?.failed || 0,
-          totalCost: cost[0]?.totalCost || 0,
-          totalTokens: tokens[0]?.totalTokens || 0,
-          avgDuration: duration[0]?.avgDuration || 0,
+          totalSessions: (totalArr[0]?.total as number) || 0,
+          activeSessions: (activeArr[0]?.active as number) || 0,
+          completedSessions: (completedArr[0]?.completed as number) || 0,
+          failedSessions: (failedArr[0]?.failed as number) || 0,
+          totalCost: (costArr[0]?.totalCost as number) || 0,
+          totalTokens: (tokensArr[0]?.totalTokens as number) || 0,
+          avgDuration: (durationArr[0]?.avgDuration as number) || 0,
         };
       } else {
         const queries = [
@@ -456,16 +459,16 @@ class SessionTracker {
 
         const results = await Promise.all(
           queries.map(query => surrealQuery(query))
-        );
+        ) as unknown[][];
 
         return {
-          totalSessions: results[0][0]?.result?.[0]?.total || 0,
-          activeSessions: results[1][0]?.result?.[0]?.active || 0,
-          completedSessions: results[2][0]?.result?.[0]?.completed || 0,
-          failedSessions: results[3][0]?.result?.[0]?.failed || 0,
-          totalCost: results[4][0]?.result?.[0]?.totalCost || 0,
-          totalTokens: results[5][0]?.result?.[0]?.totalTokens || 0,
-          avgDuration: results[6][0]?.result?.[0]?.avgDuration || 0,
+          totalSessions: ((results[0][0] as any)?.result?.[0]?.total as number) || 0,
+          activeSessions: ((results[1][0] as any)?.result?.[0]?.active as number) || 0,
+          completedSessions: ((results[2][0] as any)?.result?.[0]?.completed as number) || 0,
+          failedSessions: ((results[3][0] as any)?.result?.[0]?.failed as number) || 0,
+          totalCost: ((results[4][0] as any)?.result?.[0]?.totalCost as number) || 0,
+          totalTokens: ((results[5][0] as any)?.result?.[0]?.totalTokens as number) || 0,
+          avgDuration: ((results[6][0] as any)?.result?.[0]?.avgDuration as number) || 0,
         };
       }
     } catch (error) {

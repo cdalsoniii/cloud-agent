@@ -1,0 +1,59 @@
+[
+  {
+    "job_id": "smoke-formal-happy-path-m0",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "main",
+    "task": "Milestone M0: Toolchain & API baseline\n3 issues for Toolchain & API baseline\nImplement and formally validate related issues:\n- FORMAL-001: Prove Dafny (Replay.dfy + config/verification/dafny)\n- FORMAL-002: build:dafny / translate JS → packages/verified-kernels\n- FORMAL-003: POST /api/verify/dafny2js happy path (DAFNY2JS_PATH)\nUpdate config/verification specs when behavior changes (sync_formal).\nSuccess criteria from PRD must remain green for dafny2js + dafny-replay + formal stack.",
+    "max_iterations": 4,
+    "test_cmd": "npm run verify:all || ./scripts/verify-local.sh --suite all || true",
+    "model": "zai-org/GLM-5",
+    "deep_research": true,
+    "sync_formal": true,
+    "default_formal_suite": "all",
+    "validation": {
+      "formal_suite": "dafny"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "formal-prd/smoke-formal-happy-path",
+    "pr_title": "[formal-prd] M0 Toolchain & API baseline",
+    "pr_body": "Generated from formal-system-prd pack `smoke-formal-happy-path` milestone M0."
+  },
+  {
+    "job_id": "smoke-formal-happy-path-m1",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "main",
+    "task": "Milestone M1: Prove → translate → kernels\n8 issues for Prove → translate → kernels\nImplement and formally validate related issues:\n- FORMAL-004: POST /api/verify/dafny-replay verify/compile/verify-app\n- FORMAL-005: Kernel runtime Inv (Do/Undo/Redo)\n- FORMAL-006: Midspiral claimcheck gate on chat/build\n- GAP-DF-1: Close gap DF-1 blocking formal happy path\n- GAP-DF-2: Close gap DF-2 blocking formal happy path\n- GAP-DF-3: Close gap DF-3 blocking formal happy path\n- GAP-DF-4: Close gap DF-4 blocking formal happy path\n- GAP-DF-5: Close gap DF-5 blocking formal happy path\nUpdate config/verification specs when behavior changes (sync_formal).\nSuccess criteria from PRD must remain green for dafny2js + dafny-replay + formal stack.",
+    "max_iterations": 4,
+    "test_cmd": "npm run verify:all || ./scripts/verify-local.sh --suite all || true",
+    "model": "zai-org/GLM-5",
+    "deep_research": true,
+    "sync_formal": true,
+    "default_formal_suite": "all",
+    "validation": {
+      "formal_suite": "all"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "formal-prd/smoke-formal-happy-path",
+    "pr_title": "[formal-prd] M1 Prove → translate → kernels",
+    "pr_body": "Generated from formal-system-prd pack `smoke-formal-happy-path` milestone M1."
+  },
+  {
+    "job_id": "smoke-formal-happy-path-m2",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "main",
+    "task": "Milestone M2: Runtime gates & gap closure\n10 issues for Runtime gates & gap closure\nImplement and formally validate related issues:\n- FORMAL-007: CI formal-verification.yml green\n- FORMAL-008: Gap closure from .gap-analysis.md (DF/QW/M blocking happy path)\n- FORMAL-009: E2E formal happy-path test (not Speakeasy Petstore)\n- GAP-M-1: Close gap M-1 blocking formal happy path\n- GAP-M-2: Close gap M-2 blocking formal happy path\n- GAP-M-3: Close gap M-3 blocking formal happy path\n- GAP-M-4: Close gap M-4 blocking formal happy path\n- GAP-M-5: Close gap M-5 blocking formal happy path\n- GAP-QW-1: Close gap QW-1 blocking formal happy path\n- GAP-QW-2: Close gap QW-2 blocking formal happy path\nUpdate config/verification specs when behavior changes (sync_formal).\nSuccess criteria from PRD must remain green for dafny2js + dafny-replay + formal stack.",
+    "max_iterations": 4,
+    "test_cmd": "npm run verify:all || ./scripts/verify-local.sh --suite all || true",
+    "model": "zai-org/GLM-5",
+    "deep_research": true,
+    "sync_formal": true,
+    "default_formal_suite": "all",
+    "validation": {
+      "formal_suite": "all"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "formal-prd/smoke-formal-happy-path",
+    "pr_title": "[formal-prd] M2 Runtime gates & gap closure",
+    "pr_body": "Generated from formal-system-prd pack `smoke-formal-happy-path` milestone M2."
+  }
+]

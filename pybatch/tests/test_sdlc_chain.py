@@ -18,11 +18,20 @@ def test_validation_config_defaults():
     assert cfg.max_validation_iterations == 2
 
 
+def test_sdlc_job_defaults_enable_research_and_formal_sync():
+    job = SdlcJob(job_id="t", task="x")
+    assert job.deep_research is True
+    assert job.sync_formal is True
+    assert job.default_formal_suite == "all"
+
+
 def test_sdlc_job_validation_roundtrip():
     job = SdlcJob(
         job_id="test-1",
         task="Add health endpoint",
         test_cmd="pytest -q",
+        deep_research=False,
+        sync_formal=False,
         validation=ValidationConfig(
             rule_specs=["must return json"],
             rule_codes=["return jsonify({'ok': True})"],
@@ -32,6 +41,8 @@ def test_sdlc_job_validation_roundtrip():
     job2 = SdlcJob(**data)
     assert job2.validation.rule_specs == ["must return json"]
     assert job2.validation.rule_codes == ["return jsonify({'ok': True})"]
+    assert job2.deep_research is False
+    assert job2.sync_formal is False
 
 
 def test_worker_extract_text_handles_various_shapes():

@@ -1,4 +1,4 @@
-import { Workflow, Step } from '@mastra/core';
+import { Workflow, Step } from '../mastra-shim.js';
 import { z } from 'zod';
 import {
   envValidationTool,
@@ -134,19 +134,22 @@ const bootstrapSandbox = new Step({
   },
 });
 
+const INFERENCE_PROVIDERS = ['openrouter', 'baseten', 'fireworks', 'proxy', 'northflank'] as const;
+const inferenceProviderEnum = z.enum(INFERENCE_PROVIDERS);
+
 // Step 4: Connectivity Check with Provider Fallback
 const connectivityCheck = new Step({
   id: 'connectivity-check',
   description: 'Check connectivity from sandbox to inference endpoint with automatic provider fallback',
   inputSchema: z.object({
     dryRun: z.boolean().default(false),
-    provider: z.enum(['baseten', 'fireworks', 'proxy', 'northflank']).default('baseten'),
+    provider: inferenceProviderEnum.default('openrouter'),
     proxyUrl: z.string().optional(),
   }),
   execute: async ({ context }) => {
     const dryRun = context.inputData.dryRun;
-    const providers = ['baseten', 'fireworks', 'proxy', 'northflank'];
-    const startIndex = providers.indexOf(context.inputData.provider as string);
+    const providers = [...INFERENCE_PROVIDERS];
+    const startIndex = providers.indexOf(context.inputData.provider as (typeof INFERENCE_PROVIDERS)[number]);
     const orderedProviders = [...providers.slice(startIndex), ...providers.slice(0, startIndex)];
 
     for (const provider of orderedProviders) {
@@ -163,6 +166,22 @@ const connectivityCheck = new Step({
       let proxyUrl = context.inputData.proxyUrl;
 
       switch (provider) {
+        case 'openrouter':
+          if (!process.env.OPENROUTER_API_KEY) {
+            console.log('No OPENROUTER_API_KEY, skipping openrouter provider');
+            continue;
+          }
+          result = await daytonaShellTool.execute({
+            context: {
+              command: `curl -sS -o /dev/null -w '%{http_code}' -H 'Authorization: Bearer ${process.env.OPENROUTER_API_KEY}' --connect-timeout 5 --max-time 15 'https://openrouter.ai/api/v1/models' 2>/dev/null || printf '000'`,
+              timeoutSeconds: 30,
+            },
+          });
+          if (result.ok && result.output?.includes('200')) {
+            return { ...result, provider: 'openrouter', step: 'connectivity-check', ok: true };
+          }
+          break;
+
         case 'baseten':
           // Check direct Baseten connectivity
           result = await daytonaConnectivityTool.execute({
@@ -238,7 +257,7 @@ const configureProvider = new Step({
   id: 'configure-provider',
   description: 'Configure the selected inference provider in the sandbox opencode config',
   inputSchema: z.object({
-    provider: z.enum(['baseten', 'fireworks', 'proxy', 'northflank']).default('baseten'),
+    provider: inferenceProviderEnum.default('openrouter'),
     proxyUrl: z.string().optional(),
     dryRun: z.boolean().default(false),
   }),
@@ -259,6 +278,31 @@ const configureProvider = new Step({
     let configCommand: string;
 
     switch (provider) {
+      case 'openrouter':
+        configCommand = `cat > ~/.config/opencode/opencode.json << 'EOF'
+{
+  "provider": {
+    "openrouter": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "OpenRouter ZDR",
+      "options": {
+        "baseURL": "https://openrouter.ai/api/v1",
+        "apiKey": "${process.env.OPENROUTER_API_KEY || ''}"
+      },
+      "models": {
+        "deepseek-flash": {
+          "name": "deepseek/deepseek-v4-flash-0731",
+          "tool_call": true
+        }
+      }
+    }
+  },
+  "$schema": "https://opencode.ai/config.json",
+  "small_model": "openrouter/deepseek-flash"
+}
+EOF`;
+        break;
+
       case 'baseten':
         configCommand = `cat > ~/.config/opencode/opencode.json << 'EOF'
 {
@@ -498,7 +542,7 @@ export const daytonaOrchestrationWorkflow = new Workflow({
     harness: z.enum(['goose', 'opencode', 'pi']).default('opencode'),
     dryRun: z.boolean().default(false),
     skipCleanup: z.boolean().default(false),
-    provider: z.enum(['baseten', 'fireworks', 'proxy', 'northflank']).default('baseten'),
+    provider: inferenceProviderEnum.default('openrouter'),
     proxyUrl: z.string().optional(),
     requiredVars: z.array(z.string()).default([
       'DAYTONA_API_KEY',

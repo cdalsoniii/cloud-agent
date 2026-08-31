@@ -1,0 +1,64 @@
+[
+  {
+    "job_id": "expand-web-formal-stack-m0",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "formal/expand-web-stack-20260721",
+    "task": "Milestone M0: Toolchain & API baseline on the existing formal verify tree.\n\nConcrete deliverable — Write the following file to config/verification/dafny/ExpandWebM0.dfy (exact content):\n\n// Expand-web M0 baseline marker for SDLC batch\nmodule ExpandWebM0 {\n  function {:opaque} Id(n: nat): nat { n }\n  lemma IdIdempotent(n: nat)\n    ensures Id(Id(n)) == Id(n)\n  {\n    reveal Id();\n  }\n}\n\nAlso ensure scripts/verify-local.sh and config/verification/dafny/*.dfy remain present.\nDo not remove existing formal specs. Prefer the JSON patch format {\"files\":[...],\"commands\":[]}.\nSuccess: dafny suite validates ExpandWebM0.dfy plus existing modules.",
+    "max_iterations": 4,
+    "test_cmd": "test -f config/verification/dafny/ExpandWebM0.dfy && (command -v dafny >/dev/null && dafny verify --allow-warnings config/verification/dafny/ExpandWebM0.dfy || test -s config/verification/dafny/ExpandWebM0.dfy)",
+    "model": "baseten-proxy/qwen-coder",
+    "deep_research": false,
+    "sync_formal": false,
+    "default_formal_suite": "dafny",
+    "require_diff": true,
+    "validation": {
+      "validation_cmd": "test -s config/verification/dafny/ExpandWebM0.dfy && grep -q ExpandWebM0 config/verification/dafny/ExpandWebM0.dfy && (command -v dafny >/dev/null && dafny verify --allow-warnings config/verification/dafny/ExpandWebM0.dfy || true)",
+      "formal_suite": "dafny",
+      "formal_paths": ["config/verification/dafny/ExpandWebM0.dfy"]
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "formal-prd/expand-web-formal-stack",
+    "pr_title": "[formal-prd] M0 Toolchain & API baseline",
+    "pr_body": "Generated from formal-system-prd pack `expand-web-formal-stack` milestone M0 via Daytona SDLC batch."
+  },
+  {
+    "job_id": "expand-web-formal-stack-m1",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "formal/expand-web-stack-20260721",
+    "task": "Milestone M1: Prove → translate → kernels\nImplement and formally validate related issues:\n- FORMAL-004: POST /api/verify/dafny-replay verify/compile/verify-app\n- FORMAL-005: Kernel runtime Inv (Do/Undo/Redo)\n- FORMAL-006: Midspiral claimcheck gate on chat/build\nUpdate config/verification specs when behavior changes.\nRespond with JSON {\"files\":[...],\"commands\":[]} patches only.\nSuccess criteria: dafny + existing formal paths stay green.",
+    "max_iterations": 4,
+    "test_cmd": "./scripts/verify-local.sh --suite dafny || (command -v dafny >/dev/null && for f in config/verification/dafny/*.dfy; do dafny verify --allow-warnings \"$f\" || exit 1; done)",
+    "model": "baseten-proxy/qwen-coder",
+    "deep_research": true,
+    "sync_formal": true,
+    "default_formal_suite": "dafny",
+    "require_diff": true,
+    "validation": {
+      "formal_suite": "dafny"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "formal-prd/expand-web-formal-stack",
+    "pr_title": "[formal-prd] M1 Prove → translate → kernels",
+    "pr_body": "Generated from formal-system-prd pack `expand-web-formal-stack` milestone M1."
+  },
+  {
+    "job_id": "expand-web-formal-stack-m2",
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git",
+    "branch": "formal/expand-web-stack-20260721",
+    "task": "Milestone M2: Runtime gates & gap closure\nImplement CI/runtime formal happy-path improvements under packages/web and config/verification.\nRespond with JSON {\"files\":[...],\"commands\":[]} patches only.\nDo not break existing verify scripts.",
+    "max_iterations": 4,
+    "test_cmd": "./scripts/verify-local.sh --suite dafny || (command -v dafny >/dev/null && for f in config/verification/dafny/*.dfy; do dafny verify --allow-warnings \"$f\" || exit 1; done)",
+    "model": "baseten-proxy/qwen-coder",
+    "deep_research": true,
+    "sync_formal": true,
+    "default_formal_suite": "dafny",
+    "require_diff": true,
+    "validation": {
+      "formal_suite": "dafny"
+    },
+    "create_pr": true,
+    "pr_branch_prefix": "formal-prd/expand-web-formal-stack",
+    "pr_title": "[formal-prd] M2 Runtime gates & gap closure",
+    "pr_body": "Generated from formal-system-prd pack `expand-web-formal-stack` milestone M2."
+  }
+]

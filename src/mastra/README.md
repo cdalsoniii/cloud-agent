@@ -84,12 +84,15 @@ Run `npx tsx src/mastra/tools/verify-rules.ts` to verify all business rules agai
 
 ## Usage
 
-### Cursor MCP (stdio)
+### Cursor + OpenCode MCP (stdio)
 
-Registered as `cloud-agent-mastra` in `~/.cursor/mcp.json` via:
+Registered as `cloud-agent-mastra` in:
+
+- `~/.cursor/mcp.json` (Cursor)
+- `~/.config/opencode/opencode.json` (OpenCode — `mcp.cloud-agent-mastra`)
 
 ```bash
-npm run mastra:mcp          # stdio (Cursor)
+npm run mastra:mcp          # stdio (Cursor / OpenCode)
 npm run mastra:mcp:sse       # HTTP SSE on :3002
 ```
 

@@ -1,0 +1,32 @@
+[
+  {
+    "job_id": "expand-web-formal-stack-m0",
+    "ok": true,
+    "iterations": 1,
+    "diff": "diff --git a/config/verification/dafny/ExpandWebM0.dfy b/config/verification/dafny/ExpandWebM0.dfy\nnew file mode 100644\nindex 0000000..c44fdd7\n--- /dev/null\n+++ b/config/verification/dafny/ExpandWebM0.dfy\n@@ -0,0 +1,9 @@\n+// Expand-web M0 baseline marker for SDLC batch\n+module ExpandWebM0 {\n+  function {:opaque} Id(n: nat): nat { n }\n+  lemma IdIdempotent(n: nat)\n+    ensures Id(Id(n)) == Id(n)\n+  {\n+    reveal Id();\n+  }\n+}\n\\ No newline at end of file\nA  config/verification/dafny/ExpandWebM0.dfy",
+    "test_output": "__TEST_EXIT__:0",
+    "session_id": "ses_07cbb3503ffeJufMXfJa8hdk17",
+    "error": null,
+    "validation": [
+      {
+        "passed": true,
+        "engine": "validation_cmd",
+        "rule_id": "validation_cmd",
+        "message": "exit=0",
+        "details": {
+          "stdout": "__EXIT__:0",
+          "cmd": "test -s config/verification/dafny/ExpandWebM0.dfy && grep -q ExpandWebM0 config/verification/dafny/ExpandWebM0.dfy && (command -v dafny >/dev/null && dafny verify --allow-warnings config/verification/dafny/ExpandWebM0.dfy || true)"
+        }
+      }
+    ],
+    "validation_passed": true,
+    "pr_url": "https://github.com/BrightforestX/assistant-ui/pull/2",
+    "pr_number": 2,
+    "pr_branch": "formal-prd/expand-web-formal-stack/expand-web-formal-stack-m0",
+    "pr_error": null,
+    "sandbox_id": "b1da5abf-2c8d-431e-a89d-55652815f7f2",
+    "sandbox_url": "https://4096-yyaqpomxgy5agamn.daytonaproxy01.net",
+    "wave": 1,
+    "repo_url": "https://github.com/BrightforestX/assistant-ui.git"
+  }
+]

@@ -1,0 +1,36 @@
+# Packed verification image: multi-process services in ONE sandbox.
+# Ports: 7000 safety/correctness, 7001 properties, 7002 structure, 7003 content,
+#        7004 SHACL (LinkML shapes / pySHACL).
+# Used by Daytona (Docker) and as a base for E2B templates.
+
+FROM python:3.12-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /opt/verifier
+
+COPY multi-service-server.py /opt/verifier/multi-service-server.py
+COPY shacl-server.py /opt/verifier/shacl-server.py
+COPY supervisord.conf /etc/supervisord.conf
+
+# linkml/gen-shacl optional (heavy); pre-generated shapes always work
+RUN pip install --no-cache-dir supervisor pyshacl rdflib jsonschema || true
+
+RUN mkdir -p /opt/verifier/px/generated /opt/verifier/px/linkml
+
+COPY ontology-ui-server.py /opt/verifier/ontology-ui-server.py
+COPY ontology-ui /opt/verifier/ontology-ui
+
+EXPOSE 7000 7001 7002 7003 7004 7005
+
+ENV VERIFIER_PACKED=1 \
+    SHACL_PORT=7004 \
+    SHACL_SHAPES_DIR=/opt/verifier/px/generated \
+    ONTOLOGY_UI_PORT=7005 \
+    ONTOLOGY_UI_DIR=/opt/verifier/ontology-ui \
+    PX_REMOTE_ROOT=/opt/verifier/px
+
+# Multi-service + SHACL + ontology React Flow UI
+CMD ["python3", "-c", "import subprocess,sys; subprocess.Popen([sys.executable,'/opt/verifier/shacl-server.py','--port','7004']); subprocess.Popen([sys.executable,'/opt/verifier/ontology-ui-server.py','--port','7005']); subprocess.call([sys.executable,'/opt/verifier/multi-service-server.py'])"]

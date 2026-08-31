@@ -180,54 +180,54 @@ class PRSandboxOrchestrator {
       );
       sessionId = session.sessionId;
 
-      await prSandboxIntegration.logPRSandboxEvent(sessionId, 'execution_started', {
+      await prSandboxIntegration.logPRSandboxEvent(sessionId, 'milestone_reached', {
         executionId: this.executionId,
         options: this.opts
       });
 
       // Step 1: Validate environment
       await this.validateEnvironment();
-      await prSandboxIntegration.logPRSandboxEvent(sessionId, 'environment_validated', {});
+      await prSandboxIntegration.logPRSandboxEvent(sessionId, 'milestone_reached', {});
 
       // Step 2: Fetch PR information
       const prs = await this.fetchPRs();
       if (prs.length === 0) {
         throw new Error('No PRs found to merge');
       }
-      await prSandboxIntegration.logPRSandboxEvent(sessionId, 'prs_fetched', {
+      await prSandboxIntegration.logPRSandboxEvent(sessionId, 'milestone_reached', {
         prCount: prs.length,
         prNumbers: prs.map(p => p.number)
       });
 
       // Step 3: Create sandbox
       await this.createSandbox();
-      await prSandboxIntegration.logPRSandboxEvent(sessionId, 'sandbox_created', {
+      await prSandboxIntegration.logPRSandboxEvent(sessionId, 'milestone_reached', {
         sandboxId: this.sandboxId
       });
 
       // Step 4: Clone repo
       await this.cloneRepo();
-      await prSandboxIntegration.logPRSandboxEvent(sessionId, 'repo_cloned', {});
+      await prSandboxIntegration.logPRSandboxEvent(sessionId, 'milestone_reached', {});
 
       // Step 5: Merge PRs
       await this.mergePRs(prs);
-      await prSandboxIntegration.logPRSandboxEvent(sessionId, 'prs_merged', {
+      await prSandboxIntegration.logPRSandboxEvent(sessionId, 'milestone_reached', {
         prCount: prs.length
       });
 
       // Step 6: Install dependencies
       await this.installDependencies();
-      await prSandboxIntegration.logPRSandboxEvent(sessionId, 'dependencies_installed', {});
+      await prSandboxIntegration.logPRSandboxEvent(sessionId, 'milestone_reached', {});
 
       // Step 7: Run tests (if not skipped)
       if (!this.opts.skipTests) {
         await this.runTests();
-        await prSandboxIntegration.logPRSandboxEvent(sessionId, 'tests_completed', {});
+        await prSandboxIntegration.logPRSandboxEvent(sessionId, 'milestone_reached', {});
       }
 
       // Step 8: Start application
       const appPort = await this.startApplication();
-      await prSandboxIntegration.logPRSandboxEvent(sessionId, 'application_started', {
+      await prSandboxIntegration.logPRSandboxEvent(sessionId, 'milestone_reached', {
         port: appPort
       });
 
@@ -235,7 +235,7 @@ class PRSandboxOrchestrator {
       let tunnelUrl: string | undefined;
       if (!this.opts.skipTunnel && appPort) {
         tunnelUrl = await this.createTunnel(appPort);
-        await prSandboxIntegration.logPRSandboxEvent(sessionId, 'tunnel_created', {
+        await prSandboxIntegration.logPRSandboxEvent(sessionId, 'milestone_reached', {
           tunnelUrl
         });
       }
@@ -282,7 +282,7 @@ class PRSandboxOrchestrator {
       if (!this.opts.keepSandbox && this.sandboxId) {
         await this.destroySandbox();
         if (sessionId) {
-          await prSandboxIntegration.logPRSandboxEvent(sessionId!, 'sandbox_destroyed', {
+          await prSandboxIntegration.logPRSandboxEvent(sessionId!, 'milestone_reached', {
             sandboxId: this.sandboxId
           });
         }
@@ -369,7 +369,7 @@ class PRSandboxOrchestrator {
           }
         }
 
-        const prs: GitHubPR[] = await response.json();
+        const prs: GitHubPR[] = (await response.json() as unknown) as GitHubPR[];
         result.output = `Found ${prs.length} open PRs`;
         this.results.push(result);
         return prs;

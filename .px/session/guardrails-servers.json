@@ -1,0 +1,68 @@
+{
+  "version": 1,
+  "servers": [
+    {
+      "id": "formal.guardrails.content",
+      "name": "formal.guardrails.content",
+      "kind": "formal_sandbox",
+      "port": 7003,
+      "url": "http://127.0.0.1:7003/health",
+      "status": "unknown",
+      "inSandbox": true,
+      "note": "Guardrails bind :7003"
+    },
+    {
+      "id": "GuardrailsAI.ValidJson",
+      "name": "GuardrailsAI.ValidJson",
+      "kind": "guardrails_ai",
+      "status": "active",
+      "inSandbox": false,
+      "note": "Guardrails AI label; register more via POST /api/guardrails/register"
+    },
+    {
+      "id": "GuardrailsAI.DetectPII",
+      "name": "GuardrailsAI.DetectPII",
+      "kind": "guardrails_ai",
+      "status": "active",
+      "inSandbox": false,
+      "note": "Guardrails AI label; register more via POST /api/guardrails/register"
+    },
+    {
+      "id": "GuardrailsAI.RestrictToTopic",
+      "name": "GuardrailsAI.RestrictToTopic",
+      "kind": "guardrails_ai",
+      "status": "active",
+      "inSandbox": false,
+      "note": "Guardrails AI label; register more via POST /api/guardrails/register"
+    },
+    {
+      "id": "GuardrailsAI.ToxicLanguage",
+      "name": "GuardrailsAI.ToxicLanguage",
+      "kind": "guardrails_ai",
+      "status": "active",
+      "inSandbox": false,
+      "note": "Guardrails AI label; register more via POST /api/guardrails/register"
+    },
+    {
+      "id": "GuardrailsAI.X",
+      "name": "GuardrailsAI.X",
+      "kind": "guardrails_ai",
+      "port": 7301,
+      "url": "http://127.0.0.1:7301/health",
+      "status": "unknown",
+      "inSandbox": true,
+      "note": "registered via API"
+    },
+    {
+      "id": "GuardrailsAI.Z",
+      "name": "GuardrailsAI.Z",
+      "kind": "guardrails_ai",
+      "port": 7303,
+      "url": "http://127.0.0.1:7303/health",
+      "status": "unknown",
+      "inSandbox": true,
+      "note": "registered via API"
+    }
+  ],
+  "updatedAt": "2026-08-09T10:40:30.324386+00:00"
+}
