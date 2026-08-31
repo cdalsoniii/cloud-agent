@@ -20,6 +20,7 @@ import { analyzeRepo, getImprovementMetrics, maintenanceCycle } from './recursiv
 import type { VerificationRequest, SDLCTask, SDLCLoopConfig, OrchestrationRequest, RepoContext } from './sdlc-types.js';
 
 const PORT = parseInt(process.env.PORT || '3000', 10);
+const HOSTNAME = process.env.HOSTNAME || '0.0.0.0';
 
 interface HealthResponse {
   status: 'ok' | 'degraded' | 'error';
@@ -147,7 +148,7 @@ const server = createServer(async (req, res) => {
 
     // ── Learn (improvement metrics) ──
     if (url === '/learn' || url.startsWith('/learn?')) {
-      const urlObj = new URL(url, `http://localhost:${PORT}`);
+      const urlObj = new URL(url, `http://${HOSTNAME}:${PORT}`);
       const target = urlObj.searchParams.get('target') || 'cloud-agent';
       const metrics = await getImprovementMetrics(target);
       const learning = await getLearningForRepo(target);
@@ -157,7 +158,7 @@ const server = createServer(async (req, res) => {
 
     // ── Events (query event logs) ──
     if ((url === '/events' || url.startsWith('/events?')) && method === 'GET') {
-      const urlObj = new URL(url, `http://localhost:${PORT}`);
+      const urlObj = new URL(url, `http://${HOSTNAME}:${PORT}`);
       const correlationId = urlObj.searchParams.get('correlation_id');
       const target = urlObj.searchParams.get('target');
       if (correlationId) {
@@ -216,12 +217,12 @@ process.on('SIGINT', () => {
   server.close(() => process.exit(0));
 });
 
-server.listen(PORT, () => {
-  console.log(`Cloud Agent server running on http://localhost:${PORT}`);
-  console.log(`  Health:      http://localhost:${PORT}/health`);
-  console.log(`  Targets:     http://localhost:${PORT}/targets`);
-  console.log(`  SDLC Loop:   POST http://localhost:${PORT}/sdlc`);
-  console.log(`  Verify:      POST http://localhost:${PORT}/verify`);
-  console.log(`  Learn:       GET  http://localhost:${PORT}/learn?target=cloud-agent`);
-  console.log(`  Events:      GET  http://localhost:${PORT}/events?correlation_id=...`);
+server.listen(PORT, HOSTNAME, () => {
+  console.log(`Cloud Agent server running on http://${HOSTNAME}:${PORT}`);
+  console.log(`  Health:      http://${HOSTNAME}:${PORT}/health`);
+  console.log(`  Targets:     http://${HOSTNAME}:${PORT}/targets`);
+  console.log(`  SDLC Loop:   POST http://${HOSTNAME}:${PORT}/sdlc`);
+  console.log(`  Verify:      POST http://${HOSTNAME}:${PORT}/verify`);
+  console.log(`  Learn:       GET  http://${HOSTNAME}:${PORT}/learn?target=cloud-agent`);
+  console.log(`  Events:      GET  http://${HOSTNAME}:${PORT}/events?correlation_id=...`);
 });

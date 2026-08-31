@@ -49,6 +49,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^7.5.20",
+    "@cloudflare/containers": "^0.3.7",
     "@daytona/sdk": "^0.199.0",
     "@mastra/core": "^0.1.26",
     "@modelcontextprotocol/sdk": "^1.29.0",

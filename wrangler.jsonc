@@ -1,0 +1,32 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "cloud-agent-develop",
+  "main": "cloudflare/worker.ts",
+  "compatibility_date": "2026-08-31",
+  "compatibility_flags": ["nodejs_compat"],
+  "containers": [
+    {
+      "class_name": "CloudAgentContainer",
+      "image": "./cloudflare/Dockerfile",
+      "image_build_context": ".",
+      "max_instances": 1
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "CLOUD_AGENT",
+        "class_name": "CloudAgentContainer"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["CloudAgentContainer"]
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}
