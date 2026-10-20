@@ -1,0 +1,2 @@
+Composio GitHub PR smoke test for BrightforestX/cloud-agent.
+Created from trino-matrix-analysis-mcp scripts/composio_github_pr.py.
