@@ -1,0 +1,93 @@
+{
+  "harnesses": [
+    {
+      "name": "aider",
+      "ok": true,
+      "hit_count": 1,
+      "passes": [
+        {
+          "pass": 1,
+          "exit": 0,
+          "seconds": 10.7,
+          "test_exit": 0,
+          "test_output": "",
+          "commits_after": "1",
+          "log": "/tmp/chainlet-harness-flow/aider-pass1.log"
+        }
+      ],
+      "publish": {
+        "pushed": true,
+        "sha": "5e93c67a56a64b1f3ab29f23bc1b184d9ee28e78",
+        "remote": "5e93c67a56a64b1f3ab29f23bc1b184d9ee28e78\trefs/heads/main",
+        "push_output": "To /tmp/chainlet-harness-flow/aider/origin.git\n   d8d6ed3..5e93c67  HEAD -> main\n"
+      }
+    },
+    {
+      "name": "goose",
+      "ok": true,
+      "hit_count": 4,
+      "passes": [
+        {
+          "pass": 1,
+          "exit": 0,
+          "seconds": 33.2,
+          "test_exit": 0,
+          "test_output": "",
+          "commits_after": "1",
+          "log": "/tmp/chainlet-harness-flow/goose-pass1.log"
+        }
+      ],
+      "publish": {
+        "pushed": true,
+        "sha": "c0429fea82d087f279200e3033a9d128e9d53975",
+        "remote": "c0429fea82d087f279200e3033a9d128e9d53975\trefs/heads/main",
+        "push_output": "To /tmp/chainlet-harness-flow/goose/origin.git\n   79008c0..c0429fe  HEAD -> main\n"
+      }
+    },
+    {
+      "name": "opencode",
+      "ok": true,
+      "hit_count": 5,
+      "passes": [
+        {
+          "pass": 1,
+          "exit": 0,
+          "seconds": 65.8,
+          "test_exit": 0,
+          "test_output": "",
+          "commits_after": "1",
+          "log": "/tmp/chainlet-harness-flow/opencode-pass1.log"
+        }
+      ],
+      "publish": {
+        "pushed": true,
+        "sha": "c9ab97552693dc3d60e91b3fc0343c4408689525",
+        "remote": "c9ab97552693dc3d60e91b3fc0343c4408689525\trefs/heads/main",
+        "push_output": "To /tmp/chainlet-harness-flow/opencode/origin.git\n   6670f68..c9ab975  HEAD -> main\n"
+      }
+    },
+    {
+      "name": "zenith",
+      "ok": true,
+      "hit_count": 6,
+      "passes": [
+        {
+          "pass": 1,
+          "exit": 124,
+          "seconds": 240.1,
+          "test_exit": 0,
+          "test_output": "",
+          "commits_after": "1",
+          "log": "/tmp/chainlet-harness-flow/zenith-pass1.log"
+        }
+      ],
+      "publish": {
+        "pushed": true,
+        "sha": "697fe5213ed30fa7fc0447ee072097bf9bdf0858",
+        "remote": "697fe5213ed30fa7fc0447ee072097bf9bdf0858\trefs/heads/main",
+        "push_output": "To /tmp/chainlet-harness-flow/zenith/origin.git\n   451a2bc..697fe52  HEAD -> main\n"
+      }
+    }
+  ],
+  "all_ok": true
+}
